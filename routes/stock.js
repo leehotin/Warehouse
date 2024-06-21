@@ -8,5 +8,14 @@ router.get('/', function(req, res, next) {
   
 });
 
+router.get('/', function(req, res, next) {
+    let id = req.query.stock_id;  
+    // server on
+    // use stock_table mongoDB to lookup stock_id
+    // find by stock_id
+    // display data
+    // server close
+    stock_
+});
 
 module.exports = router;
