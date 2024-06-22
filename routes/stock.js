@@ -4,8 +4,15 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb://localhost:27017/");
 
-router.get('/', function(req, res, next) {
-  
+router.get('/', async (req, res, next) =>{
+  try{
+    await client.connect();
+    let data = await client.db("Warehouse_In_Out_system").collection("stocks").find().toArray();
+
+    res.render('stock/index',{ datas: data });
+  }finally{
+    await client.close();
+  }
 });
 
 router.get('/', function(req, res, next) {
