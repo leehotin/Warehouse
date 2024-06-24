@@ -10,6 +10,10 @@ const dbName = "Warehouse_In_Out_System";
 router.get('/', async (req, res, next) =>{
   try{
     await client.connect();
+
+    //sort by data
+    let sort = {};
+
     let data = await client.db(dbName).collection("stocks").find().toArray();
 
     res.render('stock/index',{ datas: data });
