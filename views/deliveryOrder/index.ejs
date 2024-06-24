@@ -47,13 +47,13 @@
                         <%= data.phone %>
                     </div>
                     <div class="col">
-                        <%= data.delivery_check ? "finish": "not finish" %>
+                        <%= data.delivery_check ? "Finish": "Not Finish" %>
                     </div>
                     <div class="col">
                         <%= data.delivery_user %>
                     </div>
                     <div class="col">
-                        <%= data.delivery_at %>
+                        <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                     </div>
                     <div class="col">
                         <a href="/stock/<%= data._id %>" class="btn btn-primary">edit</a>
