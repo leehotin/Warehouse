@@ -18,4 +18,29 @@ router.get('/', async (req, res, next) =>{
   }
 });
 
+// Route to get stock data
+router.get('/info', async (req, res) => {
+    try {
+        await client.connect();
+
+        // Retrieve stock data based on stockId
+        const stockData = await client.db(dbName).collection('stocks').findOne({_id: req.query.stock_Id});
+        // if (!stockData) {
+        //     return res.status(404).json({ error: 'Stock not found' });
+        //     }
+        // Process stockData (e.g., display it or perform additional actions)
+        // ..
+     
+        res.render('stock/enquiry', {stock_data: stockData});
+
+        // Close the MongoDB connection
+    } catch (error) {
+        console.error('Error fetching stock data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+    finally{
+        await client.close(); 
+    }
+});
+
 module.exports = router;
