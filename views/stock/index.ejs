@@ -6,32 +6,32 @@
     <body>
         <div class="container">
             <a href="/" class="btn btn-primary">index</a>
-            <div class="row my-2 border-bottom border-dark">
-                <div class="col fw-bold fs-5">
+            <div class="row my-1 border-bottom border-dark">
+                <div class="col fw-bold fs-5 text-center">
                     id
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     area
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     name
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     edit
                 </div>
             </div>
             <% for(data of datas){ %>
-                <div class="row py-2 border-bottom border-dark">
-                    <div class="col">
+                <div class="row py-1 border-bottom border-dark">
+                    <div class="col text-center">
                         <%= data.stock_id %>
                     </div>
-                    <div class="col">
+                    <div class="col text-center">
                         <%= data.area %>
                     </div>
-                    <div class="col">
+                    <div class="col text-center">
                         <%= data.name %>
                     </div>
-                    <div class="col">
+                    <div class="col text-center">
                         <a href="/stock/info?stock_id=<%= data._id %>" class="btn btn-primary">edit</a>
                         <a href="/stock/delete?stock_id=<%= data._id %>" class="btn btn-warning">delete</a>   
                     </div>

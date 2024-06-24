@@ -4,11 +4,13 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb://localhost:27017/");
 
+const dbName = "Warehouse_In_Out_System";
+
 router.get('/', async (req, res, next) =>{
     try{
         await client.connect();
-        let data = await client.db("Warehouse_In_Out_system").collection("delivery_notes").find().toArray();
-        
+        let data = await client.db(dbName).collection("delivery_notes").find().toArray();
+
         res.render('deliveryOrder/index',{ datas: data });
       }finally{
         await client.close();
