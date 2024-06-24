@@ -4,6 +4,7 @@ var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb://localhost:27017/");
 
+<<<<<<< HEAD
 const pdf = require('pdfkit'); // Install this package using npm install pdfkit
 
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
@@ -55,6 +56,17 @@ router.get('/stock-listing/:area', function(req, res, next) {
       doc.end(); // Finalize the PDF
     }
   });
+=======
+router.get('/', async (req, res, next) =>{
+  try{
+    await client.connect();
+    let data = await client.db("Warehouse_In_Out_system").collection("stocks").find().toArray();
+
+    res.render('stock/index',{ datas: data });
+  }finally{
+    await client.close();
+  }
+>>>>>>> 1aad804ba6f28a996892a0aa953a1cc7e3b09950
 });
 
 // Route for exporting stock listing to CSV (for Excel)
