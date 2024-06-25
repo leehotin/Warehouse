@@ -12,11 +12,22 @@ router.get('/', async (req, res, next) =>{
     await client.connect();
 
     //sort by data
-    let sort = {};
+    let sort = {
+      _id: req.query.stock_id?req.query.stock_id:1,
+    };
+    //where by data
+    let whereData = {};
+    if (typeof req.query.name !== "undefined" &&req.query.name != ""){
+        whereData.name = req.query.name;
+    }
+    if (typeof req.query.area !== "undefined" &&req.query.area != ""){
+      whereData.area = req.query.area;
+  }
 
-    let data = await client.db(dbName).collection("stocks").find().toArray();
 
-    res.render('stock/index',{ datas: data });
+    let data = await client.db(dbName).collection("stocks").find(whereData,{sort:sort}).toArray();
+    
+    res.render('stock/index',{ datas: data, sort:sort });
   }finally{
     await client.close();
   }

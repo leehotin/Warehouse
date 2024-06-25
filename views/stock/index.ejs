@@ -5,16 +5,51 @@
     </head>
     <body>
         <div class="container">
-            <a href="/" class="btn btn-primary">index</a>
+            <div class="row my-1">
+                <div class="col">
+                    <a href="/" class="btn btn-primary">index</a>
+                </div>
+            </div>
+            <div class="row">
+                <form action="/stock" method="get">
+                    <div class="row">
+                        <div class="col-1">
+                            Stock area: 
+                        </div>
+                        <div class="col-11">
+                            <input type="text" name="area" class="form-control">
+                        </div>
+
+                        <div class="col-1">
+                            Shelf: 
+                        </div>
+                        <div class="col-11">
+                            <input type="text" name="name" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-1">
+                            id:
+                        </div>
+                        <div class="col-11">
+                            <input type="radio" name="stock_id" value="1">asc<br>
+                            <input type="radio" name="stock_id" value="-1">desc
+                        </div>
+                    </div>
+                    <input type="submit" value="submit">
+                </form>
+            </div>
+
             <div class="row my-1 border-bottom border-dark">
                 <div class="col fw-bold fs-5 text-center">
                     id
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                    area
+                    stock area
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                    name
+                    stock shelf
                 </div>
                 <div class="col fw-bold fs-5 text-center">
                     edit
