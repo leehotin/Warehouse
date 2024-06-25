@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Enquiry</title>
+</head>
+<body>
+    <h1>Stock Enquiry</h1>
+    <form action="/stock" method="get">
+        <div>
+            <div>
+                <label for="product_id">Product ID:</label>
+            </div>
+            <div>
+                <input type="text" id="stock_id" name="stock_id" required><br><br>
+            </div>
+        </div>
+        <div>
+            <div>
+                <label for="area">Region : </label> 
+            </div>
+            <div>
+                <input type="text" id="area" name="area"> 
+            </div>
+        </div>
+
+        <label for="location"> Store location : </label> 
+        <input type="text" id="name" name="name"><br>
+        <button type="submit"> Store at </button>
+
+    </form>
+
+    <!-- Display stock information here -->
+    <div id="stock-info">
+        <!-- Stock ID, Region, Stock Location will be populated dynamically -->
+    </div>
+</body>
+</html>
