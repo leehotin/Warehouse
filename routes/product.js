@@ -2,10 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
+
 const client = new MongoClient("mongodb://localhost:27017/");
 const dbName = "Warehouse_In_Out_System";
 
-const ObjectId = require('mongodb').ObjectId;
 
 router.get('/', function(req, res, next) {
   
@@ -46,6 +47,20 @@ router.get('/info', async(req,res,next)=>{
     }finally{
         await client.close();
     }
-})
+});
+
+router.post('/delete',async (req,res,next) =>{
+    try{
+        let productId = new ObjectId(req.body.id);
+        await client.connect();
+        let product = await client.db(dbName).collection("products").find({_id:productId});
+        product.deleted_at = new Date();
+        await client.db(dbName).collection("products").replaceOne({_id:productId},product);
+        await client.db(dbName).collection("logs").insertOne({information:"Delete stock "+req.body.id,type:"delete",created_at:new Date(),updated_at:new Date()});
+        res.redirect("/product");
+    }finally{
+        await client.close();
+    }
+});
 
 module.exports = router;

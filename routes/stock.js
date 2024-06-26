@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
+
 const client = new MongoClient("mongodb://localhost:27017/");
 
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
@@ -17,14 +19,14 @@ router.get('/', async (req, res, next) =>{
     };
     //where by data
     let whereData = {};
+
     if (typeof req.query.name !== "undefined" &&req.query.name != ""){
-        whereData.name = req.query.name;
+      whereData.name = req.query.name;
     }
     if (typeof req.query.area !== "undefined" &&req.query.area != ""){
       whereData.area = req.query.area;
-  }
-
-
+    }
+    
     let data = await client.db(dbName).collection("stocks").find(whereData,{sort:sort}).toArray();
     
     res.render('stock/index',{ datas: data, sort:sort });
@@ -34,7 +36,7 @@ router.get('/', async (req, res, next) =>{
 });
 
 // Route to get stock data
-router.get('/info', async (req, res) => {
+router.get('/info', async (req, res,next) => {
     try {
         await client.connect();
 
@@ -57,5 +59,18 @@ router.get('/info', async (req, res) => {
         await client.close(); 
     }
 });
+
+router.post('/delete',async (req,res,next) =>{
+  try{
+    let stockId = req.body.stock_id;
+    await client.connect();
+    await client.db(dbName).collection("stocks").deleteOne({_id:new ObjectId(stockId)});
+    await client.db(dbName).collection("logs").insertOne({information:"Delete stock "+stockId,type:"delete",created_at:new Date(),updated_at:new Date()});
+    res.redirect("/stock");
+  }finally{
+    await client.close();
+  }
+});
+
 
 module.exports = router;

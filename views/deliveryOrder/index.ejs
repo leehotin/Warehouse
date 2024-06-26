@@ -6,29 +6,118 @@
     <body>
         <div class="container">
             <a href="/" class="btn btn-primary">index</a>
-            <div class="row my-2 border-bottom border-dark">
-                <div class="col fw-bold fs-5">
+            <div class="row">
+                <label class="fs-4">Search data:</label>
+                <form action="/deliveryOrder" method="get" class="border m-1">
+                    <div class="row">
+                        <div class="col-2">
+                            Delivery Id: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="delivery_id" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Company: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="company" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Address: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="address" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Phone: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="phone" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Delivery Type: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="type" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Delivery Check: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="delivery_check" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Delivery User: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="delivery_user" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            Delivery At: 
+                        </div>
+                        <div class="col-10">
+                            <input type="text" name="delivery_at" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            id:
+                        </div>
+                        <div class="col-10">
+                            <input type="radio" name="id" value="1">asc
+                            <input type="radio" name="id" value="-1">desc
+                        </div>
+                    </div>
+
+                    <input type="submit" value="submit" class="btn btn-primary">
+                </form>
+            </div>
+
+            <div class="row my-2 border-bottom border-dark bg-secondary-subtle">
+                <div class="col fw-bold fs-5 text-center">
                     id
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     type
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     company
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     phone
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     delivery check
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     delivery user
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     delivery at
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     edit
                 </div>
             </div>
@@ -56,8 +145,11 @@
                         <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                     </div>
                     <div class="col">
-                        <a href="/stock/<%= data._id %>" class="btn btn-primary">edit</a>
-                        <a href="/stock/delete/<%= data._id %>" class="btn btn-warning">delete</a>   
+                        <a href="/deliveryOrder/<%= data._id %>" class="btn btn-primary">edit</a>
+                        <form action="/deliveryOrder/delete" method="post" class="d-inline">
+                            <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
+                            <input type="submit" class="btn btn-warning" value="delete">
+                        </form>
                     </div>
                 </div>
             <% } %>
