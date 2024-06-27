@@ -53,7 +53,7 @@ router.post('/delete',async (req,res,next) =>{
     try{
         let id = new ObjectId(req.body.id);
         await client.connect();
-        let product = await client.db(dbName).collection("products").find({_id:id});
+        let product = await client.db(dbName).collection("products").findOne({_id:id});
         product.deleted_at = new Date();
         await client.db(dbName).collection("products").replaceOne({_id:id},product);
         await client.db(dbName).collection("logs").insertOne({information:"Delete product "+product.product_id,type:"delete",created_at:new Date(),updated_at:new Date()});

@@ -59,7 +59,7 @@ router.post('/delete',async (req,res,next) =>{
   try{
     let id = new ObjectId(req.body.delivery_id);
     await client.connect();
-    let deliveryNote = await client.db(dbName).collection("delivery_notes").find({_id: id});
+    let deliveryNote = await client.db(dbName).collection("delivery_notes").findOne({_id: id});
     await client.db(dbName).collection("delivery_notes").deleteOne({_id: id});
     await client.db(dbName).collection("logs").insertOne({information:"Delete deliveryNote "+deliveryNote.delivery_id,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/deliveryOrder");

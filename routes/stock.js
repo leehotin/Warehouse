@@ -64,7 +64,7 @@ router.post('/delete',async (req,res,next) =>{
   try{
     let id = new ObjectId(req.body.stock_id);
     await client.connect();
-    let stock = await client.db(dbName).collection("stocks").find({_id: id}).toArray();
+    let stock = await client.db(dbName).collection("stocks").findOne({_id: id});
     await client.db(dbName).collection("stocks").deleteOne({_id: id});
     await client.db(dbName).collection("logs").insertOne({information: `Delete stock area: ${stock.area},name: ${stock.name}.`,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/stock");
