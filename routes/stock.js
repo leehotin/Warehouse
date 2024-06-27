@@ -41,13 +41,14 @@ router.get('/info', async (req, res,next) => {
         await client.connect();
 
         // Retrieve stock data based on stockId
-        const stockData = await client.db(dbName).collection('stocks').findOne({_id: req.query.stock_Id});
+        const stockData = await client.db(dbName).collection('stocks').findOne(new ObjectId("667cbf81ac08f2d70899ad36"));
+        // const stockData = await client.db(dbName).collection('stocks').findOne({_id: new ObjectId(req.query.stock_Id)});
         // if (!stockData) {
         //     return res.status(404).json({ error: 'Stock not found' });
         //     }
         // Process stockData (e.g., display it or perform additional actions)
         // ..
-     
+      
         res.render('stock/enquiry', {stock_data: stockData});
 
         // Close the MongoDB connection
@@ -59,6 +60,33 @@ router.get('/info', async (req, res,next) => {
         await client.close(); 
     }
 });
+
+router.post('/save', async (req,res,next) =>{
+  try{
+      await client.connect();
+
+      let stock = {};
+
+      if (typeof req.body._id !=="undefined" &&req.body._id !=""){
+          stock._id = new ObjectId(req.body._id);
+      }
+
+      stock.stock_id = req.body.stock_id;
+      stock.area = req.body.area; 
+      stock.name = req.body.name;
+      let data = {};
+      if (typeof stock._id !=="undefined" && stock._id != ""){
+        data = await client.db(dbName).collection("stocks").replaceOne({_id: new ObjectId(req.body._id)}, stock);  
+      }else{
+        data = await client.db(dbName).collection("stocks").insertOne(stock);
+      }
+      res.redirect("/stock/infor?stock_id="+data._id); 
+
+  }finally{
+    await client.close();
+    
+  }
+})
 
 router.post('/delete',async (req,res,next) =>{
   try{
