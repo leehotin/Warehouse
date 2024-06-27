@@ -51,12 +51,12 @@ router.get('/info', async(req,res,next)=>{
 
 router.post('/delete',async (req,res,next) =>{
     try{
-        let productId = new ObjectId(req.body.id);
+        let id = new ObjectId(req.body.id);
         await client.connect();
-        let product = await client.db(dbName).collection("products").find({_id:productId});
+        let product = await client.db(dbName).collection("products").find({_id:id});
         product.deleted_at = new Date();
-        await client.db(dbName).collection("products").replaceOne({_id:productId},product);
-        await client.db(dbName).collection("logs").insertOne({information:"Delete stock "+req.body.id,type:"delete",created_at:new Date(),updated_at:new Date()});
+        await client.db(dbName).collection("products").replaceOne({_id:id},product);
+        await client.db(dbName).collection("logs").insertOne({information:"Delete product "+product.product_id,type:"delete",created_at:new Date(),updated_at:new Date()});
         res.redirect("/product");
     }finally{
         await client.close();

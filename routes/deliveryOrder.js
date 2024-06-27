@@ -57,10 +57,11 @@ router.get('/', async (req, res, next) =>{
 
 router.post('/delete',async (req,res,next) =>{
   try{
-    let deliveryNoteId = req.body.delivery_id;
+    let id = new ObjectId(req.body.delivery_id);
     await client.connect();
-    await client.db(dbName).collection("delivery_notes").deleteOne({_id: new ObjectId(deliveryNoteId)});
-    await client.db(dbName).collection("logs").insertOne({information:"Delete stock "+deliveryNoteId,type:"delete",created_at:new Date(),updated_at:new Date()});
+    let deliveryNote = await client.db(dbName).collection("delivery_notes").find({_id: id});
+    await client.db(dbName).collection("delivery_notes").deleteOne({_id: id});
+    await client.db(dbName).collection("logs").insertOne({information:"Delete deliveryNote "+deliveryNote.delivery_id,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/deliveryOrder");
   }finally{
     await client.close();

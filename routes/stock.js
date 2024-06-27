@@ -62,10 +62,11 @@ router.get('/info', async (req, res,next) => {
 
 router.post('/delete',async (req,res,next) =>{
   try{
-    let stockId = req.body.stock_id;
+    let id = new ObjectId(req.body.stock_id);
     await client.connect();
-    await client.db(dbName).collection("stocks").deleteOne({_id:new ObjectId(stockId)});
-    await client.db(dbName).collection("logs").insertOne({information:"Delete stock "+stockId,type:"delete",created_at:new Date(),updated_at:new Date()});
+    let stock = await client.db(dbName).collection("stocks").find({_id: id}).toArray();
+    await client.db(dbName).collection("stocks").deleteOne({_id: id});
+    await client.db(dbName).collection("logs").insertOne({information: `Delete stock area: ${stock.area},name: ${stock.name}.`,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/stock");
   }finally{
     await client.close();
