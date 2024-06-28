@@ -6,7 +6,7 @@
     <title>Stock Enquiry</title>
 </head>
 <body>
-    <h1>Stock Enquiry</h1>
+    <h1>Stock Location Enquiry</h1>
     <form action="/stock/save" method="post">
         <input type="text" name="_id" value="<%= stock_data._id %>" hidden>
         <div>
@@ -37,9 +37,15 @@
         <button type="submit"> Store at </button>
     </form>
 
+    <form action="/stock/delete" method="post" class="d-inline">
+        <input type="text" value="<%= stock_data._id %>" name="stock_id" hidden />
+        <input type="submit" class="btn btn-warning" value="delete">   
+    </form>
+    
     <!-- Display stock information here -->
     <div id="stock-info">
         <!-- Stock ID, Region, Stock Location will be populated dynamically -->
     </div>
+
 </body>
 </html>
