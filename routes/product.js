@@ -18,7 +18,7 @@ router.get('/info', async(req,res,next)=>{
         const products = client.db(dbName).collection("products");
         let data = await products.aggregate([ // join table
             {
-                $match: { _id: new ObjectId('667a117da384de34623892b6')} //找出符合條件的products
+                $match: { _id: ObjectId.createFromHexString('667a117da384de34623892b6')} //找出符合條件的products
             },
             {
                 $lookup:{
@@ -51,7 +51,7 @@ router.get('/info', async(req,res,next)=>{
 
 router.post('/delete',async (req,res,next) =>{
     try{
-        let id = new ObjectId(req.body.id);
+        let id = ObjectId.createFromHexString(req.body.id);
         await client.connect();
         let product = await client.db(dbName).collection("products").findOne({_id:id});
         product.deleted_at = new Date();

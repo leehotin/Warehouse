@@ -9,35 +9,38 @@
                 <div class="col">
                     <a href="/" class="btn btn-primary">index</a>
                 </div>
+                <div class="col">
+                    <a href="/stock/create" class="btn btn-primary">Create User</a>
+                </div>
             </div>
             <div class="row">
                 <label class="fs-4">Search data:</label>
                 <form action="/stock" method="get" class="border m-1">
                     <div class="row">
                         <div class="col-2">
-                            Stock area: 
+                            <label for="area">Stock area:</label>
                         </div>
                         <div class="col-10">
-                            <input type="text" name="area" class="form-control">
+                            <input type="text" id="area" name="area" class="form-control" placeholder="Stock Area">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2">
-                            Stock Shelf: 
+                            <label for="name">Stock Shelf:</label>
                         </div>
                         <div class="col-10">
-                            <input type="text" name="name" class="form-control">
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Stock Shelf">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2">
-                            id:
+                            <label>id:</label>
                         </div>
                         <div class="col-10">
-                            <input type="radio" name="stock_id" value="1">asc
-                            <input type="radio" name="stock_id" value="-1">desc
+                            <input type="radio" name="stock_id" value="1">Asc
+                            <input type="radio" name="stock_id" value="-1">Desc
                         </div>
                     </div>
 

@@ -15,6 +15,17 @@ router.get('/', async (req, res, next)=>{
   try{
     await client.connect();
 
+    const roles = [
+      {
+        display_name: "Admin",
+        value: "0"
+      },
+      {
+        display_name: "User",
+        value: "1"
+      },
+    ]
+
     let whereData = {};
 
     if (typeof req.query.user_id !== "undefined" &&req.query.user_id != ""){
@@ -29,9 +40,7 @@ router.get('/', async (req, res, next)=>{
 
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    console.log(data);
-
-    res.render('user/index',{datas:data});
+    res.render('user/index',{datas:data,roles: roles});
   }finally{
     await client.close();
   }
@@ -41,7 +50,7 @@ router.get('/info/:id', async (req, res, next)=>{
   // read user info
   try{
     await client.connect();
-    let data = await client.db(dbName).collection('users').findOne({_id: new ObjectId(req.params.id)});
+    let data = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.params.id)});
     const roles = [
       {
         display_name: "Admin",
@@ -52,7 +61,7 @@ router.get('/info/:id', async (req, res, next)=>{
         value: "1"
       },
     ]
-    console.log('check:',data);
+
     res.render('user/info',{data:data,roles:roles});
   }finally{
     await client.close();
@@ -82,7 +91,7 @@ router.get('/login', async (req,res,next) => {
     errorMessage = req.session.errorMessage
   }
   req.session.errorMessage = null;
-  console.log(errorMessage);
+
   res.render('user/login',{errorMessage: errorMessage});
 });
 
@@ -119,29 +128,35 @@ router.post('/save', async (req,res,next)=>{
     let user = {};
 
     if (typeof req.body.id !=="undefined" &&req.body.id !=""){
-        user._id = new ObjectId(req.body.id);
+        user._id = ObjectId.createFromHexString(req.body.id);
     }
 
-    user.user_id = req.body.user_id;
+    user.user_id = req.body.user_id??'';
     user.username = req.body.username;
     if (typeof req.body.password !=="undefined" && req.body.password !="" && typeof req.body.confirm_password !=="undefined" && req.body.confirm_password !=""){
       if(req.body.password === req.body.confirm_password){
         user.password = req.body.password;
       }
     }
-    user.name = req.body.name;
-    user.role = req.body.role; 
-    user.created_at = new Date();
+    user.name = req.body.name??'';
+    user.role = req.body.role??'1'; 
+    if(!user._id){
+      user.created_at = new Date();
+    }
     user.updated_at = new Date();
-    console.log(user);
+
     let data = {};
     if (typeof user._id !=="undefined" && user._id != ""){
-      data = await client.db(dbName).collection("users").replaceOne({_id: new ObjectId(req.body.id)}, user);
-      data = await client.db(dbName).collection("users").findOne({_id:new ObjectId(req.body.id)});
+      data = await client.db(dbName).collection("users").replaceOne({_id: ObjectId.createFromHexString(req.body.id)}, user);
+      data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
     }else{
-      data = await client.db(dbName).collection("users").insertOne(user);
-      await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
-      data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
+      if(user.password && user.username){
+        data = await client.db(dbName).collection("users").insertOne(user);
+        await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
+        data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
+      }else{
+        res.redirect('/users/create');
+      }
     }
 
     res.redirect(`/users/info/${data._id}`);
@@ -152,7 +167,7 @@ router.post('/save', async (req,res,next)=>{
 
 router.post('/delete',async (req,res,next) =>{
   try{
-    let id = new ObjectId(req.body.user_id);
+    let id = ObjectId.createFromHexString(req.body.user_id);
     await client.connect();
     let user = await client.db(dbName).collection("users").findOne({_id: id});
     await client.db(dbName).collection("users").deleteOne({_id: id});
