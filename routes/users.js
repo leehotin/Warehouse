@@ -29,8 +29,6 @@ router.get('/', async (req, res, next)=>{
 
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    console.log(data);
-
     res.render('user/index',{datas:data});
   }finally{
     await client.close();
@@ -52,7 +50,7 @@ router.get('/info/:id', async (req, res, next)=>{
         value: "1"
       },
     ]
-    console.log('check:',data);
+
     res.render('user/info',{data:data,roles:roles});
   }finally{
     await client.close();
@@ -82,7 +80,7 @@ router.get('/login', async (req,res,next) => {
     errorMessage = req.session.errorMessage
   }
   req.session.errorMessage = null;
-  console.log(errorMessage);
+
   res.render('user/login',{errorMessage: errorMessage});
 });
 
@@ -133,7 +131,7 @@ router.post('/save', async (req,res,next)=>{
     user.role = req.body.role; 
     user.created_at = new Date();
     user.updated_at = new Date();
-    console.log(user);
+
     let data = {};
     if (typeof user._id !=="undefined" && user._id != ""){
       data = await client.db(dbName).collection("users").replaceOne({_id: ObjectId.createFromHexString(req.body.id)}, user);

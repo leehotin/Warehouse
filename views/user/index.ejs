@@ -8,6 +8,7 @@
             <div class="row my-1">
                 <div class="col">
                     <a href="/" class="btn btn-primary">index</a>
+                    <a href="/users/create" class="btn btn-primary">Create User</a>
                 </div>
             </div>
             <div class="row">
@@ -15,28 +16,28 @@
                 <form action="/users" method="get" class="border m-1">
                     <div class="row">
                         <div class="col-2">
-                            user Id: 
+                            <label for="user_id">user Id: </label>
                         </div>
                         <div class="col-10">
-                            <input type="text" name="user_id" class="form-control">
+                            <input type="text" id="user_id" name="user_id" class="form-control" placeholder="User Id">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2">
-                            Name: 
+                            <label for="name">Name:</label>
                         </div>
                         <div class="col-10">
-                            <input type="text" name="name" class="form-control">
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Name">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2">
-                            Role:
+                            <label for="role">Role:</label>
                         </div>
                         <div class="col-10">
-                            <input type="text" name="role" class="form-control">
+                            <input type="text" id="role" name="role" class="form-control" placeholder="Role">
                         </div>
                     </div>
 
