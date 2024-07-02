@@ -17,6 +17,7 @@ router.get('/', async (req, res, next) =>{
     let sort = {
       _id: req.query.stock_id?req.query.stock_id:1,
     };
+    
     //where by data
     let whereData = {};
 
