@@ -21,10 +21,13 @@ router.get('/', async (req, res, next) =>{
     let whereData = {};
 
     if (typeof req.query.name !== "undefined" &&req.query.name != ""){
-      whereData.name = req.query.name;
+      whereData.name = {};
+      whereData.name.$regex = ".*"+req.query.name+".*";
     }
     if (typeof req.query.area !== "undefined" &&req.query.area != ""){
-      whereData.area = req.query.area;
+      if(req.query.area.toUpperCase() =="A1" || req.query.area.toUpperCase() =="A2" || req.query.area.toUpperCase() =="A3"){
+        whereData.area = req.query.area.toUpperCase();
+      }
     }
     
     let data = await client.db(dbName).collection("stocks").find(whereData,{sort:sort}).toArray();
