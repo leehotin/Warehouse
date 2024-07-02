@@ -34,7 +34,8 @@
             </div>
         </div>
         
-        <button type="submit"> Store at </button>
+        <input type="submit" value="<%= data._id? 'update' : 'create' %>" class="btn btn-primary m-1">
+
     </form>
 
     <form action="/stock/delete" method="post" class="d-inline">

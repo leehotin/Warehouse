@@ -60,6 +60,10 @@ router.get('/info', async (req, res,next) => {
   }
 });
 
+router.get('/create',(req,res,next)=>{
+  res.render('stock/enquiry', {stock_data: []});
+})
+
 router.post('/save', async (req,res,next) =>{
   try{
     await client.connect();
@@ -86,7 +90,8 @@ router.post('/save', async (req,res,next) =>{
   }finally{
     await client.close();
   }
-})
+});
+
 router.post('/delete',async (req,res,next) =>{
   try{
     let id = new ObjectId(req.body.stock_id);
