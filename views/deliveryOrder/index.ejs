@@ -9,87 +9,16 @@
             <div class="row">
                 <label class="fs-4">Search data:</label>
                 <form action="/deliveryOrder" method="get" class="border m-1">
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="delivery_id">Delivery Id: </label>
+                    <% for(let data of search){ %>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="<%= data.name %>"><%= data.displayName %></label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
+                            </div>
                         </div>
-                        <div class="col-10">
-                            <input type="text" id="delivery_id" name="delivery_id" class="form-control" placeholder="Delivery Id">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="company">Company:</label> 
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="company" name="company" class="form-control" placeholder="Company">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="address">Address:</label> 
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="address" name="address" class="form-control" placeholder="Address">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="phone">Phone:</label> 
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="type">Delivery Type:</label> 
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="type" name="type" class="form-control" placeholder="Delivery Type">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="delivery_check">Delivery Check:</label> 
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="delivery_check" name="delivery_check" class="form-control" placeholder="Delivery Check">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="delivery_user">Delivery User: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="delivery_user" name="delivery_user" class="form-control" placeholder="Delivery User">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="delivery_at">Delivery At:</label> 
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="delivery_at" name="delivery_at" class="form-control" placeholder="Delivery At">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2">
-                            id:
-                        </div>
-                        <div class="col-10">
-                            <input type="radio" name="id" value="1">Asc
-                            <input type="radio" name="id" value="-1">Desc
-                        </div>
-                    </div>
+                    <% } %>
 
                     <input type="submit" value="submit" class="btn btn-primary">
                 </form>
@@ -121,6 +50,11 @@
                     edit
                 </div>
             </div>
+            <% if(datas == []){ %>
+                <div class="row py-1 border-bottom border-dark text-center">
+                    <label>Not have user</label>
+                </div>
+            <% } %>
             <% for(data of datas){ %>
                 <div class="row py-2 border-bottom border-dark">
                     <div class="col">

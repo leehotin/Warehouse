@@ -12,44 +12,31 @@ router.get('/', async (req, res, next) =>{
     try{
         await client.connect();
 
-        //sort by data
-        let sort = {
-          _id: req.query.id?req.query.id:1,
-        };
-
+        let search = [
+          {displayName: "Delivery Id:",name: "whereData['delivery_id']",placeholder: "Delivery Id",type: "text"},
+          {displayName: "Company:",name: "whereData['company']",placeholder: "Company",type: "text"},
+          {displayName: "Address:",name: "whereData['address']",placeholder: "Address",type: "text"},
+          {displayName: "Phone:",name: "whereData['phone']",placeholder: "Phone",type: "text"},
+          {displayName: "Delivery Type:",name: "whereData['type']",placeholder: "Delivery Type",type: "text"},
+          {displayName: "Delivery Check:",name: "whereData['delivery_check']",placeholder: "Delivery Check",type: "text"},
+          {displayName: "Delivery User:",name: "whereData['delivery_user']",placeholder: "Delivery User",type: "text"},
+          {displayName: "Delivery At:",name: "whereData['delivery_at']",placeholder: "Delivery At",type: "text"},
+        ];
+       
+        //where by data
         let whereData = {};
 
-        if (typeof req.query.delivery_id !== "undefined" &&req.query.delivery_id != ""){
-          whereData.delivery_id = req.query.delivery_id;
+        for(let data in req.query.whereData){
+          if(typeof req.query.whereData[data] !== "undefined" && req.query.whereData[data] != ""){
+            whereData[data] = req.query.whereData[data];
+          }
         }
-        if (typeof req.query.company !== "undefined" &&req.query.company != ""){
-          whereData.company = req.query.company;
-        }
-        if (typeof req.query.address !== "undefined" &&req.query.address != ""){
-          whereData.address = req.query.address;
-        }
-        if (typeof req.query.phone !== "undefined" &&req.query.phone != ""){
-          whereData.phone = req.query.phone;
-        }
-        if (typeof req.query.type !== "undefined" &&req.query.type != ""){
-          whereData.type = req.query.type;
-        }
-        if (typeof req.query.delivery_check !== "undefined" &&req.query.delivery_check != ""){
-          whereData.delivery_check = req.query.delivery_check;
-        }
-        if (typeof req.query.delivery_user !== "undefined" &&req.query.delivery_user != ""){
-          whereData.delivery_user = req.query.delivery_user;
-        }
-        if (typeof req.query.delivery_at !== "undefined" &&req.query.delivery_at != ""){
-          whereData.delivery_at = req.query.delivery_at;
-        }
-
 
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
-          sort:sort, projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
+          projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
 
-        res.render('deliveryOrder/index',{ datas: data });
+        res.render('deliveryOrder/index',{ datas: data, search: search});
       }finally{
         await client.close();
       }

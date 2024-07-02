@@ -29,7 +29,8 @@ router.get('/', async (req, res, next)=>{
     let whereData = {};
 
     if (typeof req.query.user_id !== "undefined" &&req.query.user_id != ""){
-      whereData.user_id = req.query.user_id;
+      whereData.user_id = {}
+      whereData.user_id.$regex = ".*"+req.query.user_id+".*";
     }
     if (typeof req.query.name !== "undefined" &&req.query.name != ""){
       whereData.name = req.query.name;
