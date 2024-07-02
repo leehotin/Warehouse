@@ -41,7 +41,7 @@ router.get('/info/:id', async (req, res, next)=>{
   // read user info
   try{
     await client.connect();
-    let data = await client.db(dbName).collection('users').findOne({_id: new ObjectId(req.params.id)});
+    let data = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.params.id)});
     const roles = [
       {
         display_name: "Admin",
@@ -119,7 +119,7 @@ router.post('/save', async (req,res,next)=>{
     let user = {};
 
     if (typeof req.body.id !=="undefined" &&req.body.id !=""){
-        user._id = new ObjectId(req.body.id);
+        user._id = ObjectId.createFromHexString(req.body.id);
     }
 
     user.user_id = req.body.user_id;
@@ -136,8 +136,8 @@ router.post('/save', async (req,res,next)=>{
     console.log(user);
     let data = {};
     if (typeof user._id !=="undefined" && user._id != ""){
-      data = await client.db(dbName).collection("users").replaceOne({_id: new ObjectId(req.body.id)}, user);
-      data = await client.db(dbName).collection("users").findOne({_id:new ObjectId(req.body.id)});
+      data = await client.db(dbName).collection("users").replaceOne({_id: ObjectId.createFromHexString(req.body.id)}, user);
+      data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
     }else{
       data = await client.db(dbName).collection("users").insertOne(user);
       await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
@@ -152,7 +152,7 @@ router.post('/save', async (req,res,next)=>{
 
 router.post('/delete',async (req,res,next) =>{
   try{
-    let id = new ObjectId(req.body.user_id);
+    let id = ObjectId.createFromHexString(req.body.user_id);
     await client.connect();
     let user = await client.db(dbName).collection("users").findOne({_id: id});
     await client.db(dbName).collection("users").deleteOne({_id: id});
