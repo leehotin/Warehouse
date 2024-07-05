@@ -1,39 +1,35 @@
 <!DOCTYPE html>
-   <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title><%= 4角有限公司 %></title>
-      </head>
-      <body>
-          <h1>4角有限公司</h1>
-          
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse In Out system</title>
+</head>
+<body>
+    <h1>4角有限公司</h1>
+    
+<table>
+  <tr>
+    <th>Product</th>
+    <th>Type</th>
+    <th>Brand</th>
+    <th>Origin</th>
+    <th>Count</th>
+  </tr>
+  <tr>
+    
+    <td><input type="text" id="data.Name" name="data.Name" value="1" placeholder="data.Name" required></td>
+    </div>
+    <input type="text" id="type" name="type" value="<%= data.Type %>" placeholder="Stock ID" required><%= data.Type %></td>
+    <input type="text" id="Brand" name="Brand" value="<%= data.Brand %>" placeholder="Stock ID" required><%= data.Brand %></td>
+    <td><%= data.Type %></td>
+    <td><%= data.Brand %></td>
+    <td><%= data.Origin %></td>
+    <td><%= data.Count %></td>
+  </tr>
+</table>
 
-      <table>
-        <tr>
-          <th>Product</th>
-          <th>Type</th>
-          <th>Brand</th>
-          <th>Origin</th>
-          <th>Count</th>
-        </tr>
-        <tr>
-          <td>%=</td>
-          <td>Maria Anders</td>
-          <td>Germany</td>
-          <td>Germany</td>
-          <td>Germany</td>
-        </tr>
-        <tr>
-          <td>Centro comercial Moctezuma</td>
-          <td>Francisco Chang</td>
-          <td>Mexico</td>
-          <td>Germany</td>
-          <td>Germany</td>
-        </tr>
-      </table>
+<a href="/products">Back to Products List</a>
 
-      <a href="/products">Back to Products List</a>
-
-    </body>
-      </html>
+</body>
+</html>

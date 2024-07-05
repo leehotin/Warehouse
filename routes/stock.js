@@ -7,9 +7,9 @@ const ObjectId = require('mongodb').ObjectId;
 const client = new MongoClient("mongodb://localhost:27017/");
 
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
-const dbName = "Warehouse_In_Out_System";
+const dbName = "Warehouse-In_Out_system";
 
-router.get('/',checkLogin, async (req, res, next) =>{
+router.get('/', async (req, res, next) =>{
   try{
     await client.connect();
 
@@ -40,7 +40,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
 });
 
 // Route to get stock data
-router.get('/info',checkLogin, async (req, res,next) => {
+router.get('/info', async (req, res,next) => {
   try {
     await client.connect();
 

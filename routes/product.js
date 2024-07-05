@@ -29,20 +29,11 @@ router.get('/info', async (req,res,next)=>{
                 }
             },
             {
-                $project: {  //顯示格式
-                    _id: 1,
-                    product_id: 1,
-                    name: 1,
-                    count: 1,
-                    stocks: 1,
-                    data: {$concat:[ "$product_id" ," ","$name"]} //合併內容
-                }
-            },
-            {
                 $limit: 1 //輸出數量
             }
         ]).toArray();
-        res.render('product/info');
+        console.log(data);
+        res.render('product/info',{data:data[0]});
     }finally{
         await client.close();
     }
