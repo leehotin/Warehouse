@@ -10,7 +10,7 @@ const client = new MongoClient("mongodb://localhost:27017/");
 const dbName = "Warehouse_In_Out_System";
 
 /* GET users listing. */
-router.get('/', async (req, res, next)=>{
+router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
     await client.connect();
@@ -47,7 +47,7 @@ router.get('/', async (req, res, next)=>{
   }
 });
 
-router.get('/info/:id', async (req, res, next)=>{
+router.get('/info/:id',checkLogin, async (req, res, next)=>{
   // read user info
   try{
     await client.connect();
@@ -69,7 +69,7 @@ router.get('/info/:id', async (req, res, next)=>{
   }
 });
 
-router.get('/create', async (req, res, next)=>{
+router.get('/create',checkLogin, (req, res, next)=>{
   // create user info
   const roles = [
     {
@@ -86,7 +86,7 @@ router.get('/create', async (req, res, next)=>{
 
 });
 
-router.get('/login', async (req,res,next) => {
+router.get('/login', (req,res,next) => {
   let errorMessage = '';
   if(req.session.errorMessage){
     errorMessage = req.session.errorMessage
@@ -115,7 +115,7 @@ router.post('/login', async(req,res,next)=>{
   }
 });
 
-router.post('/logout', (req,res,next)=>{
+router.post('/logout',checkLogin, (req,res,next)=>{
   req.session.destroy(() => {
     console.log('session destroyed');
   })
@@ -166,7 +166,7 @@ router.post('/save', async (req,res,next)=>{
   }
 });
 
-router.post('/delete',async (req,res,next) =>{
+router.post('/delete',checkLogin,async (req,res,next) =>{
   try{
     let id = ObjectId.createFromHexString(req.body.user_id);
     await client.connect();
@@ -178,5 +178,22 @@ router.post('/delete',async (req,res,next) =>{
     await client.close();
   }
 });
+
+async function checkLogin(req,res,next){
+  try{
+    if(req.session.user_id){
+      await client.connect();
+      let user = await client.db(dbName).collection('users').findOne({_id: req.session.user_id});
+      if(user.length() == 1){
+        req.session.user_id = user._id;
+        req.session.role = user.role;
+        return next();
+      }
+    }
+    return res.redirect('/users/login');
+  }finally{
+    await client.close();
+  }
+}
 
 module.exports = router;

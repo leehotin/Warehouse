@@ -8,11 +8,11 @@ const client = new MongoClient("mongodb://localhost:27017/");
 const dbName = "Warehouse_In_Out_System";
 
 
-router.get('/', function(req, res, next) {
+router.get('/',checkLogin, function(req, res, next) {
   
 });
 
-router.get('/info', async(req,res,next)=>{
+router.get('/info',checkLogin, async(req,res,next)=>{
     try{
         await client.connect();
         const products = client.db(dbName).collection("products");
@@ -49,7 +49,7 @@ router.get('/info', async(req,res,next)=>{
     }
 });
 
-router.post('/delete',async (req,res,next) =>{
+router.post('/delete',checkLogin,async (req,res,next) =>{
     try{
         let id = ObjectId.createFromHexString(req.body.id);
         await client.connect();
@@ -62,5 +62,22 @@ router.post('/delete',async (req,res,next) =>{
         await client.close();
     }
 });
+
+async function checkLogin(req,res,next){
+    try{
+      if(req.session.user_id){
+        await client.connect();
+        let user = await client.db(dbName).collection('users').findOne({_id: req.session.user_id});
+        if(user.length() == 1){
+          req.session.user_id = user._id;
+          req.session.role = user.role;
+          return next();
+        }
+      }
+      return res.redirect('/users/login');
+    }finally{
+      await client.close();
+    }
+}
 
 module.exports = router;

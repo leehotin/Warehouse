@@ -9,7 +9,7 @@ const client = new MongoClient("mongodb://localhost:27017/");
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
 const dbName = "Warehouse_In_Out_System";
 
-router.get('/', async (req, res, next) =>{
+router.get('/',checkLogin, async (req, res, next) =>{
   try{
     await client.connect();
 
@@ -40,7 +40,7 @@ router.get('/', async (req, res, next) =>{
 });
 
 // Route to get stock data
-router.get('/info', async (req, res,next) => {
+router.get('/info',checkLogin, async (req, res,next) => {
   try {
     await client.connect();
 
@@ -64,11 +64,11 @@ router.get('/info', async (req, res,next) => {
   }
 });
 
-router.get('/create',(req,res,next)=>{
+router.get('/create',checkLogin,(req,res,next)=>{
   res.render('stock/enquiry', {stock_data: []});
 })
 
-router.post('/save', async (req,res,next) =>{
+router.post('/save',checkLogin, async (req,res,next) =>{
   try{
     await client.connect();
     let stock = {};
@@ -96,7 +96,7 @@ router.post('/save', async (req,res,next) =>{
   }
 });
 
-router.post('/delete',async (req,res,next) =>{
+router.post('/delete',checkLogin,async (req,res,next) =>{
   try{
     let id = ObjectId.createFromHexString(req.body.stock_id);
     await client.connect();
@@ -108,4 +108,22 @@ router.post('/delete',async (req,res,next) =>{
     await client.close();
   }
 });
+
+async function checkLogin(req,res,next){
+  try{
+    if(req.session.user_id){
+      await client.connect();
+      let user = await client.db(dbName).collection('users').findOne({_id: req.session.user_id});
+      if(user.length() == 1){
+        req.session.user_id = user._id;
+        req.session.role = user.role;
+        return next();
+      }
+    }
+    return res.redirect('/users/login');
+  }finally{
+    await client.close();
+  }
+}
+
 module.exports = router;
