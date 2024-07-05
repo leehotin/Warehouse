@@ -1,52 +1,64 @@
 var express = require('express');
 var router = express.Router();
-const { ObjectId } = require('mongodb'); // Import ObjectId for querying by _id
+const {MongoClient, ObjectId} = require('mongodb'); // Import ObjectId for querying by _id
 
-const MongoClient = require('mongodb').MongoClient;
+//const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient("mongodb://localhost:27017/");
-const dbName = "Warehouse_In_Out_System";
+const dbName = "Warehouse-In_Out_system";
 
-const ObjectId = require('mongodb').ObjectId;
+// var ObjectId = require('mongodb').ObjectId;
 
-router.get('/products_rec', async (req, res, next) => {
-    try {
-        const { _id } = req.query; // Extract _id from query parameters
-        if (!_id) {
-            res.status(400).send('Missing _id ');
-            return;
-        }
+// router.get('/products_rec', async (req, res, next) => {
+//     try {
+//         const { _id } = req.query; // Extract _id from query parameters
+//         if (!(_id)) {
+//             res.status(400).send('Missing _id ');
 
-        const client = new MongoClient(mongoUrl, { useNewUrlParser: true });
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection('products'); // Replace with your actual collection name
+//             return;
+//         }
 
-        // Fetch product data based on _id
-        const product = await collection.findOne({ _id: ObjectId(_id) });
+//         //const e = new MongoClient(client, { useNewUrlParser: true });
+//         await client.connect();
+        
+//         const db = client.db(dbName);
+//         const collection = db.collection('products'); // Replace with your actual collection name
+        
+//         const t = new ObjectId(_id);
+        
+//         //Fetch product data based on _id
+//         const product = await collection.findOne({ _id:t });
+       
+//         /*for(const i = 0 ; i <10 ; i++)
+//             for(const j = 0 ; j < 10 ; j ++)
+//                 console.log(i+":"+j);
+//         console.log("end");*/
 
-        if (!product) {
-            res.status(404).send('Product not found');
-            return;
-        }
+        
+//         console.log(product);
 
-        // Send the product data as JSON
-        res.json(product);
-    } catch (error) {
-        console.error('Error fetching product:', error);
-        res.status(500).send('Internal server error');
-    } finally {
-        client.close(); // Close the MongoDB connection
-    }
-});
+//         if (!product) {
+//             res.status(404).send('Product not found');
+//             return;
+//         }
 
-router.get('/info', async(req,res,next)=>{
+//         // Send the product data as JSON
+//         res.json(product);
+//     } catch (error) {
+//         console.error('Error fetching product:', error);
+//         res.status(500).send('Internal server error');
+//     } finally {
+//         client.close(); // Close the MongoDB connection
+//     }
+// });
+
+router.get('/info', async (req,res,next)=>{
     try{
         await client.connect();
         const products = client.db(dbName).collection("products");
         let data = await products.aggregate([ // join table
             {
-                $match: { _id: new ObjectId('667a117da384de34623892b6')} //找出符合條件的products
-            },
+                $match: { _id: new ObjectId('667cbf81ac08f2d70899ad0e')} //找出符合條件的products
+            }, 
             {
                 $lookup:{
                     from:"stocks", //目標table
@@ -69,8 +81,7 @@ router.get('/info', async(req,res,next)=>{
                 $limit: 1 //輸出數量
             }
         ]).toArray();
-
-        res.send({data:data});
+        res.render('/product/info');
     }finally{
         await client.close();
     }
