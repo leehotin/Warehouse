@@ -6,32 +6,55 @@
     <body>
         <div class="container">
             <a href="/" class="btn btn-primary">index</a>
-            <div class="row my-2 border-bottom border-dark">
-                <div class="col fw-bold fs-5">
+            <div class="row">
+                <label class="fs-4">Search data:</label>
+                <form action="/deliveryOrder" method="get" class="border m-1">
+                    <% for(let data of search){ %>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="<%= data.name %>"><%= data.displayName %></label>
+                            </div>
+                            <div class="col-10">
+                                <input type="text" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <input type="submit" value="submit" class="btn btn-primary">
+                </form>
+            </div>
+
+            <div class="row my-2 border-bottom border-dark bg-secondary-subtle">
+                <div class="col fw-bold fs-5 text-center">
                     id
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     type
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     company
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     phone
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     delivery check
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     delivery user
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     delivery at
                 </div>
-                <div class="col fw-bold fs-5">
+                <div class="col fw-bold fs-5 text-center">
                     edit
                 </div>
             </div>
+            <% if(datas.length == 0){ %>
+                <div class="row py-1 border-bottom border-dark text-center">
+                    <label>Not have user</label>
+                </div>
+            <% } %>
             <% for(data of datas){ %>
                 <div class="row py-2 border-bottom border-dark">
                     <div class="col">
@@ -56,8 +79,11 @@
                         <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                     </div>
                     <div class="col">
-                        <a href="/stock/<%= data._id %>" class="btn btn-primary">edit</a>
-                        <a href="/stock/delete/<%= data._id %>" class="btn btn-warning">delete</a>   
+                        <a href="/deliveryOrder/<%= data._id %>" class="btn btn-primary">edit</a>
+                        <form action="/deliveryOrder/delete" method="post" class="d-inline">
+                            <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
+                            <input type="submit" class="btn btn-warning" value="delete">
+                        </form>
                     </div>
                 </div>
             <% } %>

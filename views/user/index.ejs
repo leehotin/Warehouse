@@ -10,64 +10,55 @@
                     <a href="/" class="btn btn-primary">index</a>
                 </div>
                 <div class="col">
-                    <a href="/stock/create" class="btn btn-primary">Create User</a>
+                    <a href="/users/create" class="btn btn-primary">Create User</a>
                 </div>
             </div>
             <div class="row">
                 <label class="fs-4">Search data:</label>
-                <form action="/stock" method="get" class="border m-1">
+                <form action="/users" method="get" class="border m-1">
                     <div class="row">
                         <div class="col-2">
-                            <label for="area">Stock area:</label>
+                            <label for="user_id">user Id: </label>
                         </div>
                         <div class="col-10">
-                            <input type="text" id="area" name="area" class="form-control" placeholder="Stock Area">
+                            <input type="text" id="user_id" name="user_id" class="form-control" placeholder="User Id">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2">
-                            <label for="name">Stock Shelf:</label>
+                            <label for="name">Name:</label>
                         </div>
                         <div class="col-10">
-                            <input type="text" id="name" name="name" class="form-control" placeholder="Stock Shelf">
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Name">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-2">
-                            <label>id:</label>
+                            <label for="role">Role:</label>
                         </div>
                         <div class="col-10">
-                            <input type="radio" name="stock_id" value="1">Asc
-                            <input type="radio" name="stock_id" value="-1">Desc
+                            <% for(role of roles){ %>
+                                <input type="radio" id="<%=role.display_name %>" name="role" value="<%= role.value %>">
+                                <label for="<%= role.display_name %>"><%= role.display_name %></label><br>
+                            <% } %>
                         </div>
                     </div>
 
                     <input type="submit" value="submit" class="btn btn-primary">
                 </form>
             </div>
-            <div class="row my-1 border-bottom border-dark">
-                <div class="col-3">
-
-                </div>
-                <div class="col-6 fw-bold fs-5 text-center">
-                    stock
-                </div>
-                <div class="col-3">
-
-                </div>
-            </div>
 
             <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
                 <div class="col-3 fw-bold fs-5 text-center">
-                    id
+                    user Id
                 </div>
                 <div class="col-3 fw-bold fs-5 text-center">
-                    area
+                    name
                 </div>
                 <div class="col-3 fw-bold fs-5 text-center">
-                    shelf
+                    role
                 </div>
                 <div class="col-3 fw-bold fs-5 text-center">
                     edit
@@ -81,18 +72,18 @@
             <% for(data of datas){ %>
                 <div class="row py-1 border-bottom border-dark">
                     <div class="col text-center">
-                        <%= data.stock_id %>
-                    </div>
-                    <div class="col text-center">
-                        <%= data.area %>
+                        <%= data.user_id %>
                     </div>
                     <div class="col text-center">
                         <%= data.name %>
                     </div>
                     <div class="col text-center">
-                        <a href="/stock/info?stock_id=<%= data._id %>" class="btn btn-primary">edit</a>
-                        <form action="/stock/delete" method="post" class="d-inline">
-                            <input type="text" value="<%= data._id %>" name="stock_id" hidden />
+                        <%= data.role==0? 'Admin' : data.role==1? 'User' : 'error' %>
+                    </div>
+                    <div class="col text-center">
+                        <a href="/users/info/<%= data._id %>" class="btn btn-primary">edit</a>
+                        <form action="/users/delete" method="post" class="d-inline">
+                            <input type="text" value="<%= data._id %>" name="user_id" hidden />
                             <input type="submit" class="btn btn-warning" value="delete">   
                         </form>
                     </div>
