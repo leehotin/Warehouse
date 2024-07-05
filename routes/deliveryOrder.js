@@ -13,14 +13,14 @@ router.get('/',checkLogin, async (req, res, next) =>{
         await client.connect();
 
         let search = [
-          {displayName: "Delivery Id:",name: "whereData['delivery_id']",placeholder: "Delivery Id",type: "text"},
-          {displayName: "Company:",name: "whereData['company']",placeholder: "Company",type: "text"},
-          {displayName: "Address:",name: "whereData['address']",placeholder: "Address",type: "text"},
-          {displayName: "Phone:",name: "whereData['phone']",placeholder: "Phone",type: "text"},
-          {displayName: "Delivery Type:",name: "whereData['type']",placeholder: "Delivery Type",type: "text"},
-          {displayName: "Delivery Check:",name: "whereData['delivery_check']",placeholder: "Delivery Check",type: "radio",data:[{display_value:"not finish",value:"0"},{display_value:"Finish",value:"1"}]},
-          {displayName: "Delivery User:",name: "whereData['delivery_user']",placeholder: "Delivery User",type: "text"},
-          {displayName: "Delivery At:",name: "whereData['delivery_at']",placeholder: "Delivery At",type: "text"},
+          {displayName: "Delivery Id:",name: "whereData[delivery_id]",placeholder: "Delivery Id",type: "text"},
+          {displayName: "Company:",name: "whereData[company]",placeholder: "Company",type: "text"},
+          {displayName: "Address:",name: "whereData[address]",placeholder: "Address",type: "text"},
+          {displayName: "Phone:",name: "whereData[phone]",placeholder: "Phone",type: "text"},
+          {displayName: "Delivery Type:",name: "whereData[type]",placeholder: "Delivery Type",type: "text"},
+          {displayName: "Delivery Check:",name: "whereData[delivery_check]",placeholder: "Delivery Check",type: "radio",data:[{display_value:"Finish",value:"1"},{display_value:"not finish",value:"0"}]},
+          {displayName: "Delivery User:",name: "whereData[delivery_user]",placeholder: "Delivery User",type: "text"},
+          {displayName: "Delivery At:",name: "whereData[delivery_at]",placeholder: "Delivery At",type: "text"},
         ];
        
         //where by data
@@ -31,7 +31,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
             whereData[data] = req.query.whereData[data];
           }
         }
-        console.log(whereData.delivery_check);
+
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
           projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
