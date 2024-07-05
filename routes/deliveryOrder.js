@@ -18,7 +18,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
           {displayName: "Address:",name: "whereData['address']",placeholder: "Address",type: "text"},
           {displayName: "Phone:",name: "whereData['phone']",placeholder: "Phone",type: "text"},
           {displayName: "Delivery Type:",name: "whereData['type']",placeholder: "Delivery Type",type: "text"},
-          {displayName: "Delivery Check:",name: "whereData['delivery_check']",placeholder: "Delivery Check",type: "text"},
+          {displayName: "Delivery Check:",name: "whereData['delivery_check']",placeholder: "Delivery Check",type: "radio",data:[{display_value:"not finish",value:"0"},{display_value:"Finish",value:"1"}]},
           {displayName: "Delivery User:",name: "whereData['delivery_user']",placeholder: "Delivery User",type: "text"},
           {displayName: "Delivery At:",name: "whereData['delivery_at']",placeholder: "Delivery At",type: "text"},
         ];
@@ -31,7 +31,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
             whereData[data] = req.query.whereData[data];
           }
         }
-
+        console.log(whereData.delivery_check);
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
           projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
@@ -56,19 +56,19 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 });
 
 async function checkLogin(req,res,next){
-  try{
-    if(req.session.user_id){
-      await client.connect();
-      let user = await client.db(dbName).collection('users').findOne({_id: req.session.user_id});
-      if(user.length() == 1){
-        req.session.user_id = user._id;
-        req.session.role = user.role;
-        return next();
-      }
-    }
-    return res.redirect('/users/login');
-  }finally{
+  if(req.session.user_id){
+    await client.connect();
+    let user = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.session.user_id)});
     await client.close();
+    if(user){
+      req.session.user_id = user._id;
+      req.session.role = user.role;
+      return next();
+    }else{
+      return res.redirect('/users/login');
+    }
+  }else{
+    return res.redirect('/users/login');
   }
 }
 

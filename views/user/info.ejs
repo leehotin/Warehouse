@@ -71,7 +71,7 @@
                     <label>role:</label>
                 </div>
                 <div class="col">
-                    <% for(role of roles){ %>
+                    <% for(let role of roles){ %>
                         <input type="radio" id="<%=role.display_name %>" name="role" value="<%= role.value %>" <%= role.value==data.role? "checked": "" %> >
                         <label for="<%= role.display_name %>"><%= role.display_name %></label><br>
                     <% } %>

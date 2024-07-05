@@ -14,9 +14,19 @@
                             <div class="col-2">
                                 <label for="<%= data.name %>"><%= data.displayName %></label>
                             </div>
-                            <div class="col-10">
-                                <input type="text" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
-                            </div>
+                            <% if( data.type == 'text'){ %>
+                                <div class="col-10">
+                                    <input type="text" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
+                                </div>
+                            <% } %>
+                            <% if( data.type == 'radio'){ %>
+                                <div class="col-10">
+                                    <% for (let radio of data.data){ %>
+                                        <input type="radio" id="<%= radio.display_value %>" name="<%= data.name %>" value="<%= radio.value %>">
+                                        <label for="<%= radio.display_value %>"><%= radio.display_value %></label>
+                                    <% } %>
+                                </div>
+                            <% } %>
                         </div>
                     <% } %>
 

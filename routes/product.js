@@ -64,20 +64,20 @@ router.post('/delete',checkLogin,async (req,res,next) =>{
 });
 
 async function checkLogin(req,res,next){
-    try{
-      if(req.session.user_id){
-        await client.connect();
-        let user = await client.db(dbName).collection('users').findOne({_id: req.session.user_id});
-        if(user.length() == 1){
-          req.session.user_id = user._id;
-          req.session.role = user.role;
-          return next();
-        }
-      }
-      return res.redirect('/users/login');
-    }finally{
+    if(req.session.user_id){
+      await client.connect();
+      let user = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.session.user_id)});
       await client.close();
+      if(user){
+        req.session.user_id = user._id;
+        req.session.role = user.role;
+        return next();
+      }else{
+        return res.redirect('/users/login');
+      }
+    }else{
+      return res.redirect('/users/login');
     }
-}
+  }
 
 module.exports = router;
