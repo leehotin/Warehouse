@@ -28,7 +28,11 @@ router.get('/',checkLogin, async (req, res, next) =>{
 
         for(let data in req.query.whereData){
           if(typeof req.query.whereData[data] !== "undefined" && req.query.whereData[data] != ""){
-            whereData[data] = req.query.whereData[data];
+            if(req.query.whereData[data]==="1")
+              whereData[data] = 1 ;
+            else whereData[data] = req.query.whereData[data] ;
+            //whereData[data] = req.query.whereData[data];
+            //console.log(typeof(whereData[data]));
           }
         }
 
