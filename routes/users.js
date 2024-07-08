@@ -110,8 +110,9 @@ router.get('/login', (req,res,next) => {
 router.post('/login', async(req,res,next)=>{
   try{
     await client.connect();
+
     let user = await client.db(dbName).collection('users').findOne({username: req.body.username,password: req.body.password});
-    
+
     if(user){
       req.session.user_id = user._id;
       req.session.role = user.role;
@@ -159,7 +160,7 @@ router.post('/save',checkLogin, async (req,res,next)=>{
 
     let data = {};
     if (typeof user._id !=="undefined" && user._id != ""){
-      data = await client.db(dbName).collection("users").replaceOne({_id: ObjectId.createFromHexString(req.body.id)}, user);
+      data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
       data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
     }else{
       if(user.password && user.username){
