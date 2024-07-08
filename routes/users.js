@@ -156,7 +156,8 @@ router.post('/save',checkLogin, async (req,res,next)=>{
         await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
         data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
       }else{
-        res.redirect('/users/create');
+        console.log('test');
+        return res.redirect('/users/create');
       }
     }
 
