@@ -5,91 +5,113 @@
     </head>
     <body>
         <div class="container">
-            <div class="row my-1">
-                <div class="col">
-                    <a href="/" class="btn btn-primary">index</a>
-                </div>
-                <div class="col">
-                    <a href="/users/create" class="btn btn-primary">Create User</a>
-                </div>
-            </div>
             <div class="row">
-                <label class="fs-4">Search data:</label>
-                <form action="/users" method="get" class="border m-1">
+                <div class="col-2">
+                    <div class="list-group list-group-flush text-center">
+                        <a href="/" class="list-group-item">Index</a>
+                        <a href="/productlist" class="list-group-item">Products</a>
+                        <a href="/stock" class="list-group-item">Stocks</a>
+                        <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
+                        <a href="/user" class="list-group-item disabled" disabled>Users</a>
+                        <button type="submit" form="logout" class="list-group-item">Logout</button>
+                    </div>
+                    
+                    <form action="/user/logout" method="post" id="logout">
+                    </form>  
+                </div>
+                <div class="col-10">
+                    <div class="row my-1">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">User</li>
+                            </ol>
+                        </div>
+                        <div class="col">
+                            <a href="/user/create" class="btn btn-primary">Create User</a>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-2">
-                            <label for="user_id">user Id: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="user_id" name="user_id" class="form-control" placeholder="User Id">
-                        </div>
-                    </div>
+                        <label class="fs-4">Search data:</label>
+                        <form action="/user" method="get" class="border m-1">
+                            <div class="row my-1">
+                                <div class="col-2">
+                                    <label for="user_id">user Id: </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" id="user_id" name="user_id" class="form-control" placeholder="User Id">
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="name">Name:</label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" id="name" name="name" class="form-control" placeholder="Name">
-                        </div>
-                    </div>
+                            <div class="row my-1">
+                                <div class="col-2">
+                                    <label for="name">Name:</label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Name">
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="role">Role:</label>
-                        </div>
-                        <div class="col-10">
-                            <% for(role of roles){ %>
-                                <input type="radio" id="<%=role.display_name %>" name="role" value="<%= role.value %>">
-                                <label for="<%= role.display_name %>"><%= role.display_name %></label><br>
-                            <% } %>
-                        </div>
-                    </div>
+                            <div class="row my-1">
+                                <div class="col-2">
+                                    <label for="role">Role:</label>
+                                </div>
+                                <div class="col-10">
+                                    <% for(role of roles){ %>
+                                        <input type="radio" id="<%=role.display_name %>" name="role" value="<%= role.value %>">
+                                        <label for="<%= role.display_name %>"><%= role.display_name %></label><br>
+                                    <% } %>
+                                </div>
+                            </div>
 
-                    <input type="submit" value="submit" class="btn btn-primary">
-                </form>
-            </div>
-
-            <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
-                <div class="col-3 fw-bold fs-5 text-center">
-                    user Id
-                </div>
-                <div class="col-3 fw-bold fs-5 text-center">
-                    name
-                </div>
-                <div class="col-3 fw-bold fs-5 text-center">
-                    role
-                </div>
-                <div class="col-3 fw-bold fs-5 text-center">
-                    edit
-                </div>
-            </div>
-            <% if(datas.length == 0){ %>
-                <div class="row py-1 border-bottom border-dark text-center">
-                    <label>Not have user</label>
-                </div>
-            <% } %>
-            <% for(data of datas){ %>
-                <div class="row py-1 border-bottom border-dark">
-                    <div class="col text-center">
-                        <%= data.user_id %>
-                    </div>
-                    <div class="col text-center">
-                        <%= data.name %>
-                    </div>
-                    <div class="col text-center">
-                        <%= data.role==0? 'Admin' : data.role==1? 'User' : 'error' %>
-                    </div>
-                    <div class="col text-center">
-                        <a href="/users/info/<%= data._id %>" class="btn btn-primary">edit</a>
-                        <form action="/users/delete" method="post" class="d-inline">
-                            <input type="text" value="<%= data._id %>" name="user_id" hidden />
-                            <input type="submit" class="btn btn-warning" value="delete">   
+                            <input type="submit" value="Search" class="btn btn-primary m-1">
                         </form>
                     </div>
+
+                    <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+                        <div class="col-3 fw-bold fs-5 text-center">
+                            user Id
+                        </div>
+                        <div class="col-3 fw-bold fs-5 text-center">
+                            name
+                        </div>
+                        <div class="col-3 fw-bold fs-5 text-center">
+                            role
+                        </div>
+                        <div class="col-3 fw-bold fs-5 text-center">
+                            edit
+                        </div>
+                    </div>
+                    <% if(datas.length == 0){ %>
+                        <div class="row py-1 border-bottom border-dark text-center">
+                            <label>Not have user</label>
+                        </div>
+                    <% } %>
+                    <% for(data of datas){ %>
+                        <div class="row py-1 border-bottom border-dark">
+                            <div class="col text-center">
+                                <%= data.user_id %>
+                            </div>
+                            <div class="col text-center">
+                                <%= data.name %>
+                            </div>
+                            <div class="col text-center">
+                                <%= data.role==0? 'Admin' : data.role==1? 'User' : 'error' %>
+                            </div>
+                            <div class="col text-center">
+                                <a href="/user/info/<%= data._id %>" class="btn btn-primary">edit</a>
+                                <form action="/user/delete" method="post" class="d-inline">
+                                    <input type="text" value="<%= data._id %>" name="user_id" hidden />
+                                    <input type="submit" class="btn btn-warning" value="delete">   
+                                </form>
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
-            <% } %>
+            </div>
         </div>
+        
+           
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </html>

@@ -45,10 +45,9 @@ router.post('/delete',checkLogin,async (req,res,next) =>{
         let id = ObjectId.createFromHexString(req.body.id);
         await client.connect();
         let product = await client.db(dbName).collection("products").findOne({_id:id});
-        product.deleted_at = new Date();
-        await client.db(dbName).collection("products").replaceOne({_id:id},product);
+        await client.db(dbName).collection("products").updateOne({_id:id},{$set:{deleted_at: new Date()}});
         await client.db(dbName).collection("logs").insertOne({information:"Delete product "+product.product_id,type:"delete",created_at:new Date(),updated_at:new Date()});
-        res.redirect("/product");
+        res.redirect("/productlist");
     }finally{
         await client.close();
     }
@@ -94,11 +93,11 @@ async function checkLogin(req,res,next){
         req.session.role = user.role;
         return next();
       }else{
-        return res.redirect('/users/login');
+        return res.redirect('/user/login');
       }
     }else{
-      return res.redirect('/users/login');
+      return res.redirect('/user/login');
     }
-  }
+}
 
 module.exports = router;

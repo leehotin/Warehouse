@@ -25,10 +25,15 @@ router.get('/',checkLogin, async (req, res, next) =>{
        
         //where by data
         let whereData = {};
-
+        whereData.delivery_check = 0;
+        
         for(let data in req.query.whereData){
           if(typeof req.query.whereData[data] !== "undefined" && req.query.whereData[data] != ""){
-            whereData[data] = req.query.whereData[data];
+            if(req.query.whereData[data]==="1")
+              whereData[data] = 1 ;
+            else whereData[data] = req.query.whereData[data] ;
+            //whereData[data] = req.query.whereData[data];
+            //console.log(typeof(whereData[data]));
           }
         }
 
@@ -47,7 +52,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     let id = ObjectId.createFromHexString(req.body.delivery_id);
     await client.connect();
     let deliveryNote = await client.db(dbName).collection("delivery_notes").findOne({_id: id});
-    await client.db(dbName).collection("delivery_notes").deleteOne({_id: id});
+    await client.db(dbName).collection("delivery_notes").updateOne({_id:id},{$set:{deleted_at: new Date()}});
     await client.db(dbName).collection("logs").insertOne({information:"Delete deliveryNote "+deliveryNote.delivery_id,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/deliveryOrder");
   }finally{
@@ -65,10 +70,10 @@ async function checkLogin(req,res,next){
       req.session.role = user.role;
       return next();
     }else{
-      return res.redirect('/users/login');
+      return res.redirect('/user/login');
     }
   }else{
-    return res.redirect('/users/login');
+    return res.redirect('/user/login');
   }
 }
 

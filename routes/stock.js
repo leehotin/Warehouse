@@ -7,9 +7,9 @@ const ObjectId = require('mongodb').ObjectId;
 const client = new MongoClient("mongodb://localhost:27017/");
 
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
-const dbName = "Warehouse-In_Out_system";
+const dbName = "Warehouse_In_Out_System";
 
-router.get('/', async (req, res, next) =>{
+router.get('/',checkLogin, async (req, res, next) =>{
   try{
     await client.connect();
 
@@ -30,6 +30,7 @@ router.get('/', async (req, res, next) =>{
         whereData.area = req.query.area.toUpperCase();
       }
     }
+    whereData.deleted_at = null;
     
     let data = await client.db(dbName).collection("stocks").find(whereData,{sort:sort}).toArray();
     
@@ -40,7 +41,7 @@ router.get('/', async (req, res, next) =>{
 });
 
 // Route to get stock data
-router.get('/info', async (req, res,next) => {
+router.get('/info',checkLogin, async (req, res,next) => {
   try {
     await client.connect();
 
@@ -80,10 +81,14 @@ router.post('/save',checkLogin, async (req,res,next) =>{
     stock.stock_id = req.body.stock_id;
     stock.area = req.body.area; 
     stock.name = req.body.name;
-    
+    if(!stock._id){
+      user.created_at = new Date();
+    }
+    user.updated_at = new Date();
+
     let data = {};
     if (typeof stock._id !=="undefined" && stock._id != ""){
-      data = await client.db(dbName).collection("stocks").replaceOne({_id: ObjectId.createFromHexString(req.body._id)}, stock);
+      data = await client.db(dbName).collection("stocks").updateOne({_id: ObjectId.createFromHexString(req.body._id)}, {$set:stock});
       data = await client.db(dbName).collection("stocks").findOne({_id:ObjectId.createFromHexString(req.body._id)});
     }else{
       data = await client.db(dbName).collection("stocks").insertOne(stock);
@@ -101,7 +106,7 @@ router.post('/delete',checkLogin ,async (req,res,next) =>{
     let id = ObjectId.createFromHexString(req.body.stock_id);
     await client.connect();
     let stock = await client.db(dbName).collection("stocks").findOne({_id: id});
-    await client.db(dbName).collection("stocks").deleteOne({_id: id});
+    await client.db(dbName).collection("stocks").updateOne({_id:id},{$set:{deleted_at: new Date()}});
     await client.db(dbName).collection("logs").insertOne({information: `Delete stock area: ${stock.area},name: ${stock.name}.`,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/stock");
   }finally{
@@ -119,10 +124,10 @@ async function checkLogin(req,res,next){
       req.session.role = user.role;
       return next();
     }else{
-      return res.redirect('/users/login');
+      return res.redirect('/user/login');
     }
   }else{
-    return res.redirect('/users/login');
+    return res.redirect('/user/login');
   }
 }
 
