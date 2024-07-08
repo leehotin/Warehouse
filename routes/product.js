@@ -5,20 +5,20 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 
 const client = new MongoClient("mongodb://localhost:27017/");
-const dbName = "Warehouse_In_Out_System";
+const dbName = "Warehouse-In_Out_system";
 
 
-router.get('/',checkLogin, function(req, res, next) {
-  
+router.get('/', async (req, res, next) => {
+    
 });
 
-router.get('/info',checkLogin, async(req,res,next)=>{
+router.get('/info', async (req,res,next)=>{
     try{
         await client.connect();
         const products = client.db(dbName).collection("products");
         let data = await products.aggregate([ // join table
             {
-                $match: { _id: ObjectId.createFromHexString('667a117da384de34623892b6')} //找出符合條件的products
+                $match: { _id: ObjectId.createFromHexString('667cbf81ac08f2d70899ad0e')} //找出符合條件的products
             },
             {
                 $lookup:{
@@ -29,21 +29,11 @@ router.get('/info',checkLogin, async(req,res,next)=>{
                 }
             },
             {
-                $project: {  //顯示格式
-                    _id: 1,
-                    product_id: 1,
-                    name: 1,
-                    count: 1,
-                    stocks: 1,
-                    data: {$concat:[ "$product_id" ," ","$name"]} //合併內容
-                }
-            },
-            {
                 $limit: 1 //輸出數量
             }
         ]).toArray();
-
-        res.send({data:data});
+        console.log(data);
+        res.render('product/info',{data:data[0]});
     }finally{
         await client.close();
     }
