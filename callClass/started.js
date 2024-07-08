@@ -1,4 +1,4 @@
-const { AllSubstringsIndexStrategy } = require('js-search');
+//const { AllSubstringsIndexStrategy } = require('js-search');
 const {MongoClient, ObjectId} = require('mongodb');
 //const ObjectId = require('mongodb').ObjectId;
 
@@ -17,37 +17,65 @@ class IOemuSys{
     async disconnect(){
         await this.client.close();
     }
-    //讀取db用，預設是載入db是Warehouse-In_Out_system，而預設集合是products，查詢的文檔是product，還有一些剩餘參數未使用
-    async Read(inquire='product',db='Warehouse-In_Out_system',collection='products',...ele){
+    //讀取db用，預設是載入db是Warehouse_In_Out_System，而預設集合是products，查詢的文檔是product，還有一些剩餘參數未使用
+    async Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
             console.log('前台進入閱覧'+inquire+'模式，加油~');
             const setdb = [db,collection];
-            console.log(ele);
+            console.log(setdb);
+            console.log(await this.client.db(setdb[0]).collection(setdb[1]).find().toArray());
+           /* console.log(ele);
             let id ;
             if(ele)//ObjectId.createFromHexString(req.session.user_id)
                 ele =ele[0] ;
             else id = undefined ;
-            console.log(id);
+            console.log(id);*/
             //把找到的所有結果放入data裡
-            var data = await this.client.db(setdb[0]).collection(setdb[1]).find(ele).toArray();
+            var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
             //回傳到呼叫函數的地方data所載的東西然後再由那邊處理
             return data ;
     }
     async search(a){
         console.log('前台有人進行了1次搜尋作業');
-        const setdb = ['Warehouse-In_Out_system','products'] ;
+        const setdb = ['Warehouse_In_Out_System','products'] ;
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).createIndex({"$**":"text"});
         var data = await this.client.db(setdb[0]).collection(setdb[1]).find({$text:{$search:a}}).toArray(); 
         return data ;
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
     }
     //對所想要進行的資料進行排序，預設是對Name排序
-    async sort(inquire='Name',setdb){
+    async sort(setdb,matchCol,targetValue,fromValue,localMatch,targetMatch,setSelector,inquire='Name',...ele){
         console.log('前台使用排序功能對'+setdb[0]+'資料庫中的'+setdb[1]+'集合裡的'+inquire+'項進行排序，做到了~~');
         //把找到的資料依想要排序的項目進行排序並裝入data裡
-        const data = await this.client.db(setdb[0]).collection(setdb[1]).find().sort({[inquire]:setdb[2]}).toArray();
+        //const data = await this.client.db(setdb[0]).collection(setdb[1]).find().sort({[inquire]:setdb[2]}).toArray();
         //回傳到呼叫的函數的地方data所載的東西然後再由那邊處理
-        return data ;
-    }
+        
+            //console.log(typeof(targetValue));
+           // let value ;
+           /* if(typeof(targetValue)==='object' ){
+                const objectId = targetValue ;
+                value = objectId.toHexString();
+                value = ObjectId.createFromHexString(value);
+            }*/
+            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate([
+               //{
+                    //$match:{[matchCol]:value}
+                //},
+                {
+                    $lookup:{
+                        from:fromValue,
+                        localField:localMatch,
+                        foreignField:targetMatch,
+                        as:setSelector
+                    }
+                },
+                {
+                    $sort:{[inquire]:setdb[2]}
+                }
+            ]).toArray();
+            //console.log(joinData)
+
+        return joinData ;
+    } 
 
     //暫時未使用
     async update(...ele){
@@ -105,8 +133,8 @@ class IOemuSys{
             await this.disconnect();
         }
     }
-    //進行刪除東西的操作，預設dbName是Warehouse-In_Out_system，集合2是products，並再傳入一個目標參數，該目標參數是一個陣列，裡面應該有兩個元素
-    async delete(dbName='Warehouse-In_Out_system' ,collectionName='products', target){
+    //進行刪除東西的操作，預設dbName是Warehouse_In_Out_System，集合2是products，並再傳入一個目標參數，該目標參數是一個陣列，裡面應該有兩個元素
+    async delete(dbName='Warehouse_In_Out_System' ,collectionName='products', target){
         //設定db成固定參數
         const setdb = [dbName,collectionName] ;
         //讓後台能看到正在進行這個操作
@@ -124,14 +152,14 @@ class IOemuSys{
     //檢查Login狀態
     async checkLogin(data2db){
         //用getdata來裝找到的文檔筆數
-        let getdata = await this.client.db('Warehouse-In_Out_system').collection('users').countDocuments({username:data2db[0]});
+        let getdata = await this.client.db('Warehouse_In_Out_System').collection('users').countDocuments({username:data2db[0]});
         //如果多於1筆則報錯，並回傳error這個陣列，其中陣列第二個元素用來給呼叫的地方重定向成login那邊的路由
         if(getdata!=1){
             let error = [('老兄~~~我找到超過一個使用者叫' + data[0] + '的人耶~~不可能，絕對不可能~'),'login'] ;
             return error ;
         }
         //真的把找到的唯一一筆資料傳入getdata裡面
-        getdata = await this.client.db('Warehouse-In_Out_system').collection('users').findOne({username:data2db[0],password:data2db[1]});
+        getdata = await this.client.db('Warehouse_In_Out_System').collection('users').findOne({username:data2db[0],password:data2db[1]});
         //如果找不到匹配的資料(username和password)則進行這個if
         if(!getdata)
             //回傳一個字串
@@ -141,7 +169,7 @@ class IOemuSys{
         //回傳呼叫的地方result陣列
         return result ;
     }
-    async joinCollection(dbName='Warehouse-In_Out_system',collectionName='products',matchCol,targetValue,fromValue,localMatch,targetMatch,setSelector,...ele){
+    async joinCollection(dbName='Warehouse_In_Out_System',collectionName='products',matchCol,targetValue,fromValue,localMatch,targetMatch,setSelector,...ele){
         //console.log(typeof(targetValue));
         let value ;
         if(typeof(targetValue)==='object' ){
