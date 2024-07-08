@@ -10,10 +10,10 @@
         <div class="col-2">
           <div class="list-group list-group-flush text-center">
               <a href="/" class="list-group-item disabled" disabled>Index</a>
-              <a href="/product" class="list-group-item">Products</a>
+              <a href="/productlist" class="list-group-item">Products</a>
               <a href="/stock" class="list-group-item">Stocks</a>
-              <a href="/user" class="list-group-item">Users</a>
               <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
+              <a href="/user" class="list-group-item">Users</a>
               <button type="submit" form="logout" class="list-group-item">Logout</button>
           </div> 
           
@@ -27,6 +27,14 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active" aria-current="page">Home</li>
                 </ol>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <!-- delivery Order(created_at) == new Date().date  -->
+            </div>
+            <div class="col">
+              <!-- delivery Order(delivery_check) == 0 && delivery_at == null-->
             </div>
           </div>
         </div>

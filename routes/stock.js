@@ -30,6 +30,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
         whereData.area = req.query.area.toUpperCase();
       }
     }
+    whereData.deleted_at = null;
     
     let data = await client.db(dbName).collection("stocks").find(whereData,{sort:sort}).toArray();
     
@@ -77,10 +78,14 @@ router.post('/save',checkLogin, async (req,res,next) =>{
         stock._id = ObjectId.createFromHexString(req.body._id);
     }
 
-    stock.stock_id = parseInt(req.body.stock_id);
+    stock.stock_id = req.body.stock_id;
     stock.area = req.body.area; 
     stock.name = req.body.name;
-    
+    if(!stock._id){
+      user.created_at = new Date();
+    }
+    user.updated_at = new Date();
+
     let data = {};
     if (typeof stock._id !=="undefined" && stock._id != ""){
       data = await client.db(dbName).collection("stocks").updateOne({_id: ObjectId.createFromHexString(req.body._id)}, {$set:stock});
@@ -101,7 +106,7 @@ router.post('/delete',checkLogin ,async (req,res,next) =>{
     let id = ObjectId.createFromHexString(req.body.stock_id);
     await client.connect();
     let stock = await client.db(dbName).collection("stocks").findOne({_id: id});
-    await client.db(dbName).collection("stocks").deleteOne({_id: id});
+    await client.db(dbName).collection("stocks").updateOne({_id:id},{$set:{deleted_at: new Date()}});
     await client.db(dbName).collection("logs").insertOne({information: `Delete stock area: ${stock.area},name: ${stock.name}.`,type:"delete",created_at:new Date(),updated_at:new Date()});
     res.redirect("/stock");
   }finally{
