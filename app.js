@@ -25,7 +25,7 @@ app.use(session({secret:'Warehouse_In_Out_System', resave:false, saveUninitializ
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 app.use('/product',productRouter);
 app.use('/stock',stockRouter);
 app.use('/deliveryOrder',deliveryOrderRouter);

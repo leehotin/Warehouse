@@ -5,106 +5,127 @@
     </head>
     <body>
         <div class="container">
-            <div class="row my-1">
-                <div class="col">
-                    <a href="/" class="btn btn-primary">index</a>
-                </div>
-                <div class="col">
-                    <a href="/deliveryOrder/create" class="btn btn-primary">Create Delivery Order</a>
-                </div>
-            </div>
-
             <div class="row">
-                <label class="fs-4">Search data:</label>
-                <form action="/deliveryOrder" method="get" class="border m-1">
-                    <% for(let data of search){ %>
-                        <div class="row">
-                            <div class="col-2">
-                                <label for="<%= data.name %>"><%= data.displayName %></label>
-                            </div>
-                            <% if( data.type == 'text'){ %>
-                                <div class="col-10">
-                                    <input type="text" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
-                                </div>
-                            <% } %>
-                            <% if( data.type == 'radio'){ %>
-                                <div class="col-10">
-                                    <% for (let radio of data.data){ %>
-                                        <input type="radio" id="<%= radio.display_value %>" name="<%= data.name %>" value="<%= radio.value %>">
-                                        <label for="<%= radio.display_value %>"><%= radio.display_value %></label>
+                <div class="col-2">
+                    <div class="list-group list-group-flush text-center">
+                        <a href="/" class="list-group-item">Index</a>
+                        <a href="/product" class="list-group-item">Products</a>
+                        <a href="/stock" class="list-group-item">Stocks</a>
+                        <a href="/user" class="list-group-item">Users</a>
+                        <a href="/deliveryOrder" class="list-group-item disabled" disabled>Delivery Orders</a>
+                        <button type="submit" form="logout" class="list-group-item">Logout</button>
+                    </div>
+                    
+                    <form action="/user/logout" method="post" id="logout">
+                    </form>
+                </div>
+                <div class="col-10">
+                    <div class="row my-1">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Delivery Order</li>
+                            </ol>
+                        </div>
+                        <div class="col">
+                            <a href="/deliveryOrder/create" class="btn btn-primary">Create Delivery Order</a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="fs-4">Search data:</label>
+                        <form action="/deliveryOrder" method="get" class="border m-1">
+                            <% for(let data of search){ %>
+                                <div class="row my-1">
+                                    <div class="col-2">
+                                        <label for="<%= data.name %>"><%= data.displayName %></label>
+                                    </div>
+                                    <% if( data.type == 'text'){ %>
+                                        <div class="col-10">
+                                            <input type="text" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
+                                        </div>
+                                    <% } %>
+                                    <% if( data.type == 'radio'){ %>
+                                        <div class="col-10">
+                                            <% for (let radio of data.data){ %>
+                                                <input type="radio" id="<%= radio.display_value %>" name="<%= data.name %>" value="<%= radio.value %>">
+                                                <label for="<%= radio.display_value %>"><%= radio.display_value %></label>
+                                            <% } %>
+                                        </div>
                                     <% } %>
                                 </div>
                             <% } %>
-                        </div>
-                    <% } %>
 
-                    <input type="submit" value="submit" class="btn btn-primary">
-                </form>
-            </div>
-
-            <div class="row my-2 border-bottom border-dark bg-secondary-subtle">
-                <div class="col fw-bold fs-5 text-center">
-                    id
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    type
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    company
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    phone
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    delivery check
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    delivery user
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    delivery at
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                    edit
-                </div>
-            </div>
-            <% if(datas.length == 0){ %>
-                <div class="row py-1 border-bottom border-dark text-center">
-                    <label>Not have Delivery Order</label>
-                </div>
-            <% } %>
-            <% for(data of datas){ %>
-                <div class="row py-2 border-bottom border-dark">
-                    <div class="col">
-                        <%= data.delivery_id %>
-                    </div>
-                    <div class="col">
-                        <%= data.type %>
-                    </div>
-                    <div class="col">
-                        <%= data.company %>
-                    </div>
-                    <div class="col">
-                        <%= data.phone %>
-                    </div>
-                    <div class="col">
-                        <%= data.delivery_check ? "Finish": "Not Finish" %>
-                    </div>
-                    <div class="col">
-                        <%= data.delivery_user %>
-                    </div>
-                    <div class="col">
-                        <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
-                    </div>
-                    <div class="col">
-                        <a href="/deliveryOrder/<%= data._id %>" class="btn btn-primary">edit</a>
-                        <form action="/deliveryOrder/delete" method="post" class="d-inline">
-                            <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
-                            <input type="submit" class="btn btn-warning" value="delete">
+                            <input type="submit" value="Search data" class="btn btn-primary">
                         </form>
                     </div>
+
+                    <div class="row my-2 border-bottom border-dark bg-secondary-subtle">
+                        <div class="col fw-bold fs-5 text-center">
+                            id
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            type
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            company
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            phone
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            delivery check
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            delivery user
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            delivery at
+                        </div>
+                        <div class="col fw-bold fs-5 text-center">
+                            edit
+                        </div>
+                    </div>
+                    <% if(datas.length == 0){ %>
+                        <div class="row py-1 border-bottom border-dark text-center">
+                            <label>Not have Delivery Order</label>
+                        </div>
+                    <% } %>
+                    <% for(data of datas){ %>
+                        <div class="row py-2 border-bottom border-dark">
+                            <div class="col">
+                                <%= data.delivery_id %>
+                            </div>
+                            <div class="col">
+                                <%= data.type %>
+                            </div>
+                            <div class="col">
+                                <%= data.company %>
+                            </div>
+                            <div class="col">
+                                <%= data.phone %>
+                            </div>
+                            <div class="col">
+                                <%= data.delivery_check ? "Finish": "Not Finish" %>
+                            </div>
+                            <div class="col">
+                                <%= data.delivery_user %>
+                            </div>
+                            <div class="col">
+                                <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
+                            </div>
+                            <div class="col">
+                                <a href="/deliveryOrder/<%= data._id %>" class="btn btn-primary">edit</a>
+                                <form action="/deliveryOrder/delete" method="post" class="d-inline">
+                                    <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
+                                    <input type="submit" class="btn btn-warning" value="delete">
+                                </form>
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
-            <% } %>
+            </div>
+            
         </div>
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

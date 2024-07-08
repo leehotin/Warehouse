@@ -7,9 +7,9 @@ const ObjectId = require('mongodb').ObjectId;
 const client = new MongoClient("mongodb://localhost:27017/");
 
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
-const dbName = "Warehouse-In_Out_system";
+const dbName = "Warehouse_In_Out_System";
 
-router.get('/', async (req, res, next) =>{
+router.get('/',checkLogin, async (req, res, next) =>{
   try{
     await client.connect();
 
@@ -40,7 +40,7 @@ router.get('/', async (req, res, next) =>{
 });
 
 // Route to get stock data
-router.get('/info', async (req, res,next) => {
+router.get('/info',checkLogin, async (req, res,next) => {
   try {
     await client.connect();
 
@@ -77,7 +77,7 @@ router.post('/save',checkLogin, async (req,res,next) =>{
         stock._id = ObjectId.createFromHexString(req.body._id);
     }
 
-    stock.stock_id = req.body.stock_id;
+    stock.stock_id = parseInt(req.body.stock_id);
     stock.area = req.body.area; 
     stock.name = req.body.name;
     
@@ -119,10 +119,10 @@ async function checkLogin(req,res,next){
       req.session.role = user.role;
       return next();
     }else{
-      return res.redirect('/users/login');
+      return res.redirect('/user/login');
     }
   }else{
-    return res.redirect('/users/login');
+    return res.redirect('/user/login');
   }
 }
 

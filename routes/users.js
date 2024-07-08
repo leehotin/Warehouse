@@ -63,7 +63,13 @@ router.get('/info/:id',checkLogin, async (req, res, next)=>{
       },
     ]
 
-    res.render('user/info',{data:data,roles:roles});
+    let message = "";
+    if(req.session.message){
+      message = req.session.message;
+    }
+    req.session.message = null;
+
+    res.render('user/info',{data:data,roles:roles,message:message});
   }finally{
     await client.close();
   }
@@ -81,8 +87,13 @@ router.get('/create',checkLogin, (req, res, next)=>{
       value: "1"
     },
   ]
+  let message = "";
+  if(req.session.message){
+    message = req.session.message;
+  }
+  req.session.message = null;
 
-  res.render('user/info',{data:[],roles:roles});
+  res.render('user/info',{data:[],roles:roles,message:message});
 
 });
 
@@ -107,7 +118,7 @@ router.post('/login', async(req,res,next)=>{
       res.redirect('/');
     }else{
       req.session.errorMessage = 'username or password error';
-      res.redirect('/users/login');
+      res.redirect('/user/login');
     }
  
   }finally{
@@ -119,7 +130,7 @@ router.post('/logout',checkLogin, (req,res,next)=>{
   req.session.destroy(() => {
     console.log('session destroyed');
   })
-  res.redirect("/users/login");
+  res.redirect("/user/login");
 });
 
 router.post('/save',checkLogin, async (req,res,next)=>{
@@ -156,12 +167,12 @@ router.post('/save',checkLogin, async (req,res,next)=>{
         await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
         data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
       }else{
-        console.log('test');
-        return res.redirect('/users/create');
+        req.session.message = "create input error";
+        return res.redirect('/user/create');
       }
     }
 
-    res.redirect(`/users/info/${data._id}`);
+    res.redirect(`/user/info/${data._id}`);
   }finally{
     await client.close();
   }
@@ -174,7 +185,7 @@ router.post('/delete',checkLogin,async (req,res,next) =>{
     let user = await client.db(dbName).collection("users").findOne({_id: id});
     await client.db(dbName).collection("users").deleteOne({_id: id});
     await client.db(dbName).collection("logs").insertOne({information: `Delete user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"delete",created_at:new Date(),updated_at:new Date()});
-    res.redirect("/users");
+    res.redirect("/user");
   }finally{
     await client.close();
   }
@@ -190,10 +201,10 @@ async function checkLogin(req,res,next){
       req.session.role = user.role;
       return next();
     }else{
-      return res.redirect('/users/login');
+      return res.redirect('/user/login');
     }
   }else{
-    return res.redirect('/users/login');
+    return res.redirect('/user/login');
   }
 }
 
