@@ -69,10 +69,10 @@ async function checkLogin(req,res,next){
       req.session.role = user.role;
       return next();
     }else{
-      return res.redirect('/users/login');
+      return res.redirect('/user/login');
     }
   }else{
-    return res.redirect('/users/login');
+    return res.redirect('/user/login');
   }
 }
 
