@@ -32,8 +32,9 @@ router.get('/info', async (req,res,next)=>{
                 $limit: 1 //輸出數量
             }
         ]).toArray();
+        let stocks = await client.db(dbName).collection("stocks").find().toArray();
         console.log(data);
-        res.render('product/info',{data:data[0]});
+        res.render('product/info',{data:data[0],stocks:stocks});
     }finally{
         await client.close();
     }
@@ -52,6 +53,36 @@ router.post('/delete',checkLogin,async (req,res,next) =>{
         await client.close();
     }
 });
+
+
+router.post('/save',async (req,res,next) =>{
+    try{
+        await client.connect();
+        let productUpdata = {};
+
+        if (typeof req.body._id !=="undefined" &&req.body._id !=""){
+            productUpdata._id = ObjectId.createFromHexString(req.body._id);
+        }
+        productUpdata.Product_id = req.body.Product_id;
+        try{
+            await client.connect();
+            const productsCollection = client.db(dbName).collection("products");
+            let productUpdate = {
+                // update product data based on req.body
+            };
+            await productsCollection.updateOne({_id: ObjectId(req.body.id)}, {$set: productUpdate});
+            res.redirect("/product");
+        } catch (err) {
+            next(err);
+        }
+    });
+
+
+    }finally{
+        await client.close();
+    }
+});
+
 
 async function checkLogin(req,res,next){
     if(req.session.user_id){

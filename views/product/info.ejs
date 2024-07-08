@@ -1,35 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warehouse In Out system</title>
-</head>
-<body>
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Warehouse In Out system</title>
+  </head>
+  <body>
     <h1>4角有限公司</h1>
-    
-<table>
-  <tr>
-    <th>Product</th>
-    <th>Type</th>
-    <th>Brand</th>
-    <th>Origin</th>
-    <th>Count</th>
-  </tr>
-  <tr>
-    
-    <td><input type="text" id="data.Name" name="data.Name" value="1" placeholder="data.Name" required></td>
-    </div>
-    <input type="text" id="type" name="type" value="<%= data.Type %>" placeholder="Stock ID" required><%= data.Type %></td>
-    <input type="text" id="Brand" name="Brand" value="<%= data.Brand %>" placeholder="Stock ID" required><%= data.Brand %></td>
-    <td><%= data.Type %></td>
-    <td><%= data.Brand %></td>
-    <td><%= data.Origin %></td>
-    <td><%= data.Count %></td>
-  </tr>
-</table>
+      
+    <form action="/product/save" method="post">
+      <input type="text" name="_id" value="<%= data._id %>" hidden>
 
-<a href="/products">Back to Products List</a>
+      <table>
+        <tr>
+          <td>
+            <label for="Product_id">Product ID:</label>
+          </td>
+          <td>
+            <input type="text" id="Product_id" name="Product_id" value="<%= data.Product_id %>" placeholder="Type" required>
+          </td>
+        </tr>
 
-</body>
+        <tr>
+          <td>
+            <label for="name">Product name:</label> 
+          </td>
+          <td>
+            <input type="text" id="Name" name="Name" value="<%= data.Name %>" placeholder="Type" required>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <label for="Type">Type:</label> 
+          </td>
+          <td>
+            <input type="text" id="type" name="type" value="<%= data.Type %>" placeholder="Type" required>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <label for="Brand">Brand:</label> 
+          </td>
+          <td>
+            <input type="text" id="Brand" name="Brand" value="<%= data.Brand %>" placeholder="Brand" required>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <label for="Origin">Origin:</label> 
+          </td>
+          <td>
+            <input type="text" id="Origin" name="Origin" value="<%= data.Origin %>" placeholder="Origin" required>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <label for="Count">Count:</label> 
+          </td>
+          <td>
+            <input type="text" id="Count" name="Count" value="<%= data.Count %>" placeholder="Count" required>
+          </td>
+        </tr>
+        
+        <tr>
+          <td>
+            <label for="stock">stock</label>
+          </td>
+          <td>
+            <select name="stock" id="stock">
+              <% for(let stock of stocks){ %>
+                <option value="<%= stock._id %>" <%= data.stock_id == stock._id?'selected':'' %> ><%= stock.area %> <%= stock.name %> </option>
+              <% } %> 
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td> 
+            <Button type="submit">Submit</Button> 
+          </td>
+        </tr>
+      </table>
+    </form>
+      
+    <a href="/products">Back to stock List</a>
+    <a href="/products">Back to Index</a>
+  </body>
+  </body>
 </html>
