@@ -63,7 +63,10 @@
                         </div>
                         <div class="col fw-bold fs-5">
                             <a href='/productlist/sort?sort=&seq=<%= sort===""?-1:1 %>'>快將過期數量</a>
-                        </div>                
+                        </div>
+                        <div class="col fw-bold fs-5">
+                            
+                        </div>                  
                     </div>
                     <% for(x in data){ %>
                         <div class="row py-2 border-bottom border-dark">
@@ -100,7 +103,7 @@
                                     //if(toDate) 
                                     middle = Object.keys(data[x].Date[i])    ;
                                     //middle = middle%100 ;
-                                    %>
+                                %>
                                     <%= data[x].Date[i] %><br />
                                     <% } %><br><br>
                                     
