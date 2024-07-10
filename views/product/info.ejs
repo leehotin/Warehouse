@@ -87,8 +87,13 @@
       </table>
     </form>
       
-    <a href="/products">Back to stock List</a>
-    <a href="/products">Back to Index</a>
-  </body>
+    <a href="/products">Back to stock List</a></br>
+    <a href="/products">Back to Index</a></br>
+     
+    <% let count= 0  ;
+    for(const value in Object.values(data.Date)){ let Arr = [] ; %>
+    <% Arr.push((Object.keys(data.Date))[value]) %><% Arr.push((Object.values(data.Date))[value]) %><% count +=Object.values(data.Date)[value] ; %>
+    <a><%= Arr %></a></br><% } %>
+    總貨量為：<%= count %>
   </body>
 </html>

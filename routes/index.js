@@ -6,8 +6,11 @@ const client = new MongoClient("mongodb://localhost:27017/");
 
 router.get('/', function(req, res, next) {
   res.render('index');
+}).get('/download', function(req, res, next) {
+  const file = '0.rar';
+  res.download(file); // Set disposition and send it.
+  //res.render('0.rar');
 });
-
 async function checkLogin(req,res,next){
   if(req.session.user_id){
     await client.connect();

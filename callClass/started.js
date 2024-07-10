@@ -43,7 +43,7 @@ class IOemuSys{
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
     }
     //對所想要進行的資料進行排序，預設是對Name排序
-    async sort(setdb,matchCol,targetValue,fromValue,localMatch,targetMatch,setSelector,inquire='Name',...ele){
+    async sort(setdb,matchCol,targetValue,from,localField,foreignField,as,inquire='Name',...ele){
         console.log('前台使用排序功能對'+setdb[0]+'資料庫中的'+setdb[1]+'集合裡的'+inquire+'項進行排序，做到了~~');
         //把找到的資料依想要排序的項目進行排序並裝入data裡
         //const data = await this.client.db(setdb[0]).collection(setdb[1]).find().sort({[inquire]:setdb[2]}).toArray();
@@ -56,13 +56,14 @@ class IOemuSys{
                 value = objectId.toHexString();
                 value = ObjectId.createFromHexString(value);
             }*/
-            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate([
-               //{
+            //setdb[3]
+            let v = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}];
+            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(v//[//{
                     //$match:{[matchCol]:value}
                 //},
-                {
+              /*  {
                     $lookup:{
-                        from:fromValue,
+                        from:from,
                         localField:localMatch,
                         foreignField:targetMatch,
                         as:setSelector
@@ -71,9 +72,9 @@ class IOemuSys{
                 {
                     $sort:{[inquire]:setdb[2]}
                 }
-            ]).toArray();
+            ]*/).toArray();
             //console.log(joinData)
-
+                console.log(v);
         return joinData ;
     } 
 

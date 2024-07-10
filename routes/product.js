@@ -5,13 +5,41 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 
 const client = new MongoClient("mongodb://localhost:27017/");
-const dbName = "Warehouse-In_Out_system";
+const dbName = "Warehouse_In_Out_System";
 
 
 router.get('/', async (req, res, next) => {
     
 });
+router.post('/info', async (req,res,next)=>{
+    try{
+        console.log(req.body.call_info)
+        await client.connect();
+        const products = client.db(dbName).collection("products");
+        let data = await products.aggregate([ // join table
+            {
+                $match: { Product_id:req.body.call_info} //找出符合條件的products
+            },
+            {
+                $lookup:{
+                    from:"stocks", //目標table
+                    localField:"stock_id", // 自己的col 
+                    foreignField:"_id", // 目標的col
+                    as: "stocks"// 取得資料後的名稱
+                }
+            },
+            {
+                $limit: 1 //輸出數量
+            }
+        ]).toArray();
+        let stocks = await client.db(dbName).collection("stocks").find().toArray();
+        console.log(data);
+        res.render('product/info',{data:data[0],stocks:stocks});
 
+    }finally{
+        await client.close();
+    }
+});
 router.get('/info', async (req,res,next)=>{
     try{
         await client.connect();
