@@ -2,6 +2,8 @@
 const {MongoClient, ObjectId} = require('mongodb');
 //const ObjectId = require('mongodb').ObjectId;
 
+
+
 class IOemuSys{
     //建構函數用
     constructor(){
@@ -16,6 +18,12 @@ class IOemuSys{
     //中斷連線用
     async disconnect(){
         await this.client.close();
+    }
+    async test(data,id){
+        let da = await this.client.db('Warehouse_In_Out_System').collection('products').replaceOne({_id:id},data);
+        //let data = await this.client.db('Warehouse_In_Out_System').collection('products').find().toArray();
+
+        return da ;
     }
     //讀取db用，預設是載入db是Warehouse_In_Out_System，而預設集合是products，查詢的文檔是product，還有一些剩餘參數未使用
     async Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
@@ -43,35 +51,25 @@ class IOemuSys{
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
     }
     //對所想要進行的資料進行排序，預設是對Name排序
-    async sort(setdb,matchCol,targetValue,fromValue,localMatch,targetMatch,setSelector,inquire='Name',...ele){
+    async sort(setdb,matchCol,targetValue,from,localField,foreignField,as,inquire='Name',...ele){
         console.log('前台使用排序功能對'+setdb[0]+'資料庫中的'+setdb[1]+'集合裡的'+inquire+'項進行排序，做到了~~');
+        if(setdb[2]=="1")
+            setdb[2] = 1 ;
+        else setdb[2] = -1 ;
         //把找到的資料依想要排序的項目進行排序並裝入data裡
         //const data = await this.client.db(setdb[0]).collection(setdb[1]).find().sort({[inquire]:setdb[2]}).toArray();
         //回傳到呼叫的函數的地方data所載的東西然後再由那邊處理
-        
-            //console.log(typeof(targetValue));
-           // let value ;
-           /* if(typeof(targetValue)==='object' ){
+        // let value ;
+        /* if(typeof(targetValue)==='object' ){
                 const objectId = targetValue ;
                 value = objectId.toHexString();
                 value = ObjectId.createFromHexString(value);
-            }*/
-            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate([
-               //{
-                    //$match:{[matchCol]:value}
-                //},
-                {
-                    $lookup:{
-                        from:fromValue,
-                        localField:localMatch,
-                        foreignField:targetMatch,
-                        as:setSelector
-                    }
-                },
-                {
-                    $sort:{[inquire]:setdb[2]}
-                }
-            ]).toArray();
+        }
+        */
+        let coll = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}] ;
+        console.log(coll);
+    
+            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(coll).toArray();
             //console.log(joinData)
 
         return joinData ;
