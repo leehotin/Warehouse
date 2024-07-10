@@ -30,7 +30,14 @@ class IOemuSys{
             console.log('前台進入閱覧'+inquire+'模式，加油~');
             const setdb = [db,collection];
             console.log(setdb);
-            console.log(await this.client.db(setdb[0]).collection(setdb[1]).find().toArray());
+            let obj ={};
+            if(ele[0]){
+                 obj[ele[0][0]] = ele[0][1];
+            
+            }
+            //else [inquire] = undefined ;
+            //console.log(obj);
+            //console.log(await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray());
            /* console.log(ele);
             let id ;
             if(ele)//ObjectId.createFromHexString(req.session.user_id)
@@ -38,8 +45,10 @@ class IOemuSys{
             else id = undefined ;
             console.log(id);*/
             //把找到的所有結果放入data裡
-            var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
+            let data = await this.client.db(setdb[0]).collection(setdb[1]).find({delivery_id:ele[0][1]}).toArray();
             //回傳到呼叫函數的地方data所載的東西然後再由那邊處理
+            //console.log(obj);
+            //console.log(data);
             return data ;
     }
     async search(a){

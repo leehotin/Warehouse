@@ -1,0 +1,93 @@
+<html>
+
+<head>
+
+    <title>Warehouse In Out system</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row_rita">
+            <div class="col-2" style="float:left;">
+                <div class="list-group list-group-flush text-center">
+                    <a href="/" class="list-group-item">Index</a>
+                    <a href="/productlist" class="list-group-item disabled" disabled>Products</a>
+                    <a href="/stock" class="list-group-item">Stocks</a>
+                    <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
+                    <a href="/user" class="list-group-item">Users</a>
+                    <button type="submit" form="logout" class="list-group-item">Logout</button>
+                    <form action="/user/logout" method="post" id="logout"></div>
+
+                
+                
+            </div>
+
+            <div class="col-10">
+                <div class="row">
+                    <div class="col" style="float:left;display:inline;">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/">DeliveryOrder</a></li>
+                            <li class="breadcrumb-item">Information</li>
+                            <li class="breadcrumb-item active" aria-current="page"><%= data[0].delivery_id %></li>
+                        </ol>
+                        <div style="float:left">
+                        <form action="./delete" method="post">
+                            <button class="btn btn-primary" >Delete Order</button>
+                        </form>
+                        </div>
+                    </div><div class="" style="float: right;">
+                        <form action="./update" method="=post">
+                        <button class="btn btn-primary" style="float:right;padding:10px">Update Order</button>
+                  
+                <div class="row my-2 border-bottom border-dark">
+                    <div class="col fw-bold fs-5">
+                        DeliveryID<input type="text" value="<%= data[0].delivery_id %>" class="text">
+                    </div>
+                    <div class="col fw-bold fs-5">
+                        Company<input type="text" value="<%= data[0].company %>" class="text">
+                    </div>
+                    <div class="col fw-bold fs-5">
+                        Address<input type="text" value="<%= data[0].address %>" class="text">
+                    </div>
+                </div>
+                <div class="row my-2 border-bottom border-dark">
+                    <div class="col fw-bold fs-5">
+                        Phone<input type="text" value="<%= data[0].phone %>" class="text">
+                    </div>
+                    <div class="col fw-bold fs-5">
+                        Type： In<input type="radio" value="in" name="type" <% if(data[0].type==='in'){ %>checked<% } %>>Out<input type="radio" value="0" name="type" <% if(data[0].type==='out'){ %>checked<% } %>>
+                    </div>
+                </div>
+                <div class="row my-2 border-bottom border-dark">
+                    <div class="col fw-bold fs-5">
+                        Item：<br>
+                        <% for(i in data[0].items){ %>
+                            <input type='text' class="text" value="<%= (data[0].items[i].name).replace(/\n/g, '') %>" size="50"><input type='text' class="text" value="<%= (data[0].items[i].count) %>" size="10"><input type='text' class="text" value="<%= (data[0].items[i].completed) %>"><input type='text' class="text" value="<%= (data[0].items[i].stock_id) %>"><br>
+                        <% } %>
+                    </div>
+                    <div class="col fw-bold fs-5">
+                        <a href='/'>delivery_check</a>
+                    </div>
+                    <div class="col fw-bold fs-5">
+                        <a href='/'>delivery_user</a>
+                    </div>
+                    <div class="col fw-bold fs-5">
+                        <a href='/'>delivery_user</a>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+</html>

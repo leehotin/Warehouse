@@ -94,7 +94,7 @@
                     <% for(data of datas){ %>
                         <div class="row py-2 border-bottom border-dark">
                             <div class="col">
-                                <%= data.delivery_id %>
+                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
                             </div>
                             <div class="col">
                                 <%= data.type %>

@@ -94,10 +94,10 @@
                             <div class="col">
                                 <%
                                 let Arr = [], mod ; 
-                                Arr.push(Object.keys(data[x].Date));
+                                Arr.push(data[x].Date);
                                 for(let j in Arr){
                                     
-                                    Arr[j] = Arr[j]/100 ;
+                                    //Arr[j] = Arr[j]/100 ;
                                 }
                                 for(let i in data[x].Date){
                                     //if(toDate) 
@@ -105,7 +105,7 @@
                                     //middle = middle%100 ;
                                 %>
                                     <%= data[x].Date[i] %><br />
-                                    <% } %><br><br>
+                                    <% } %><%= Arr %><br><br>
                                     
                             </div>
 

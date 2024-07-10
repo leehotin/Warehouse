@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+const IOemuSys = require('./../callClass/started');
+const iOemuSys = new IOemuSys();
+
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 
@@ -57,6 +60,18 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     res.redirect("/deliveryOrder");
   }finally{
     await client.close();
+  }
+}).get('/info',checkLogin, async (req,res,next) =>{
+  try{
+    let db , colleciton ;
+    await iOemuSys.connect();
+    let da = await iOemuSys.Read('deliveryOrderInfo',db , 'delivery_notes', ['delivery_id',req.query.delivery_id]);
+    //let deliveryNote = await client.db(dbName).collection("delivery_notes").findOne({_id: id});
+    //await client.db(dbName).collection("delivery_notes").updateOne({_id:id},{$set:{deleted_at: new Date()}});
+    //await client.db(dbName).collection("logs").insertOne({information:"Delete deliveryNote "+deliveryNote.delivery_id,type:"delete",created_at:new Date(),updated_at:new Date()});
+    await res.render('deliveryOrder/info',{data:da});
+  }finally{
+    await iOemuSys.disconnect();
   }
 });
 

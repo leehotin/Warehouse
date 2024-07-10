@@ -1,0 +1,11 @@
+.di{
+    display:flex;
+    justify-content:center;
+}
+.text{
+    text-align:center;
+}
+.row_rita{
+    float: left;
+    justify-content:space-between;
+}
