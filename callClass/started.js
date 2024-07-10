@@ -64,14 +64,26 @@ class IOemuSys{
                 const objectId = targetValue ;
                 value = objectId.toHexString();
                 value = ObjectId.createFromHexString(value);
-        }
-        */
-        let coll = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}] ;
-        console.log(coll);
-    
-            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(coll).toArray();
+            }*/
+            //setdb[3]
+            let v = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}];
+            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(v//[//{
+                    //$match:{[matchCol]:value}
+                //},
+              /*  {
+                    $lookup:{
+                        from:from,
+                        localField:localMatch,
+                        foreignField:targetMatch,
+                        as:setSelector
+                    }
+                },
+                {
+                    $sort:{[inquire]:setdb[2]}
+                }
+            ]*/).toArray();
             //console.log(joinData)
-
+                console.log(v);
         return joinData ;
     } 
 

@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-
+const Crypto = require('crypto');
+const hash = Crypto.createHash('sha512');
+//console.log(hash.update('123456').digest('hex'));
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 
@@ -111,8 +113,10 @@ router.get('/login', (req,res,next) => {
 router.post('/login', async(req,res,next)=>{
   try{
     await client.connect();
-
-    let user = await client.db(dbName).collection('users').findOne({username: req.body.username,password: req.body.password,deleted_at:null});
+    
+    let pw = has(req.body.password);
+    console.log(pw);
+    let user = await client.db(dbName).collection('users').findOne({username: req.body.username,password: pw,deleted_at:null});
 
     if(user){
       req.session.user_id = user._id;
@@ -149,7 +153,8 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.username = req.body.username;
     if (typeof req.body.password !=="undefined" && req.body.password !="" && typeof req.body.confirm_password !=="undefined" && req.body.confirm_password !=""){
       if(req.body.password === req.body.confirm_password){
-        user.password = req.body.password;
+        user.password = has(req.body.password);
+        //user.password = req.body.password;
       }
     }
     user.name = req.body.name??'';
@@ -208,6 +213,11 @@ async function checkLogin(req,res,next){
   }else{
     return res.redirect('/user/login');
   }
+}
+function has(pword){
+  //let pw  ;
+  let pw ="'" + Crypto.createHash('sha256').update(pword).digest('base64') + "'";
+  return pw ;
 }
 
 module.exports = router;
