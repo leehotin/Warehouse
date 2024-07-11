@@ -159,8 +159,10 @@
                             <div class="col">
                                 <select name="delivery_user" id="delivery_user" class="form-select form-select-sm">
                                     <option>請選擇</option>
-                                    <% for(i of user){ %><%= Object.keys(i) %>
-                                    <option value="<%= data.delivery_user %>"><%= data.delivery_user %></option>
+                                    <% for(i of user){ %>
+                                    <option value="<%= Object.values(i) %>"<% if(Object.values(i)==data.delivery_user){ %>selected <% } %>>
+                                        <%= Object.values(i) %>
+                                    </option>
                                     <% } %>
                                 </select>
                             </div>

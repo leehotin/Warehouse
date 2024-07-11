@@ -29,6 +29,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
       if(req.query.area.toUpperCase() =="A1" || req.query.area.toUpperCase() =="A2" || req.query.area.toUpperCase() =="A3"){
         whereData.area = req.query.area.toUpperCase();
       }
+      else res.render('stock/index',{datas:'1',sort:'1'});
     }
     whereData.deleted_at = null;
     

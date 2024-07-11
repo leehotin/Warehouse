@@ -30,22 +30,28 @@ class IOemuSys{
             console.log('前台進入閱覧'+inquire+'模式，加油~');
             const setdb = [db,collection];
             console.log(setdb);
-            let data ,obj ={};
-            if(ele[0][0]){
-                obj[ele[0][0]] = ele[0][1];
-            }
+            let data ,projection ={};
+            if(ele[0][0])
+                projection[ele[0][0]] = ele[0][1];
+            
+            //console.log('aaaa',typeof(ele[0][1]));
+            //console.log(projection)
             switch(ele[0][0]){
                 case "delivery_id" :
                     //console.log(obj);
-                    data = await this.client.db(setdb[0]).collection(setdb[1]).findOne(obj);
+                    //console.log('bbbb',typeof(ele[0][1]))
+                    data = await this.client.db(setdb[0]).collection(setdb[1]).findOne(projection);
+                    //console.log(data);
                     break ;
                 case "username" :
-                    const projection = { username: 1, _id: 0 }
-                    console.log("aaa", JSON.stringify(projection));
-                    obj['_id'] = 0 ;
-                    console.log("bbb", JSON.stringify(obj));
-                    data = await this.client.db(setdb[0]).collection(setdb[1]).find({},obj).toArray();
-                    //console.log(data);
+                    //console.log('cccc',typeof(ele[0][1]))
+                    //const projection = { [ele[0][0]]:ele[0][1], _id: 0 };
+                    //console.log("aaa", JSON.stringify(projection));
+                    projection['_id'] = 0 ;
+                    projection['deleted_at'] = 1 ;
+                    //console.log("bbb", JSON.stringify(obj));
+                    data = await this.client.db(setdb[0]).collection(setdb[1]).find({},{projection}).toArray();
+                    console.log(data);
                     break ;
                 default :
                     
