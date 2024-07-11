@@ -32,32 +32,32 @@
                             <li class="breadcrumb-item active" aria-current="page"><%= stock_data._id? (stock_data.area + " " + stock_data.name) : 'Craete Stock' %></li>
                         </ol>
                     </div>
-                  </div>
-                <h1>Stock Location Enquiry</h1>
+                </div>
+                <label class="h1">Stock Location Enquiry</label>
                 <form action="/stock/save" method="post">
                     <input type="text" name="_id" value="<%= stock_data._id %>" hidden>
-                    <div>
-                        <div>
+                    <div class="row">
+                        <div class="col">
                             <label for="stock_id">Stock ID:</label>
                         </div>
-                        <div>
-                            <input type="text" id="stock_id" name="stock_id" value="<%= stock_data.stock_id %>" placeholder="Stock ID" required>
+                        <div class="col">
+                            <input type="text" id="stock_id" name="stock_id" value="<%= stock_data.stock_id %>" class="form-control" placeholder="Stock ID" required>
                         </div>
                     </div>
-                    <div>
-                        <div>
+                    <div class="row">
+                        <div class="col">
                             <label for="area">Region : </label> 
                         </div>
-                        <div>
-                            <input type="text" id="area" name="area" value="<%= stock_data.area %>" placeholder="Region" required> 
+                        <div class="col">
+                            <input type="text" id="area" name="area" value="<%= stock_data.area %>" class="form-control" placeholder="Region" required> 
                         </div>
                     </div>
-                    <div>
-                        <div>
+                    <div class="row">
+                        <div class="col">
                             <label for="name"> Store location : </label>
                         </div>
-                        <div>
-                            <input type="text" id="name" name="name" value="<%= stock_data.name %>" placeholder="Store location" required>
+                        <div class="col">
+                            <input type="text" id="name" name="name" value="<%= stock_data.name %>" class="form-control" placeholder="Store location" required>
                         </div>
                     </div>
                     
