@@ -10,92 +10,163 @@
 
 <body>
     <div class="container">
-        <div class="row_rita">
-            <div class="col-2" style="float:left;">
+        <div class="row row_rita">
+            <div class="col-2">
                 <div class="list-group list-group-flush text-center">
                     <a href="/" class="list-group-item">Index</a>
-                    <a href="/productlist" class="list-group-item disabled" disabled>Products</a>
+                    <a href="/productlist" class="list-group-item">Products</a>
                     <a href="/stock" class="list-group-item">Stocks</a>
                     <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
                     <a href="/user" class="list-group-item">Users</a>
                     <button type="submit" form="logout" class="list-group-item">Logout</button>
-                    <form action="/user/logout" method="post" id="logout"></div>
-
-                
-                
+                </div>
+                <form action="/user/logout" method="post" id="logout"></form>
             </div>
 
             <div class="col-10">
                 <div class="row">
-                    <div class="col" style="float:left;display:inline;">
+                    <div class="col">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="/">DeliveryOrder</a></li>
+                            <li class="breadcrumb-item"><a href="/deliveryOrder">DeliveryOrder</a></li>
                             <li class="breadcrumb-item">Information</li>
                             <li class="breadcrumb-item active" aria-current="page"><%= data[0].delivery_id %></li>
                         </ol>
-                        <div style="float:left">
-                        <form action="./delete" method="post">
-                            <button class="btn btn-primary" >Delete Order</button>
-                        </form>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-warning" form="delete">Delete Order</button>
+                        <button class="btn btn-primary" form="update">Update Order</button>
+                    </div>
+                    <form action="./delete" method="post" id="delete">
+                    </form>
+                </div>
+                <div class="row">
+                    <form action="./update" method="post" id="update">
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="DeliveryID">Delivery ID:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="DeliveryID" name="delivery_id" value="<%= data[0].delivery_id %>" class="form-control text">
+                            </div>
                         </div>
-                    </div><div class="" style="float: right;">
-                        <form action="./update" method="=get">
-                        <button class="btn btn-primary" style="float:right;padding:10px">Update Order</button>
-                  
-                <div class="row my-2 border-bottom border-dark">
-                    <div class="col fw-bold fs-5">
-                        DeliveryID<input type="text" value="<%= data[0].delivery_id %>" class="text">
-                    </div>
-                    <div class="col fw-bold fs-5">
-                        Company<input type="text" value="<%= data[0].company %>" class="text">
-                    </div>
-                    <div class="col fw-bold fs-5">
-                        Address<input type="text" value="<%= data[0].address %>" class="text">
-                    </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="Company">Company:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Company" name="company" value="<%= data[0].company %>" class="form-control text">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="Address">Company Address:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Address" name="address" value="<%= data[0].address %>" class="form-control text">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="Phone">Company Phone:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Phone" name="phone" value="<%= data[0].phone %>" class="form-control text">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label>Delivery Type:</label>
+                            </div>
+                            <div class="col">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="in">In</label>
+                                    <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(data[0].type==='in'){ %>checked<% } %>> 
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label" for="out">Out</label>
+                                    <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(data[0].type==='out'){ %>checked<% } %>>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <label class="fw-bold ">Items：</label>
+                            <div class="col">
+                                <% for(i in data[0].items){ %>
+                                    <div class="row py-1 my-1 border-bottom border-dark">
+                                        <div class="col">
+                                            <label for="item[<%= i %>][name]">Name:</label>
+                                            <input type='text' class="form-control text" name="item[<%= i %>][name]" id="item[<%= i %>][name]" value="<%= (data[0].items[i].name).replace(/\n/g, '') %>" size="50">
+                                        </div>
+                                        <div class="col">
+                                            <label for="item[<%= i %>][count]">Count:</label>
+                                            <input type='text' class="form-control text" name="item[<%= i %>][count]" id="item[<%= i %>][count]" value="<%= (data[0].items[i].count) %>" size="10">
+                                        </div>
+                                        <div class="col">
+                                            <label for="item[<%= i %>][completed]">Completed:</label>
+                                            <input type='text' class="form-control text" name="item[<%= i %>][completed]" id="item[<%= i %>][completed]" value="<%= (data[0].items[i].completed) %>">
+                                        </div>
+                                        <div class="col">
+                                            <label for="item[<%= i %>][stock_id]">Stock Id:</label>
+                                            <input type='text' class="form-control text" name="item[<%= i %>][stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data[0].items[i].stock_id) %>">
+                                        </div>
+                                    </div>
+                                <% }for(i = 0 ; i < 2 ; i++){ %>
+                                    <div class="row py-1 my-1 border-bottom border-dark">
+                                        <div class="col">
+                                            <label for="up_item[<%= i %>][name]">Name:</label>
+                                            <input type='text' class="form-control text" name="up_item[<%= i %>][name]" id="up_item[<%= i %>][name]" value="" size="50">
+                                        </div>
+                                        <div class="col">
+                                            <label for="up_item[<%= i %>][count]">Count:</label>
+                                            <input type='text' class="form-control text" name="up_item[<%= i %>][count]" id="up_item[<%= i %>][count]" value="" size="10">
+                                        </div>
+                                        <div class="col">
+                                            <label for="up_item[<%= i %>][completed]">Completed:</label>
+                                            <input type='text' class="form-control text" name="up_item[<%= i %>][completed]" id="up_item[<%= i %>][completed]" value="">
+                                        </div>
+                                        <div class="col">
+                                            <label for="up_item[<%= i %>][stock_id]">Stock Id:</label>
+                                            <input type='text' class="form-control text" name="up_item[<%= i %>][stock_id]" id="up_item[<%= i %>][stock_id]" value="">
+                                        </div>
+                                    </div>
+                                <% }%>
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                Delivery Check：
+                            </div>
+                            <div class="col">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="finish">Finish</label>
+                                    <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(data[0].delivery_check===1){ %>checked<% } %>>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label" for="NotFinish">Not Finish</label>
+                                    <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(data[0].delivery_check==='0'){ %>checked<% } %>>
+                                </div>
+                            </div>
+                            <div class="col fw-bold">
+                                <label for="delivery_user">Delivery User:</label>
+                            </div>
+                            <div class="col">
+                                <select name="delivery_user" id="delivery_user" class="form-select form-select-sm">
+                                    <option>請選擇</option>
+                                    <option value="<%= data[0].delivery_user %>"><%= data[0].delivery_user %></option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row my-2 border-bottom border-dark">
-                    <div class="col fw-bold fs-5">
-                        Phone<input type="text" value="<%= data[0].phone %>" class="text">
-                    </div>
-                    <div class="col fw-bold fs-5">
-                        Type： In<input type="radio" value="in" name="type" <% if(data[0].type==='in'){ %>checked<% } %>>Out<input type="radio" value="0" name="type" <% if(data[0].type==='out'){ %>checked<% } %>>
-                    </div>
-                </div>
-                <div class="row my-2 border-bottom border-dark">
-                    <div class="col fw-bold fs-5">
-                        Item：<br>
-                        <% for(i in data[0].items){ %>
-                            <input type='text' class="text" name="item[<%= i %>][name]" value="<%= (data[0].items[i].name).replace(/\n/g, '') %>" size="50">
-                            <input type='text' class="text" name="item[<%= i %>][count]" value="<%= (data[0].items[i].count) %>" size="10">
-                            <input type='text' class="text" name="item[<%= i %>][completed]" value="<%= (data[0].items[i].completed) %>">
-                            <input type='text' class="text" name="item[<%= i %>][stock_id]"value="<%= (data[0].items[i].stock_id) %>"><br>
-                        <% }for(i = 0 ; i < 2 ; i++){ %>
-                        
-                        <input type='text' class="text" name="up_item[<%= i %>][name]" value="" size="50">
-                        <input type='text' class="text" name="up_item[<%= i %>][count]" value="" size="10">
-                        <input type='text' class="text" name="up_item[<%= i %>][completed]" value="">
-                        <input type='text' class="text" name="up_item[<%= i %>][stock_id]" value=""><br>
-                        <% }%>
-                    </div>
-                    <div class="col fw-bold fs-5">
-                        delivery_check：
-                        Finish<input type="radio" value="in" name="delivery_check" <% if(data[0].delivery_check===1){ %>checked<% } %>>
-                        Not Finish<input type="radio" value="0" name="delivery_check" <% if(data[0].delivery_check==='0'){ %>checked<% } %>>
-                    </div>
-                    <div class="col fw-bold fs-5">
-                        <select>
-                            <option>請選擇</option>
-                            <option name="<%= data[0].delivery_user %>" value="<%= data[0].delivery_user %>"><%= data[0].delivery_user %></option>
-                            </select>
-                        </select>
-                    </div>
-                </div>
-            </form>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
