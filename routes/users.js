@@ -184,20 +184,26 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.updated_at = new Date();
 
     let data = {};
-    if (typeof user._id !=="undefined" && user._id != ""){
-      data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
-      data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
-    }else{
-      if(user.password && user.username){
-        data = await client.db(dbName).collection("users").insertOne(user);
-        await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
-        data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
+    let checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
+    if(!checkUser.length()){
+      if (typeof user._id !=="undefined" && user._id != ""){
+        data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
+        data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
       }else{
-        req.session.message = "create input error";
-        return res.redirect('/user/create');
+        if(user.password && user.username){
+          data = await client.db(dbName).collection("users").insertOne(user);
+          await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
+          data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
+        }else{
+          req.session.message = "create input error";
+          return res.redirect('/user/create');
+        }
       }
+    }else{
+      req.session.message = "database have this username";
+      return res.redirect('/user/create');
     }
-
+    
     res.redirect(`/user/info/${data._id}`);
   }finally{
     await client.close();
