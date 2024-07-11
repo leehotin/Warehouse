@@ -81,7 +81,6 @@ router.post('/delete',checkLogin,async (req,res,next) =>{
     }
 });
 
-
 router.post('/save',async (req,res,next) =>{
     try{
         await client.connect();
@@ -91,18 +90,27 @@ router.post('/save',async (req,res,next) =>{
             productUpdata._id = ObjectId.createFromHexString(req.body._id);
         }
         productUpdata.Product_id = req.body.Product_id;
-        try{
-            await client.connect();
-            const productsCollection = client.db(dbName).collection("products");
-            let productUpdate = {
-                // update product data based on req.body
-            };
-            await productsCollection.updateOne({_id: ObjectId(req.body.id)}, {$set: productUpdate});
-            res.redirect("/product");
-        } catch (err) {
-            next(err);
+        productUpdata.Name = req.body.Name;
+        productUpdata.Type = req.body.Type;
+        productUpdata.Brand = req.body.Brand;
+        productUpdata.Origin = req.body.Origin;
+        productUpdata.Count = req.body.Count;
+        productUpdata.stock_id = req.body.stock_id;
+        if(!productUpdata._id){
+            productUpdata.created_at = new Date();
         }
-    
+        productUpdata.updated_at = new Date();
+       
+        const productsCollection = client.db(dbName).collection("products");
+        if(productUpdata._id){
+            //update data to DB
+            //find by _id
+        }else{
+            //create data to DB (return data)
+            //find by data.insertedId
+        }
+        //return product info get data by _id    
+        res.redirect("/product/info?id=");
     }finally{
         await client.close();
     }

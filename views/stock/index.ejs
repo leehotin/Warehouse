@@ -10,7 +10,7 @@
                     <div class="list-group list-group-flush text-center">
                         <a href="/" class="list-group-item">Index</a>
                         <a href="/productlist" class="list-group-item">Products</a>
-                        <a href="/stock" class="list-group-item disabled" disabled>Stocks</a>
+                        <a href="/stock" class="list-group-item">Stocks</a>
                         <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
                         <a href="/user" class="list-group-item">Users</a>
                         <button type="submit" form="logout" class="list-group-item">Logout</button>
@@ -19,6 +19,7 @@
                     <form action="/user/logout" method="post" id="logout">
                     </form> 
                 </div>
+
                 <div class="col-10">
                     <div class="row my-1">
                         <div class="col">
@@ -57,8 +58,8 @@
                                     <label>id:</label>
                                 </div>
                                 <div class="col-10">
-                                    <input type="radio" name="stock_id" value="1">Asc
-                                    <input type="radio" name="stock_id" value="-1">Desc
+                                    <input type="radio" name="stock_id" id="asc" value="1"><label for="asc">Asc</label>
+                                    <input type="radio" name="stock_id" id="desc" value="-1"><label for="desc">Desc</label>
                                 </div>
                             </div>
 

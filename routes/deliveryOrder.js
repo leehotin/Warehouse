@@ -21,7 +21,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
           {displayName: "Address:",name: "whereData[address]",placeholder: "Address",type: "text"},
           {displayName: "Phone:",name: "whereData[phone]",placeholder: "Phone",type: "text"},
           {displayName: "Delivery Type:",name: "whereData[type]",placeholder: "Delivery Type",type: "text"},
-          {displayName: "Delivery Check:",name: "whereData[delivery_check]",placeholder: "Delivery Check",type: "radio",data:[{display_value:"Finish",value:"1"},{display_value:"not finish",value:"0"}]},
+          {displayName: "Delivery Check:",name: "whereData[delivery_check]",placeholder: "Delivery Check",type: "radio",data:[{display_value:"Finish",value:"1"},{display_value:"Not Finish",value:"0"}]},
           {displayName: "Delivery User:",name: "whereData[delivery_user]",placeholder: "Delivery User",type: "text"},
           {displayName: "Delivery At:",name: "whereData[delivery_at]",placeholder: "Delivery At",type: "text"},
         ];
@@ -40,6 +40,8 @@ router.get('/',checkLogin, async (req, res, next) =>{
             //console.log(typeof(whereData[data]));
           }
         }
+        let a=[] ;
+        a.length
         console.log(typeof(whereData.phone));
         //if(req.query.whereData)
         //console.log(req.query.whereData);
