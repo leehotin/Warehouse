@@ -2,10 +2,35 @@ var express = require('express');
 var router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
+
 const client = new MongoClient("mongodb://localhost:27017/");
 
-router.get('/', function(req, res, next) {
-  res.render('index');
+// Assuming your MongoDB database name is "Warehouse_In_Out_System"
+const dbName = "Warehouse_In_Out_System";
+
+router.get('/', async (req, res, next)=> {
+  try{
+    await client.connect();
+    //reset output
+    let data = {};
+
+    //get today
+    let start = new Date(), end = new Date();
+    start.setHours(0,0,0,0);
+    end.setHours(23,59,59,999);
+    //get data from DB
+    let todayOrder = await client.db(dbName).collection('delivery_notes').find({created_at:{$gte:start,$lte:end}}).toArray();
+    let notFinish = await client.db(dbName).collection('delivery_notes').find({delivery_at:null,delivery_check:"0"}).toArray();
+    
+    //set return data
+    data.todayOrders = todayOrder;
+    data.notFinishs = notFinish;
+
+    res.render('index',{datas:data});
+  }finally{
+    await client.close();
+  }
 }).get('/download', function(req, res, next) {
   const file = '0.rar';
   res.download(file); // Set disposition and send it.

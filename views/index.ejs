@@ -30,11 +30,65 @@
             </div>
           </div>
           <div class="row">
-            <div class="col">
+            <div class="col m-1">
               <!-- delivery Order(created_at) == new Date().date  -->
+              <div class="row text-center">
+                <label>Today Create Order</label>
+              </div>
+              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+                <div class="col fw-bold fs-5 text-center">
+                  <label>Delivery Id</label>
+                </div>
+                <div class="col fw-bold fs-5 text-center">
+                  <label>Company</label>
+                </div>
+                <div class="col fw-bold fs-5 text-center">
+                  <label>Type</label>
+                </div>
+              </div>
+              <% for(let data of datas.todayOrders){ %>
+                <div class="row py-1 border-bottom border-dark">
+                  <div class="col text-center">
+                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                  </div>
+                  <div class="col text-center">
+                    <%= data.company %>
+                  </div>
+                  <div class="col text-center">
+                    <%= data.type %>
+                  </div>
+                </div>
+              <% } %>
             </div>
-            <div class="col">
+            <div class="col m-1">
               <!-- delivery Order(delivery_check) == 0 && delivery_at == null-->
+              <div class="row text-center">
+                <label>Not Finish Order</label>
+              </div>
+              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+                <div class="col fw-bold fs-5 text-center">
+                  <label>Delivery Id</label>
+                </div>
+                <div class="col fw-bold fs-5 text-center">
+                  <label>Company</label>
+                </div>
+                <div class="col fw-bold fs-5 text-center">
+                  <label>Type</label>
+                </div>
+              </div>
+              <% for(let data of datas.notFinishs){ %>
+                <div class="row py-1 border-bottom border-dark">
+                  <div class="col text-center">
+                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                  </div>
+                  <div class="col text-center">
+                    <%= data.company %>
+                  </div>
+                  <div class="col text-center">
+                    <%= data.type %>
+                  </div>
+                </div>
+              <% } %>
             </div>
           </div>
         </div>

@@ -40,6 +40,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
             //console.log(typeof(whereData[data]));
           }
         }
+        whereData.deleted_at = null;
         let a=[] ;
         a.length
         console.log(typeof(whereData.phone));
