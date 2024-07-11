@@ -11,7 +11,7 @@
                         <a href="/" class="list-group-item">Index</a>
                         <a href="/productlist" class="list-group-item">Products</a>
                         <a href="/stock" class="list-group-item">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item disabled" disabled>Delivery Orders</a>
+                        <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
                         <a href="/user" class="list-group-item">Users</a>
                         <button type="submit" form="logout" class="list-group-item">Logout</button>
                     </div> 
@@ -93,29 +93,29 @@
                     <% } %>
                     <% for(data of datas){ %>
                         <div class="row py-2 border-bottom border-dark">
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <%= data.type %>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <%= data.company %>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <%= data.phone %>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <%= data.delivery_check==1 ? "Finish": "Not Finish" %>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <%= data.delivery_user %>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                             </div>
-                            <div class="col">
-                                <a href="/deliveryOrder/<%= data._id %>" class="btn btn-primary">edit</a>
+                            <div class="col text-center">
+                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">edit</a>
                                 <form action="/deliveryOrder/delete" method="post" class="d-inline">
                                     <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
                                     <input type="submit" class="btn btn-warning" value="delete">
