@@ -41,7 +41,7 @@ class IOemuSys{
                     break ;
                 case "delivery_user" :
                     console.log(obj);
-                    user = await this.client.db(setdb[0]).collection(setdb[1]).find({[ele[0][1]]:true}).toArray();
+                    user = await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray();
                     break ;
 
             }

@@ -115,7 +115,13 @@ router.post('/login', async(req,res,next)=>{
     await client.connect();
     let user ,pw = has(req.body.password);
     console.log(pw);
-    user = await client.db(dbName).collection('users').countDocuments({username:{'$regex':req.body.username,'$options':'i'}});
+    const query = {
+      username: { $regex: new RegExp(req.body.username, 'i') },
+      $expr: {
+        $eq: [{ $strLenCP: "$username" }, req.body.username.length]
+      }
+    };
+    user = await client.db(dbName).collection('users').countDocuments(query);
     if(user>1){
       req.session.errorMessage = '使用者錯誤，請通知管理員更正';
       res.redirect('/user/login');

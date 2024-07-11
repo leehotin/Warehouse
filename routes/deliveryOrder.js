@@ -34,12 +34,18 @@ router.get('/',checkLogin, async (req, res, next) =>{
           if(typeof req.query.whereData[data] !== "undefined" && req.query.whereData[data] != ""){
             if(req.query.whereData[data]==="1")
               whereData[data] = 1 ;
+            else if(req.query.whereData.phone)
+              whereData[data] = Number(req.query.phone);
             else whereData[data] = req.query.whereData[data] ;
             //whereData[data] = req.query.whereData[data];
             //console.log(typeof(whereData[data]));
           }
         }
-
+        let a=[] ;
+        a.length
+        console.log(typeof(whereData.phone));
+        //if(req.query.whereData)
+        //console.log(req.query.whereData);
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
           projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
@@ -66,7 +72,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     let db , colleciton ;
     await iOemuSys.connect();
     let da = await iOemuSys.Read('deliveryOrderInfo',db , 'delivery_notes', ['delivery_id',req.query.delivery_id]);
-    let use = await iOemuSys.Read('使用者列表',db , 'delivery_notes',['delivery_user'] );
+    let use = await iOemuSys.Read('使用者列表',db , 'delivery_notes',['delivery_user','true'] );
     //let deliveryNote = await client.db(dbName).collection("delivery_notes").findOne({_id: id});
     //await client.db(dbName).collection("delivery_notes").updateOne({_id:id},{$set:{deleted_at: new Date()}});
     //await client.db(dbName).collection("logs").insertOne({information:"Delete deliveryNote "+deliveryNote.delivery_id,type:"delete",created_at:new Date(),updated_at:new Date()});
