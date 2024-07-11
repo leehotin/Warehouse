@@ -40,7 +40,7 @@
                         </form>
                         </div>
                     </div><div class="" style="float: right;">
-                        <form action="./update" method="=post">
+                        <form action="./update" method="=get">
                         <button class="btn btn-primary" style="float:right;padding:10px">Update Order</button>
                   
                 <div class="row my-2 border-bottom border-dark">
@@ -66,17 +66,29 @@
                     <div class="col fw-bold fs-5">
                         Item：<br>
                         <% for(i in data[0].items){ %>
-                            <input type='text' class="text" value="<%= (data[0].items[i].name).replace(/\n/g, '') %>" size="50"><input type='text' class="text" value="<%= (data[0].items[i].count) %>" size="10"><input type='text' class="text" value="<%= (data[0].items[i].completed) %>"><input type='text' class="text" value="<%= (data[0].items[i].stock_id) %>"><br>
-                        <% } %>
+                            <input type='text' class="text" name="item[<%= i %>][name]" value="<%= (data[0].items[i].name).replace(/\n/g, '') %>" size="50">
+                            <input type='text' class="text" name="item[<%= i %>][count]" value="<%= (data[0].items[i].count) %>" size="10">
+                            <input type='text' class="text" name="item[<%= i %>][completed]" value="<%= (data[0].items[i].completed) %>">
+                            <input type='text' class="text" name="item[<%= i %>][stock_id]"value="<%= (data[0].items[i].stock_id) %>"><br>
+                        <% }for(i = 0 ; i < 2 ; i++){ %>
+                        
+                        <input type='text' class="text" name="up_item[<%= i %>][name]" value="" size="50">
+                        <input type='text' class="text" name="up_item[<%= i %>][count]" value="" size="10">
+                        <input type='text' class="text" name="up_item[<%= i %>][completed]" value="">
+                        <input type='text' class="text" name="up_item[<%= i %>][stock_id]" value=""><br>
+                        <% }%>
                     </div>
                     <div class="col fw-bold fs-5">
-                        <a href='/'>delivery_check</a>
+                        delivery_check：
+                        Finish<input type="radio" value="in" name="delivery_check" <% if(data[0].delivery_check===1){ %>checked<% } %>>
+                        Not Finish<input type="radio" value="0" name="delivery_check" <% if(data[0].delivery_check==='0'){ %>checked<% } %>>
                     </div>
                     <div class="col fw-bold fs-5">
-                        <a href='/'>delivery_user</a>
-                    </div>
-                    <div class="col fw-bold fs-5">
-                        <a href='/'>delivery_user</a>
+                        <select>
+                            <option>請選擇</option>
+                            <option name="<%= data[0].delivery_user %>" value="<%= data[0].delivery_user %>"><%= data[0].delivery_user %></option>
+                            </select>
+                        </select>
                     </div>
                 </div>
             </form>
