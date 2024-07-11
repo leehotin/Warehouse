@@ -9,13 +9,13 @@
       <div class="row">
         <div class="col-2">
           <div class="list-group list-group-flush text-center">
-              <a href="/" class="list-group-item disabled" disabled>Index</a>
+              <a href="/" class="list-group-item">Index</a>
               <a href="/productlist" class="list-group-item">Products</a>
               <a href="/stock" class="list-group-item">Stocks</a>
               <a href="/deliveryOrder" class="list-group-item">Delivery Orders</a>
               <a href="/user" class="list-group-item">Users</a>
               <button type="submit" form="logout" class="list-group-item">Logout</button>
-              <a href="/recycleBin" class="list-group-item">Recycle Bin</a>
+              <a href="/recycleBin" class="list-group-item  disabled" disabled>Recycle Bin</a>
           </div> 
           
           <form action="/user/logout" method="post" id="logout">
@@ -27,36 +27,44 @@
             <div class="col">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active" aria-current="page">Home</li>
+                    <li class="breadcrumb-item active" aria-current="page">recycleBin</li>
                 </ol>
+                <button type="submit" form="rollback" class="">復原</button>
+                <form action="/recycleBin/rollback" method="post" id="rollback">
+                </form>
             </div>
           </div>
           <div class="row">
             <div class="col m-1">
               <!-- delivery Order(created_at) == new Date().date  -->
               <div class="row text-center">
-                <label>Today Create Order</label>
+                <label>進桶表</label>
               </div>
               <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Delivery Id</label>
+                  <label><a href='/recycleBin?sort=<%= sort %>&title=time'>進垃圾桶時間</a></label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Company</label>
+                  <label>誰經手的</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Type</label>
+                  <label>來自哪裡</label>
                 </div>
               </div>
-              <% for(let data of datas.todayOrders){ %>
+             <% for(data of datas){ %>
                 <div class="row py-1 border-bottom border-dark">
+                    <div class="">
+                        <input type="checkbox" value="<%= data._id %>" name="<%= data._id %>" >
+                        
+                      </div>  
                   <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                    <a href="./deliveryOrder/info?delivery_id="><%= data._id.getTimestamp() %></a>
                   </div>
                   <div class="col text-center">
-                    <%= data.company %>
+                    <%= data.who %>
                   </div>
                   <div class="col text-center">
-                    <%= data.type %>
+                   <%= data.source %>
                   </div>
                 </div>
               <% } %>
@@ -77,19 +85,19 @@
                   <label>Type</label>
                 </div>
               </div>
-              <% for(let data of datas.notFinishs){ %>
+             
                 <div class="row py-1 border-bottom border-dark">
                   <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                    <a href="./deliveryOrder/info?delivery_id="></a>
                   </div>
                   <div class="col text-center">
-                    <%= data.company %>
+                    
                   </div>
                   <div class="col text-center">
-                    <%= data.type %>
+                    
                   </div>
                 </div>
-              <% } %>
+              
             </div>
           </div>
         </div>

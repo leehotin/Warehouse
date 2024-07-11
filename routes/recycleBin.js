@@ -11,8 +11,15 @@ router.get('/',async function(req, res, next) {
     try{
         //進行連線
         await iOemuSys.connect();
+
+        if(req.session.user_id){
+            req.query.sort= 1 ? 1 : -1
+            let data = await iOemuSys.Read('垃圾桶',iOemuSys.CreatedbIndex('recycleBin'),['recycleBin',req.query.sort]);
+            res.render('recycleBin/index',{datas:data,sort:req.query.sort}) ;
+        }
+        else res.redirect('user/login') ;
         //宣告變數存在，其實可以直接傳入想要的東西
-        let inquire,db,collection;
+        //let inquire,db,collection;
         //呼叫物件裡的方法
        // let da = await iOemuSys.Read(inquire,db,collection);
        // console.log("123"+da)
@@ -26,7 +33,7 @@ router.get('/',async function(req, res, next) {
         //for(x in data){
             //           對應以下值   
             //await console.log(x);                                               
-            let data = await iOemuSys.joinCollection(
+           /* let data = await iOemuSys.joinCollection(
                 'Warehouse_In_Out_System',   //   dbName|
                 'products',                  //collectionName|
                 'stock_id',                  //matchCol|
@@ -36,14 +43,14 @@ router.get('/',async function(req, res, next) {
                 '_id',                       //targetMatch|
                 'trans_stock_id'             //setSelector|
                                              //...ele
-            );
+            );*/
             //console.log(data);
             //await console.log(data[0].trans_stock_id[0].name);
            // await console.log(x);
             //Arr.push(pushData);
        // };
         //console.log(Arr);
-        res.render('productlist/index',{data:data,sort:inquire});
+        //res.render('productlist/index',{data:data,sort:inquire});
     }
     finally{
         //關閉連線

@@ -2,8 +2,6 @@
 const {MongoClient, ObjectId} = require('mongodb');
 //const ObjectId = require('mongodb').ObjectId;
 
-
-
 class IOemuSys{
     //建構函數用
     constructor(){
@@ -19,61 +17,49 @@ class IOemuSys{
     async disconnect(){
         await this.client.close();
     }
+    async CreatedbIndex(collectionName){
+        collectionName = collectionName || 'products' ;
+        return  ['Warehouse_In_Out_System',collectionName] ;
+    }
     async test(data,id){
         let da = await this.client.db('Warehouse_In_Out_System').collection('products').replaceOne({_id:id},data);
         //let data = await this.client.db('Warehouse_In_Out_System').collection('products').find().toArray();
 
         return da ;
     }
-    //讀取db用，預設是載入db是Warehouse_In_Out_System，而預設集合是products，查詢的文檔是product，還有一些剩餘參數未使用
-    async Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
-            console.log('前台進入閱覧'+inquire+'模式，加油~');
-            const setdb = [db,collection];
-            console.log(setdb);
-            let data ,projection ={};
-            if(ele[0][0])
-                projection[ele[0][0]] = ele[0][1];
-            
-            //console.log('aaaa',typeof(ele[0][1]));
-            //console.log(projection)
-            switch(ele[0][0]){
-                case "delivery_id" :
-                    //console.log(obj);
-                    //console.log('bbbb',typeof(ele[0][1]))
-                    data = await this.client.db(setdb[0]).collection(setdb[1]).findOne(projection);
-                    //console.log(data);
-                    break ;
-                case "username" :
-                    //console.log('cccc',typeof(ele[0][1]))
-                    //const projection = { [ele[0][0]]:ele[0][1], _id: 0 };
-                    //console.log("aaa", JSON.stringify(projection));
-                    projection['_id'] = 0 ;
-                    projection['deleted_at'] = 1 ;
-                    //console.log("bbb", JSON.stringify(obj));
-                    data = await this.client.db(setdb[0]).collection(setdb[1]).find({},{projection}).toArray();
-                    console.log(data);
-                    break ;
-                default :
-                    
- 
-            }
+    //讀取db用，預設是載入db是Warehouse_In_Out_System，而預設集合是products，查詢的集合類型是product，還有一些剩餘參數未使用
+    async Read(inquire = 'product', setdb, ...ele) {
+        setdb = setdb || this.CreatedbIndex();   //初始化db
+        const [dbName, collectionName] = await setdb ; 
+        console.log(collectionName)                 //終極濃縮版....新學來的...
+        console.log('前台進入閱覧' + inquire + '模式，加油~');
+        //const setdb = [db, collection];//Rita的舊寫法版本初始化db
+        let data, query, projection = {};
+        if (ele[0][0])       //如果存在就把ele[0][0]的值當成ele[0][1]的鍵 ;
+            projection[ele[0][0]] = ele[0][1];
+        //console.log(projection);//監察數值有沒有進去用  理論上可以刪了(就是設個斷點的用意看程式有沒有進行到這一段)
+        switch (ele[0][0]) {
+            case "Product_id":
+            case "delivery_id":
+                data = await this.client.db(setdb[0]).collection(setdb[1]).findOne(projection);
+                break;
+            case "username":
+                projection['_id'] = 0;
+                projection['deleted_at'] = 1;
+                data = await this.client.db(setdb[0]).collection(setdb[1]).find({}, { projection }).toArray();
+                break;
+            case "recycleBin":
+                query = {inquire:ele[0][1]} ;    //創建排序方法查詢
 
-            //else [inquire] = undefined ;
-            //console.log(obj);
-            //console.log(await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray());
-           /* console.log(ele);
-            let id ;
-            if(ele)//ObjectId.createFromHexString(req.session.user_id)
-                ele =ele[0] ;
-            else id = undefined ;
-            console.log(id);*/
-            //把找到的所有結果放入data裡
-            
-            //data = await this.client.db(setdb[0]).collection(setdb[1]).find({delivery_id:ele[0][1]}).toArray();
-            //回傳到呼叫函數的地方data所載的東西然後再由那邊處理
-            //console.log(obj);
-            //console.log(data);
-            return data ;
+               // data = await this.client.db(dbName).collection(collectionName).find({}).toArray() ;
+                data = await this.client.db(dbName).collection(collectionName).find().sort(query).toArray();
+                break;
+            default :
+        }
+        //把找到的所有結果放入data裡
+        //回傳到呼叫函數的地方data所載的東西然後再由那邊處理
+        console.log(data);
+        return data;
     }
     async search(a){
         console.log('前台有人進行了1次搜尋作業');
@@ -178,17 +164,47 @@ class IOemuSys{
     }
     //進行刪除東西的操作，預設dbName是Warehouse_In_Out_System，集合2是products，並再傳入一個目標參數，該目標參數是一個陣列，裡面應該有兩個元素
     async delete(dbName='Warehouse_In_Out_System' ,collectionName='products', target){
-        //設定db成固定參數
+       // Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
+        //設定db成固定參數  await iOemuSys.delete('Warehouse_In_Out_System','products',['Product_id',req.body.call_no]);
         const setdb = [dbName,collectionName] ;
+        const junkBin = 'recycle_bin' ;
         //讓後台能看到正在進行這個操作
-        console.log('前台進入對'+ setdb[1] +'內的資料'+ target[1] +'進行刪除，各位考試加油~');
-        //如果沒有傳入目標的陣列的第二個元素則跳出本呼叫
-        if(!target[1]){
-            return console.log('要處理的目標為空值或不完全，請退回再試或詢問相關技術人員~');
+        //console.log('aaaa',target)
+        let data = await this.Read('Product',setdb[0],setdb[1],[target[0],target[1]]);
+        //console.log(data);
+        var bulkInputJunk = await this.client.db(setdb[0]).collection(junkBin).initializeOrderedBulkOp() ;
+        var bulkDeleteOrigin = await this.client.db(setdb[0]).collection(setdb[1]).initializeOrderedBulkOp() ;
+        data['source'] = setdb[1] ;
+        data['original_id'] = data['_id'];
+        delete data['_id'];
+        //console.log(data);
+        //console.log('bbbb',target)
+        let query = {} ;//= [{insertOne:data}];//
+        //console.log(query)
+        await bulkInputJunk.insert(data);
+        await bulkInputJunk.execute();
+        //query = [{deleteOne:{filter:{}}}];//
+        for(const i in data){
+            if(data.hasOwnProperty(target[0])){
+                query[target[0]]= data.Product_id ;
+                break ;
+            }
         }
+        
+        
+        //console.log(query);
+        await bulkDeleteOrigin.find(query).delete();
+        await bulkDeleteOrigin.execute();
+        console.log('前台進入對'+ setdb[1] +'內的資料'+ target[1] +'進行刪除，各位考試加油~');
+        //如果沒有傳入目標的陣列的第二個元素則跳出本呼叫///
+        //await this.client.db(setdb[0]).collection(setdb[1]).bulkWrite(query);/
+        //await this.client.db(setdb[0]).collection(setdb[1]).deleteOne( { Product_id: 'AB100010' });
+        //if(!target[1]){
+        //    return console.log('要處理的目標為空值或不完全，請退回再試或詢問相關技術人員~');/
+        //}
         //當沒有意外的話便進行刪除處理(單項)
-        await this.client.db(setdb[0]).collection(setdb[1]).deleteOne({[target[0]]:target[1]}) ;
-        console.log('已完成對資料' + target[1] + '的分解~') ;
+        //await this.client.db(setdb[0]).collection(setdb[1]).deleteOne({[target[0]]:target[1]}) ;
+        //console.log('已完成對資料' + target[1] + '的分解~') ;
         //return 0不寫好像也不會在JS上面當錯
         return 0 ;
     }
@@ -264,117 +280,40 @@ class IOemuSys{
         }
         //有兩項資料則才進行資料比對和把結果裝在data2db裡
         let data2db = await this.checkLogin(data);
-        //回傳data2db裡的東西(裡面不一定要東西，裡面裝什麼視乎進行的checkLogin()方法得到的東西)
+        //回傳data2db裡的東西(裡面不一定要東西，裡面裝什麼視乎進行的checkLogin()方法得到的東西)//
         return data2db;
     }
+    async remove(dbName='Warehoust_In_Out_System',equiueId,...ele){
+        const junkBin = 'recycle_bin' ;        //這是垃圾的初始化...
+        let data = await this.client.db(dbName).collection(junkBin).findOne({original_id:ObjectId.createFromHexString(equiueId)});
+        const setdb = [dbName, data['source']];  //初始化 db數據
+        data['_id'] = data['original_id'];       //把存在垃圾桶裡的 好東西拿回去的憑證之一
+        delete data['original_id'];              //把這個憑證刪掉
+        delete data['source'];                   //這是本來的來源地 好東西拿回去的憑證之二
+        let query = [{insertOne:data}];          //做一個詢問條件句  以藏在下面要用的地方
+        let starting = await this.client.db(setdb[0]).collection(setdb[1]).bulkWrite(query);  //bulkWrite是批量操作mongodb的方法，
+        if(starting){                                                                         //同學如有不懂可以在VS Code先點在想要看說明的方法字串中
+            console.log('資料已從垃圾桶裡回到家裡，其內容是：') ;                      //然後按F12 可以看到其相關的用法和作者的註解等資訊
+            console.log(starting);
+        }
+        else return err = 'Error發生了，文件沒法搬運完成QAQ';                                                 //除止有意外直接死用
+        for(const i in data){
+            if(data.hasOwnProperty(target[0])){
+                query[0].deleteOne['original_id']= ObjectId.createFromHexString(data._id) ;                                    //比對 偷懶用   結果到頭來懶就偷不到  code就寫了很多出來...
+                break ;//比對到就跳出不讓for loop跑到最後浪費運算時間
+            }
+        }
+        query = [{deleteOne:{filter:{}}}] ; //注入用
+        let toEnding = await this.client.db(setdb[0]).collection(junkBin).bulkWrite(query) ;  //刪除垃圾桶的文檔
+        if(toEnding){
+            console.log('已把垃圾桶的垃圾清了~~身心舒暢~~那舊垃圾資料如下：') ;
+            console.log(toEnding);
+        }
+        else return err = '糟了，文件有危險，因為是世界奇觀~' ;   
+                //因為我不想想太多，如有這麼個 岡刂 岡刂 女子 土褱 木幾 我鳥 者阝 手高 口吾 手店 ...
+     }
 }
 
 module.exports = IOemuSys ;
 
 
-
-/*exports.A = async (...ele) => {
-    try {
-        await client.connect();
-        const data = await client.db(ele[0]).collection(ele[1]).findOne({ name: ele[2] });
-        console.log(data.name);
-    } finally {
-        await client.close();
-    }
-};
-
-exports.function_Main = async (...elements) => {
-    await exports.A(...elements);
-};
-/*module.exports = {
-    function_Main: async (...elements) => {
-        await A(...elements);
-    },
-    A: async (...ele) => {
-        try {
-            await client.connect();
-            const data = await client.db(ele[0]).collection(ele[1]).findOne({ name: ele[2] });
-            console.log(data.name);
-        } finally {
-            await client.close();
-        }
-    }
-};
-exports.function_Main = async(...elements)=>{
-    await exports.A(...elements);
-}
-/*module.exports = {
-    function_Main: async (...elements) => {
-        await A(...elements);
-    },
-    A: async (...ele) => {
-        try {
-            await client.connect();
-
-            const data = await client.db(ele[0]).collection(ele[1]).findOne({ id: ele[2] });
-            console.log(data.id);
-        }
-        finally {
-            await client.close();
-        }
-    },
-    A('123','234') ;
-
-
-
-};
-
-/*module.exports = {
-    function_Main: async (...elements) => {
-        await A(...elements);
-    },
-    A: async (...ele) => {
-        try {
-            await client.connect();
-            const data = await client.db(ele[0]).collection(ele[1]).findOne({ id: ele[2] });
-            console.log(data.id);
-        } finally {
-            await client.close();
-        }
-    }
-};
-  /*  function_Create: async function(...elements){
-        try{
-            await client.connect();
-        }
-        finally{
-            await client.close();
-        }
-
-    },*/
-    
-/*    function_Read: async function(...elements){
-        try{ 
-            await client.connect();
-            
-            const data = await client.db(elements[0]).collection(elements[1]).findOne({name:elements[2]});
-            console.log(data) ;
-        }
-        finally{
-            await client.close();
-        }
-    },
-
-    function_Del: async (...elements)=>{
-        try{
-            await client.connect();
-        }
-        finally{
-            await client.close();
-        }
-    },
-    
-    function_Update: async (...elements)=>{
-        try{
-            await client.connect();
-        }
-        finally{
-            await client.close();
-        }
-    }
-};*/

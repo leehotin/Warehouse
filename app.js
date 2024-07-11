@@ -11,6 +11,7 @@ var productRouter = require('./routes/product');
 var stockRouter = require('./routes/stock');
 var deliveryOrderRouter = require('./routes/deliveryOrder');
 var listRouter = require('./routes/productList'); 
+var recycleBinRouter = require('./routes/recycleBin') ;
 var app = express();
 
 // view engine setup
@@ -30,6 +31,7 @@ app.use('/product',productRouter);
 app.use('/stock',stockRouter);
 app.use('/deliveryOrder',deliveryOrderRouter);
 app.use('/productlist', listRouter);
+app.use('/recycleBin', recycleBinRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
