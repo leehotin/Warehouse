@@ -30,20 +30,26 @@ class IOemuSys{
             console.log('前台進入閱覧'+inquire+'模式，加油~');
             const setdb = [db,collection];
             console.log(setdb);
-            let user, data ,obj ={};
+            let data ,obj ={};
+            if(ele[0][0]){
+                obj[ele[0][0]] = ele[0][1];
+            }
             switch(ele[0][0]){
-                default :
-                    if(ele[0])
-                        obj[ele[0][0]] = ele[0][1]; 
                 case "delivery_id" :
-                    console.log(obj);
-                    data = await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray();
+                    //console.log(obj);
+                    data = await this.client.db(setdb[0]).collection(setdb[1]).findOne(obj);
                     break ;
-                case "delivery_user" :
-                    console.log(obj);
-                    user = await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray();
+                case "username" :
+                    const projection = { username: 1, _id: 0 }
+                    console.log("aaa", JSON.stringify(projection));
+                    obj['_id'] = 0 ;
+                    console.log("bbb", JSON.stringify(obj));
+                    data = await this.client.db(setdb[0]).collection(setdb[1]).find({},obj).toArray();
+                    //console.log(data);
                     break ;
-
+                default :
+                    
+ 
             }
 
             //else [inquire] = undefined ;

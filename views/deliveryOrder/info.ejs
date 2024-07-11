@@ -30,7 +30,7 @@
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
                             <li class="breadcrumb-item"><a href="/deliveryOrder">DeliveryOrder</a></li>
                             <li class="breadcrumb-item">Information</li>
-                            <li class="breadcrumb-item active" aria-current="page"><%= data[0].delivery_id %></li>
+                            <li class="breadcrumb-item active" aria-current="page"><%= data.delivery_id %></li>
                         </ol>
                     </div>
                     <div class="col">
@@ -47,7 +47,7 @@
                                 <label for="DeliveryID">Delivery ID:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="DeliveryID" name="delivery_id" value="<%= data[0].delivery_id %>" class="form-control text">
+                                <input type="text" id="DeliveryID" name="delivery_id" value="<%= data.delivery_id %>" class="form-control text">
                             </div>
                         </div>
 
@@ -56,7 +56,7 @@
                                 <label for="Company">Company:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="Company" name="company" value="<%= data[0].company %>" class="form-control text">
+                                <input type="text" id="Company" name="company" value="<%= data.company %>" class="form-control text">
                             </div>
                         </div>
 
@@ -65,7 +65,7 @@
                                 <label for="Address">Company Address:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="Address" name="address" value="<%= data[0].address %>" class="form-control text">
+                                <input type="text" id="Address" name="address" value="<%= data.address %>" class="form-control text">
                             </div>
                         </div>
 
@@ -74,7 +74,7 @@
                                 <label for="Phone">Company Phone:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="Phone" name="phone" value="<%= data[0].phone %>" class="form-control text">
+                                <input type="text" id="Phone" name="phone" value="<%= data.phone %>" class="form-control text">
                             </div>
                         </div>
 
@@ -85,11 +85,11 @@
                             <div class="col">
                                 <div class="form-check">
                                     <label class="form-check-label" for="in">In</label>
-                                    <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(data[0].type==='in'){ %>checked<% } %>> 
+                                    <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(data.type==='in'){ %>checked<% } %>> 
                                 </div>
                                 <div class="form-check">
                                     <label class="form-check-label" for="out">Out</label>
-                                    <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(data[0].type==='out'){ %>checked<% } %>>
+                                    <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(data.type==='out'){ %>checked<% } %>>
                                 </div>
                             </div>
                         </div>
@@ -97,23 +97,23 @@
                         <div class="row my-1">
                             <label class="fw-bold ">Items：</label>
                             <div class="col">
-                                <% for(i in data[0].items){ %>
+                                <% for(i in data.items){ %>
                                     <div class="row py-1 my-1 border-bottom border-dark">
                                         <div class="col">
                                             <label for="item[<%= i %>][name]">Name:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][name]" id="item[<%= i %>][name]" value="<%= (data[0].items[i].name).replace(/\n/g, '') %>" size="50">
+                                            <input type='text' class="form-control text" name="item[<%= i %>][name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50">
                                         </div>
                                         <div class="col">
                                             <label for="item[<%= i %>][count]">Count:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][count]" id="item[<%= i %>][count]" value="<%= (data[0].items[i].count) %>" size="10">
+                                            <input type='text' class="form-control text" name="item[<%= i %>][count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
                                         </div>
                                         <div class="col">
                                             <label for="item[<%= i %>][completed]">Completed:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][completed]" id="item[<%= i %>][completed]" value="<%= (data[0].items[i].completed) %>">
+                                            <input type='text' class="form-control text" name="item[<%= i %>][completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
                                         </div>
                                         <div class="col">
                                             <label for="item[<%= i %>][stock_id]">Stock Id:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data[0].items[i].stock_id) %>">
+                                            <input type='text' class="form-control text" name="item[<%= i %>][stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>">
                                         </div>
                                     </div>
                                 <% }for(i = 0 ; i < 2 ; i++){ %>
@@ -146,11 +146,11 @@
                             <div class="col">
                                 <div class="form-check">
                                     <label class="form-check-label" for="finish">Finish</label>
-                                    <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(data[0].delivery_check===1){ %>checked<% } %>>
+                                    <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(data.delivery_check===1){ %>checked<% } %>>
                                 </div>
                                 <div class="form-check">
                                     <label class="form-check-label" for="NotFinish">Not Finish</label>
-                                    <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(data[0].delivery_check==='0'){ %>checked<% } %>>
+                                    <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(data.delivery_check==='0'){ %>checked<% } %>>
                                 </div>
                             </div>
                             <div class="col fw-bold">
@@ -159,7 +159,9 @@
                             <div class="col">
                                 <select name="delivery_user" id="delivery_user" class="form-select form-select-sm">
                                     <option>請選擇</option>
-                                    <option value="<%= data[0].delivery_user %>"><%= data[0].delivery_user %></option>
+                                    <% for(i of user){ %><%= Object.keys(i) %>
+                                    <option value="<%= data.delivery_user %>"><%= data.delivery_user %></option>
+                                    <% } %>
                                 </select>
                             </div>
                         </div>
