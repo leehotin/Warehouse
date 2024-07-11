@@ -65,6 +65,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     let db , colleciton ;
     await iOemuSys.connect();
     let da = await iOemuSys.Read('deliveryOrderInfo',db , 'delivery_notes', ['delivery_id',req.query.delivery_id]);
+    let use = await iOemuSys.Read('使用者列表',db , 'delivery_notes',['delivery_user'] );
     //let deliveryNote = await client.db(dbName).collection("delivery_notes").findOne({_id: id});
     //await client.db(dbName).collection("delivery_notes").updateOne({_id:id},{$set:{deleted_at: new Date()}});
     //await client.db(dbName).collection("logs").insertOne({information:"Delete deliveryNote "+deliveryNote.delivery_id,type:"delete",created_at:new Date(),updated_at:new Date()});

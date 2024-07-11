@@ -113,19 +113,32 @@ router.get('/login', (req,res,next) => {
 router.post('/login', async(req,res,next)=>{
   try{
     await client.connect();
-    
-    let pw = has(req.body.password);
+    let user ,pw = has(req.body.password);
     console.log(pw);
-    let user = await client.db(dbName).collection('users').findOne({username: req.body.username,password: pw,deleted_at:null});
-
-    if(user){
-      req.session.user_id = user._id;
-      req.session.role = user.role;
-      res.redirect('/');
-    }else{
+    user = await client.db(dbName).collection('users').countDocuments({username:{'$regex':req.body.username,'$options':'i'}});
+    if(user>1){
+      req.session.errorMessage = '使用者錯誤，請通知管理員更正';
+      res.redirect('/user/login');
+    }
+    else if(user===0){
       req.session.errorMessage = 'username or password error';
       res.redirect('/user/login');
     }
+    else {
+      user = await client.db(dbName).collection('users').findOne({username:{'$regex':req.body.username,'$options':'i'}});
+      if(pw===user.password){
+        req.session.user_id = user._id;
+        req.session.role = user.role;
+        res.redirect('/');
+      }
+      else {
+        req.session.errorMessage = 'username or password error';
+        res.redirect('/user/login');
+      }
+    }
+    console.log("取得使用者的資料：")
+    console.log(user);
+
  
   }finally{
     await client.close();

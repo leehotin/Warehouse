@@ -30,11 +30,22 @@ class IOemuSys{
             console.log('前台進入閱覧'+inquire+'模式，加油~');
             const setdb = [db,collection];
             console.log(setdb);
-            let obj ={};
-            if(ele[0]){
-                 obj[ele[0][0]] = ele[0][1];
-            
+            let user, data ,obj ={};
+            switch(ele[0][0]){
+                default :
+                    if(ele[0])
+                        obj[ele[0][0]] = ele[0][1]; 
+                case "delivery_id" :
+                    console.log(obj);
+                    data = await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray();
+                    break ;
+                case "delivery_user" :
+                    console.log(obj);
+                    user = await this.client.db(setdb[0]).collection(setdb[1]).find({[ele[0][1]]:true}).toArray();
+                    break ;
+
             }
+
             //else [inquire] = undefined ;
             //console.log(obj);
             //console.log(await this.client.db(setdb[0]).collection(setdb[1]).find(obj).toArray());
@@ -45,7 +56,8 @@ class IOemuSys{
             else id = undefined ;
             console.log(id);*/
             //把找到的所有結果放入data裡
-            let data = await this.client.db(setdb[0]).collection(setdb[1]).find({delivery_id:ele[0][1]}).toArray();
+            
+            //data = await this.client.db(setdb[0]).collection(setdb[1]).find({delivery_id:ele[0][1]}).toArray();
             //回傳到呼叫函數的地方data所載的東西然後再由那邊處理
             //console.log(obj);
             //console.log(data);
