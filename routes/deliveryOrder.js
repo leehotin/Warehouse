@@ -70,8 +70,10 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   try{
     let db;
     await iOemuSys.connect();
-    let da = await iOemuSys.Read('deliveryOrderInfo',db , 'delivery_notes', ['delivery_id',req.query.delivery_id]);
-    let use = await iOemuSys.Read('使用者列表',db , 'users',['username',1] );
+    
+
+    let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
+    let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
     await res.render('deliveryOrder/info',{data:da,user:use});
   }finally{
     await iOemuSys.disconnect();

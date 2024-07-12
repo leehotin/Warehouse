@@ -31,7 +31,7 @@ class IOemuSys{
     async Read(inquire = 'product', setdb, ...ele) {
         setdb = setdb || this.CreatedbIndex();   //初始化db
         const [dbName, collectionName] = await setdb ; 
-        console.log(collectionName)                 //終極濃縮版....新學來的...
+        console.log(collectionName) ;                //終極濃縮版....新學來的...
         console.log('前台進入閱覧' + inquire + '模式，加油~');
         //const setdb = [db, collection];//Rita的舊寫法版本初始化db
         let data, query, projection = {};
@@ -41,12 +41,12 @@ class IOemuSys{
         switch (ele[0][0]) {
             case "Product_id":
             case "delivery_id":
-                data = await this.client.db(setdb[0]).collection(setdb[1]).findOne(projection);
+                data = await this.client.db(dbName).collection(collectionName).findOne(projection);
                 break;
             case "username":
                 projection['_id'] = 0;
                 projection['deleted_at'] = 1;
-                data = await this.client.db(setdb[0]).collection(setdb[1]).find({}, { projection }).toArray();
+                data = await this.client.db(dbName).collection(collectionName).find({}, { projection }).toArray();
                 break;
             case "recycleBin":
                 query = {inquire:ele[0][1]} ;    //創建排序方法查詢
@@ -163,39 +163,42 @@ class IOemuSys{
         }
     }
     //進行刪除東西的操作，預設dbName是Warehouse_In_Out_System，集合2是products，並再傳入一個目標參數，該目標參數是一個陣列，裡面應該有兩個元素
-    async delete(dbName='Warehouse_In_Out_System' ,collectionName='products', target){
+    async delete(inquire='空值' ,setdb, target){
        // Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
         //設定db成固定參數  await iOemuSys.delete('Warehouse_In_Out_System','products',['Product_id',req.body.call_no]);
-        const setdb = [dbName,collectionName] ;
-        const junkBin = 'recycle_bin' ;
-        //讓後台能看到正在進行這個操作
-        //console.log('aaaa',target)
-        let data = await this.Read('Product',setdb[0],setdb[1],[target[0],target[1]]);
-        //console.log(data);
-        var bulkInputJunk = await this.client.db(setdb[0]).collection(junkBin).initializeOrderedBulkOp() ;
-        var bulkDeleteOrigin = await this.client.db(setdb[0]).collection(setdb[1]).initializeOrderedBulkOp() ;
-        data['source'] = setdb[1] ;
+        setdb = setdb || this.CreatedbIndex();   //初始化db
+        const [dbName, collectionName] = await setdb ;
+        const junkBin = 'recycleBin' ; 
+        let data = await this.Read(inquire,setdb,[target[0],target[1]]);
+        //console.log(data);      //一個斷點//讓後台能看到正在進入這一步
+        data['source'] = collectionName ;
+        data['who'] = target[2] ;
         data['original_id'] = data['_id'];
         delete data['_id'];
-        //console.log(data);
-        //console.log('bbbb',target)
-        let query = {} ;//= [{insertOne:data}];//
-        //console.log(query)
-        await bulkInputJunk.insert(data);
-        await bulkInputJunk.execute();
-        //query = [{deleteOne:{filter:{}}}];//
+        let query = [{insertOne:data}];
+        let starting = await this.client.db(dbName).collection(junkBin).bulkWrite(query);
+        if(starting){
+            console.log('資料已移轉至垃圾桶，資料如下：') ;
+            console.log(starting) ;
+        }
+        else return err = 'Error發生了，文件沒法搬運完成QAQ' ;
+        console.log(data);
+        if(!query[0].deleteOne[0].filter){
+            query[0].deleteOne[0].filter = {} ;
+        }
+        query = [{deleteOne:{filter:{}}}];
         for(const i in data){
             if(data.hasOwnProperty(target[0])){
-                query[target[0]]= data.Product_id ;
+                query[0].deleteOne[0].filter[target[0]]= target[1] ;
                 break ;
             }
         }
-        
-        
-        //console.log(query);
-        await bulkDeleteOrigin.find(query).delete();
-        await bulkDeleteOrigin.execute();
-        console.log('前台進入對'+ setdb[1] +'內的資料'+ target[1] +'進行刪除，各位考試加油~');
+        let toEnding = await this.client.db(dbName).collection(collectionName).bulkWrite(query)
+        if(toEnding){
+            console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`) ;
+            console.log(toEnding);
+        }
+        else return err = '糟了，文件有危險，因為是世界奇觀~' ; 
         //如果沒有傳入目標的陣列的第二個元素則跳出本呼叫///
         //await this.client.db(setdb[0]).collection(setdb[1]).bulkWrite(query);/
         //await this.client.db(setdb[0]).collection(setdb[1]).deleteOne( { Product_id: 'AB100010' });
@@ -284,7 +287,7 @@ class IOemuSys{
         return data2db;
     }
     async remove(dbName='Warehoust_In_Out_System',equiueId,...ele){
-        const junkBin = 'recycle_bin' ;        //這是垃圾的初始化...
+        const junkBin = 'recycleBin' ;        //這是垃圾的初始化...
         let data = await this.client.db(dbName).collection(junkBin).findOne({original_id:ObjectId.createFromHexString(equiueId)});
         const setdb = [dbName, data['source']];  //初始化 db數據
         data['_id'] = data['original_id'];       //把存在垃圾桶裡的 好東西拿回去的憑證之一
@@ -306,7 +309,7 @@ class IOemuSys{
         query = [{deleteOne:{filter:{}}}] ; //注入用
         let toEnding = await this.client.db(setdb[0]).collection(junkBin).bulkWrite(query) ;  //刪除垃圾桶的文檔
         if(toEnding){
-            console.log('已把垃圾桶的垃圾清了~~身心舒暢~~那舊垃圾資料如下：') ;
+            console.log('已把垃圾桶的垃圾清了~~身心舒暢~~那嚿垃圾資料如下：') ;
             console.log(toEnding);
         }
         else return err = '糟了，文件有危險，因為是世界奇觀~' ;   

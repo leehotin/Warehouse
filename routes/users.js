@@ -16,7 +16,8 @@ router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
     await client.connect();
-
+    console.log('aaa',req.session.user_id);
+    console.log('bbb',req.session.role);
     const roles = [
       {
         display_name: "Admin",
@@ -41,10 +42,10 @@ router.get('/',checkLogin, async (req, res, next)=>{
       whereData.role = req.query.role;
     }
     whereData.deleted_at = null;
-
+    console.log('aaa',whereData);
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data,roles: roles});
+    res.render('user/index',{datas:data, roles:roles, type:req.session.role});
   }finally{
     await client.close();
   }
@@ -185,7 +186,7 @@ router.post('/save',checkLogin, async (req,res,next)=>{
 
     let data = {};
     let checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
-    if(!checkUser.length()){
+    if(!checkUser.length){
       if (typeof user._id !=="undefined" && user._id != ""){
         data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
         data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
