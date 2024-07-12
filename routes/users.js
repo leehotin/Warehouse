@@ -16,8 +16,6 @@ router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
     await client.connect();
-    console.log('aaa',req.session.user_id);
-    console.log('bbb',req.session.role);
     const roles = [
       {
         display_name: "Admin",
@@ -42,10 +40,9 @@ router.get('/',checkLogin, async (req, res, next)=>{
       whereData.role = req.query.role;
     }
     whereData.deleted_at = null;
-    console.log('aaa',whereData);
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data, roles:roles, type:req.session.role});
+    res.render('user/index',{datas:data, roles:roles});
   }finally{
     await client.close();
   }
