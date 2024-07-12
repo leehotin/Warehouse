@@ -25,7 +25,8 @@ router.get('/',checkLogin, async (req, res, next) =>{
           {displayName: "Delivery User:",name: "whereData[delivery_user]",placeholder: "Delivery User",type: "text"},
           {displayName: "Delivery At:",name: "whereData[delivery_at]",placeholder: "Delivery At",type: "text"},
         ];
-       
+        //darkmode checking
+        let darkMode = req.session.darkmode??'white';
         //where by data
         let whereData = {};
         
@@ -68,13 +69,16 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   }
 }).get('/info',checkLogin, async (req,res,next) =>{
   try{
+    //darkmode checking
+    let darkMode = req.session.darkmode??'white';
+
     let db;
     await iOemuSys.connect();
 
 
     let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
     let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
-    await res.render('deliveryOrder/info',{data:da,user:use});
+    await res.render('deliveryOrder/info',{data:da,user:use,darkmode:darkMode});
   }finally{
     await iOemuSys.disconnect();
   }

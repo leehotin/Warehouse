@@ -9,11 +9,11 @@ const client = new MongoClient("mongodb://localhost:27017/");
 // Assuming your MongoDB database name is "Warehouse_In_Out_System"
 const dbName = "Warehouse_In_Out_System";
 
-router.get('/', async (req, res, next)=> {
+router.get('/',checkLogin, async (req, res, next)=> {
   try{
     await client.connect();
-    let darkmode = req.session.darkmode??'white';
-    console.log(req.session);
+    //darkmode checking
+    let darkMode = req.session.darkmode??'white';
     //reset output
     let data = {};
 
@@ -29,7 +29,7 @@ router.get('/', async (req, res, next)=> {
     data.todayOrders = todayOrder;
     data.notFinishs = notFinish;
 
-    res.render('index',{datas:data,darkmode:darkmode});
+    res.render('index',{datas:data,darkmode:darkMode});
   }finally{
     await client.close();
   }
@@ -39,7 +39,7 @@ router.get('/', async (req, res, next)=> {
   //res.render('0.rar');
 });
 
-router.get('/darkmode', async (req,res,next)=>{
+router.get('/darkmode',checkLogin, async (req,res,next)=>{
   if(req.session.darkmode == 'white'){
     req.session.darkmode = 'dark';
   }else{

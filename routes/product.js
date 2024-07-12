@@ -13,6 +13,8 @@ router.get('/', async (req, res, next) => {
 });
 router.post('/info', async (req,res,next)=>{
     try{
+        //darkmode checking
+        let darkMode = req.session.darkmode??'white';
         console.log(req.body.call_info)
         await client.connect();
         const products = client.db(dbName).collection("products");
@@ -34,7 +36,7 @@ router.post('/info', async (req,res,next)=>{
         ]).toArray();
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
         console.log(data);
-        res.render('product/info',{data:data[0],stocks:stocks});
+        res.render('product/info',{data:data[0],stocks:stocks,darkmode:darkMode});
 
     }finally{
         await client.close();
@@ -42,6 +44,9 @@ router.post('/info', async (req,res,next)=>{
 });
 router.get('/info', async (req,res,next)=>{
     try{
+        //darkmode checking
+        let darkMode = req.session.darkmode??'white';
+        
         await client.connect();
         const products = client.db(dbName).collection("products");
 
@@ -73,7 +78,7 @@ router.get('/info', async (req,res,next)=>{
         }
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
         
-        res.render('product/info',{data:data[0],stocks:stocks});
+        res.render('product/info',{data:data[0],stocks:stocks,darkmode:darkMode});
     }finally{
         await client.close();
     }
