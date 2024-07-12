@@ -40,14 +40,14 @@ router.get('/', async (req, res, next)=> {
 });
 
 router.get('/darkmode', async (req,res,next)=>{
-  if(await req.session.darkmode == 'white'){
-    await req.session.darkmode == 'dark';
+  if(req.session.darkmode == 'white'){
+    req.session.darkmode = 'dark';
   }else{
-    await req.session.darkmode == 'white';
+    req.session.darkmode = 'white';
   }
-  
   res.redirect('/');
-})
+});
+
 async function checkLogin(req,res,next){
   if(req.session.user_id){
     await client.connect();
