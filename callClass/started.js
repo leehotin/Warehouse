@@ -1,5 +1,5 @@
 //const { AllSubstringsIndexStrategy } = require('js-search');
-const { filter } = require('domutils');
+//const { filter } = require('domutils');   //不知為什麼會有XD
 const {MongoClient, ObjectId} = require('mongodb');
 //const ObjectId = require('mongodb').ObjectId;
 
