@@ -9,3 +9,11 @@
     float: left;
     justify-content:space-between;
 }
+.dark{
+    background-color: black;
+    color: white;
+}
+.white{
+    background-color: white;
+    color:black;
+}
