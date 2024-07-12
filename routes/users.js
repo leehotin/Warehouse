@@ -121,6 +121,7 @@ router.post('/login', async(req,res,next)=>{
         $eq: [{ $strLenCP: "$username" }, req.body.username.length]
       }
     };
+    console.log(query);
     user = await client.db(dbName).collection('users').countDocuments(query);
     if(user>1){
       req.session.errorMessage = '使用者錯誤，請通知管理員更正';
