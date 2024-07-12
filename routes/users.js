@@ -54,7 +54,7 @@ router.get('/',checkLogin, async (req, res, next)=>{
     whereData.deleted_at = null;
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data,roles: roles, darkmode:darkMode});
+    res.render('user/index',{datas:data,roles: roles,header:header, darkmode:darkMode});
   }finally{
     await client.close();
   }

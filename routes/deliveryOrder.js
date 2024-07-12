@@ -50,7 +50,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
           projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
 
-        res.render('deliveryOrder/index',{ datas: data, search: search});
+        res.render('deliveryOrder/index',{ datas: data, search: search,darkmode:darkMode});
       }finally{
         await client.close();
       }

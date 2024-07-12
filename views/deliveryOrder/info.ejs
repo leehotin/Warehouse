@@ -20,12 +20,12 @@
                     <a href="/user" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Users</a>
                     <button type="submit" form="logout" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Logout</button>
                     <a href="/recycleBin" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Recycle Bin</a>
-                    <a href="/darkmode" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">change background</a>
+                    <a href="/darkmode" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>"><%= darkmode=='dark'?'Daytime Mode':'Darkness Mode' %></a>
                 </div> 
                 
                 <form action="/user/logout" method="post" id="logout">
                 </form> 
-              </div>
+            </div>
 
             <div class="col-10">
                 <div class="row">

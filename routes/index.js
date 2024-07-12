@@ -40,12 +40,13 @@ router.get('/',checkLogin, async (req, res, next)=> {
 });
 
 router.get('/darkmode',checkLogin, async (req,res,next)=>{
-  if(req.session.darkmode == 'white'){
-    req.session.darkmode = 'dark';
-  }else{
+  if(req.session.darkmode == 'dark'){
     req.session.darkmode = 'white';
+  }else{
+    req.session.darkmode = 'dark';
   }
-  res.redirect('/');
+  //Redirect to previous page
+  res.redirect('back');
 });
 
 async function checkLogin(req,res,next){
