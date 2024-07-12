@@ -70,11 +70,25 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   try{
     let db;
     await iOemuSys.connect();
-    
+
 
     let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
     let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
     await res.render('deliveryOrder/info',{data:da,user:use});
+  }finally{
+    await iOemuSys.disconnect();
+  }
+}).post('/update',checkLogin, async (req,res,next) =>{
+  try{
+    //let query ;
+    await iOemuSys.connect();
+    console.log(req.body);
+    let data = await iOemuSys.update('Update', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
+    if(data)
+      console.log(data);
+    //let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
+    //let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
+    //await res.render('deliveryOrder/info',{data:da,user:use});
   }finally{
     await iOemuSys.disconnect();
   }

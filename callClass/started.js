@@ -1,4 +1,5 @@
 //const { AllSubstringsIndexStrategy } = require('js-search');
+const { filter } = require('domutils');
 const {MongoClient, ObjectId} = require('mongodb');
 //const ObjectId = require('mongodb').ObjectId;
 
@@ -107,17 +108,54 @@ class IOemuSys{
     } 
 
     //暫時未使用
-    async update(...ele){
-        try{
-            await this.connect();
-            for(const x in ele[2]){
-                //console.log(ele[2]);
-               // await this.client.db(ele[0]).collection(ele[1]).updateOne({Product_id:ele[2][i]})
+    async update(inquire,setdb,query,...ele){
+        setdb = setdb || this.CreatedbIndex() ;
+        const [dbName, collectionName] = await setdb ;
+        let result = [], temp={}, items = [];
+        for (let i = 0; i < query['item[product_id]'].length; i++) {
+            items[i] = {
+                product_id: query['item[product_id]'][i],
+                name: query['item[name]'][i],
+                count: Number(query['item[count]'][i]),
+                completed: Number(query['item[completed]'][i]),
+                stock_id: query['item[stock_id]'][i]
+            };
+        };
+        if(query['up_item[name]'][0]!=''){
+            let j = 0 ;
+            for(let i = query['item[product_id]'].length ; i < query['item[product_id]'].length+2 ; i++){
+                items[i] = {
+                    "product_id": query['up_item[product_id]'][j],
+                    "name": query['up_item[name]'][j],
+                    "count": Number(query['up_item[count]'][j]),
+                    "completed": Number(query['up_item[completed]'][j]),
+                    "stock_id": query['up_item[stock_id]'][j]
+                };
+                j++ ;
             }
-        }
-        finally{
-            await this.disconnect();
-        }
+        };
+        console.log(items);
+        temp = {
+            "delivery_id":query['delivery_id'],
+            "company":query['company'],
+            "address":query['address'],
+            "phone":Number(query['phone']),
+            "items":items,
+            "type":query['type'],
+            "delivery_check":query['delivery_check'],
+            "delivery_user":query['delivery_user'],
+            "updated_at":new Date()
+        };
+        // const obj = query
+       // console.log(query)
+       console.log("aaa",query['delivery_id'])
+       console.log('bbb',temp);
+        result = [{updateOne:{filter:{delivery_id:query['delivery_id']},$set:temp}}] ; 
+        console.log('ccc',result);
+        //query = [{updateOne:{"filter":}}]
+        let data = await this.client.db(dbName).collection(collectionName).updateOne({delivery_id:query['delivery_id']},{$set:temp}) ;
+        //let data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
+        return data ; 
     }
     //只是試驗時有使用，還未進行修改讓所有地方呼叫，所以只是傳入剩餘參數
     async Create(...ele){
