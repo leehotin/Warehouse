@@ -185,26 +185,37 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.updated_at = new Date();
 
     let data = {};
-    let checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
-    if(!checkUser.length()){
-      if (typeof user._id !=="undefined" && user._id != ""){
+    let checkUser = [];
+    if (typeof user._id !=="undefined" && user._id != ""){
+      //update user
+      //check DB username is unique
+      checkUser = await client.db(dbName).collection("users").find({_id:{$ne:user._id},username:user.username}).toArray();
+      if(checkUser.length == 0){
         data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
         data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
       }else{
-        if(user.password && user.username){
+        req.session.message = "update input error";
+        return res.redirect(`/user/info/${user._id}`);
+      }
+    }else{
+      //create user
+      if(user.password && user.username){
+        //check DB username is unique
+        checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
+        if(checkUser.length == 0){
           data = await client.db(dbName).collection("users").insertOne(user);
           await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
           data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
         }else{
-          req.session.message = "create input error";
+          req.session.message = "database has this username";
           return res.redirect('/user/create');
-        }
+        } 
+      }else{
+        req.session.message = "create input error";
+        return res.redirect('/user/create');
       }
-    }else{
-      req.session.message = "database have this username";
-      return res.redirect('/user/create');
     }
-    
+
     res.redirect(`/user/info/${data._id}`);
   }finally{
     await client.close();
