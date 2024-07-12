@@ -90,10 +90,10 @@ router.post('/save',checkLogin, async (req,res,next) =>{
     let data = {};
     if (typeof stock._id !=="undefined" && stock._id != ""){
       data = await client.db(dbName).collection("stocks").updateOne({_id: ObjectId.createFromHexString(req.body._id)}, {$set:stock});
-      data = await client.db(dbName).collection("stocks").findOne({_id:ObjectId.createFromHexString(req.body._id)});
+      data._id =req.body._id;
     }else{
       data = await client.db(dbName).collection("stocks").insertOne(stock);
-      data = await client.db(dbName).collection("stocks").findOne({_id:data.insertedId});
+      data._id = data.insertedId;
     }
     
     res.redirect("/stock/info?stock_id="+data._id); 
