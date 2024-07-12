@@ -16,7 +16,6 @@ router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
     await client.connect();
-
     const roles = [
       {
         display_name: "Admin",
@@ -50,10 +49,9 @@ router.get('/',checkLogin, async (req, res, next)=>{
 
     }
     whereData.deleted_at = null;
-
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data,roles: roles,header:header});
+    res.render('user/index',{datas:data,roles: roles});
   }finally{
     await client.close();
   }
@@ -194,12 +192,9 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.updated_at = new Date();
 
     let data = {};
-    let checkUser = [];
-    if (typeof user._id !=="undefined" && user._id != ""){
-      //update user
-      //check DB username is unique
-      checkUser = await client.db(dbName).collection("users").find({_id:{$ne:user._id},username:user.username}).toArray();
-      if(checkUser.length == 0){
+    let checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
+    if(!checkUser.length()){
+      if (typeof user._id !=="undefined" && user._id != ""){
         data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
         data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
       }else{

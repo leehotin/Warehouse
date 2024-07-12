@@ -94,7 +94,9 @@ router.get('/',async function(req, res, next) {
     try{
         //進行連線
         await iOemuSys.connect();
-        await iOemuSys.remove();
+        console.log(req.session.user_id)
+        await iOemuSys.delete('ProductList',iOemuSys.CreatedbIndex('products'),['Product_id',req.body.call_no,req.session.user_id]);
+        //delete(dbName='Warehouse_In_Out_System' ,collectionName='products', target)
         //以下沒有得到想要的結果，所以可能要再問一下Wong Sir
         //await iOemuSys.delete('Warehouse_In_Out_System','products',['Product_id',req.body.call_no]);
         /*res.writeHead(200,{
