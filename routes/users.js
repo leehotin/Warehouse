@@ -181,7 +181,7 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.user_id = req.body.user_id??'';
     user.username = req.body.username;
     if (typeof req.body.password !=="undefined" && req.body.password !="" && typeof req.body.confirm_password !=="undefined" && req.body.confirm_password !=""){
-      if(req.body.password === req.body.confirm_password){
+      if(req.body.password === req.body.confirm_password && req.body.password.length <17 && req.body.confirm_password.length <17){
         user.password = has(req.body.password);
         //user.password = req.body.password;
       }
