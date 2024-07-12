@@ -103,14 +103,20 @@ router.post('/save',async (req,res,next) =>{
        
         const productsCollection = client.db(dbName).collection("products");
         if(productUpdata._id){
+            await productsCollection.updateOne({ _id: productUpdata._id }, { $set: productUpdata });
+        } else {
             //update data to DB
             //find by _id
-        }else{
+            const result = await productsCollection.insertOne(productUpdata);
+            productUpdata._id = result.insertedId;
+        }
             //create data to DB (return data)
             //find by data.insertedId
-        }
+            res.redirect("/product/info?id=" + productUpdata._id.toHexString());
+        } catch (err) {
+            console.error(err);
         //return product info get data by _id    
-        res.redirect("/product/info?id=");
+               next(err);
     }finally{
         await client.close();
     }

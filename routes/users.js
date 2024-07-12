@@ -26,7 +26,7 @@ router.get('/',checkLogin, async (req, res, next)=>{
         value: "1"
       },
     ]
-
+    let header = req.query.role??'User/Admin'
     let whereData = {};
 
     if (typeof req.query.user_id !== "undefined" &&req.query.user_id != ""){
@@ -38,11 +38,20 @@ router.get('/',checkLogin, async (req, res, next)=>{
     }
     if (typeof req.query.role !== "undefined" &&req.query.role != ""){
       whereData.role = req.query.role;
+      switch(req.query.role){
+        case "0":
+          header = "Admin";
+          break;
+        case "1":
+          header = "User";
+          break;
+      }
+
     }
     whereData.deleted_at = null;
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data, roles:roles});
+    res.render('user/index',{datas:data,roles: roles});
   }finally{
     await client.close();
   }
@@ -119,6 +128,7 @@ router.post('/login', async(req,res,next)=>{
         $eq: [{ $strLenCP: "$username" }, req.body.username.length]
       }
     };
+    console.log(query);
     user = await client.db(dbName).collection('users').countDocuments(query);
     if(user>1){
       req.session.errorMessage = '使用者錯誤，請通知管理員更正';
@@ -183,25 +193,33 @@ router.post('/save',checkLogin, async (req,res,next)=>{
 
     let data = {};
     let checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
-    if(!checkUser.length){
+    if(!checkUser.length()){
       if (typeof user._id !=="undefined" && user._id != ""){
         data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
         data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
       }else{
-        if(user.password && user.username){
+        req.session.message = "update input error";
+        return res.redirect(`/user/info/${user._id}`);
+      }
+    }else{
+      //create user
+      if(user.password && user.username){
+        //check DB username is unique
+        checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
+        if(checkUser.length == 0){
           data = await client.db(dbName).collection("users").insertOne(user);
           await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
           data = await client.db(dbName).collection("users").findOne({_id:data.insertedId});
         }else{
-          req.session.message = "create input error";
+          req.session.message = "database has this username";
           return res.redirect('/user/create');
-        }
+        } 
+      }else{
+        req.session.message = "create input error";
+        return res.redirect('/user/create');
       }
-    }else{
-      req.session.message = "database have this username";
-      return res.redirect('/user/create');
     }
-    
+
     res.redirect(`/user/info/${data._id}`);
   }finally{
     await client.close();
