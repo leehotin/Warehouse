@@ -20,8 +20,8 @@ router.get('/', async (req, res, next)=> {
     start.setHours(0,0,0,0);
     end.setHours(23,59,59,999);
     //get data from DB
-    let todayOrder = await client.db(dbName).collection('delivery_notes').find({created_at:{$gte:start,$lte:end}}).toArray();
-    let notFinish = await client.db(dbName).collection('delivery_notes').find({delivery_at:null,delivery_check:"0"}).toArray();
+    let todayOrder = await client.db(dbName).collection('delivery_notes').find({created_at:{$gte:start,$lte:end}}, {projection:{_id:0,delivery_id:1,type:1,company:1}}).toArray();
+    let notFinish = await client.db(dbName).collection('delivery_notes').find({delivery_at:null,delivery_check:"0"}, {projection:{_id:0,delivery_id:1,type:1,company:1}}).toArray();
     
     //set return data
     data.todayOrders = todayOrder;
