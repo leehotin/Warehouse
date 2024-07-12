@@ -29,11 +29,10 @@
                     <li class="breadcrumb-item active" aria-current="page">Home</li>
                     <li class="breadcrumb-item active" aria-current="page">recycleBin</li>
                 </ol>
-                <button type="submit" form="rollback" class="">復原</button>
-                <form action="/recycleBin/rollback" method="post" id="rollback">
-                </form>
+                <button type="submit" form="rollback" class="">復原</button>    
             </div>
           </div>
+          <form action="/recycleBin/rollback" method="get" id="rollback">
           <div class="row">
             <div class="col m-1">
               <!-- delivery Order(created_at) == new Date().date  -->
@@ -54,7 +53,7 @@
              <% for(data of datas){ %>
                 <div class="row py-1 border-bottom border-dark">
                     <div class="">
-                        <input type="checkbox" value="<%= data._id %>" name="<%= data._id %>" >
+                        <input type="checkbox" value="<%= data._id %>" name="rollback_no" >
                         
                       </div>  
                   <div class="col text-center">
@@ -100,6 +99,7 @@
               
             </div>
           </div>
+          </form>
         </div>
       </div>
     </div>

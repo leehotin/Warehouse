@@ -16,7 +16,6 @@ router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
     await client.connect();
-
     const roles = [
       {
         display_name: "Admin",
@@ -27,7 +26,7 @@ router.get('/',checkLogin, async (req, res, next)=>{
         value: "1"
       },
     ]
-
+    let header = req.query.role??'User/Admin'
     let whereData = {};
 
     if (typeof req.query.user_id !== "undefined" &&req.query.user_id != ""){
@@ -39,9 +38,17 @@ router.get('/',checkLogin, async (req, res, next)=>{
     }
     if (typeof req.query.role !== "undefined" &&req.query.role != ""){
       whereData.role = req.query.role;
+      switch(req.query.role){
+        case "0":
+          header = "Admin";
+          break;
+        case "1":
+          header = "User";
+          break;
+      }
+
     }
     whereData.deleted_at = null;
-
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
     res.render('user/index',{datas:data,roles: roles});
@@ -175,7 +182,7 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.user_id = req.body.user_id??'';
     user.username = req.body.username;
     if (typeof req.body.password !=="undefined" && req.body.password !="" && typeof req.body.confirm_password !=="undefined" && req.body.confirm_password !=""){
-      if(req.body.password === req.body.confirm_password){
+      if(req.body.password === req.body.confirm_password && req.body.password.length <17 && req.body.confirm_password.length <17){
         user.password = has(req.body.password);
         //user.password = req.body.password;
       }
@@ -188,12 +195,9 @@ router.post('/save',checkLogin, async (req,res,next)=>{
     user.updated_at = new Date();
 
     let data = {};
-    let checkUser = [];
-    if (typeof user._id !=="undefined" && user._id != ""){
-      //update user
-      //check DB username is unique
-      checkUser = await client.db(dbName).collection("users").find({_id:{$ne:user._id},username:user.username}).toArray();
-      if(checkUser.length == 0){
+    let checkUser = await client.db(dbName).collection("users").find({username:user.username}).toArray();
+    if(!checkUser.length()){
+      if (typeof user._id !=="undefined" && user._id != ""){
         data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
         data = await client.db(dbName).collection("users").findOne({_id:ObjectId.createFromHexString(req.body.id)});
       }else{

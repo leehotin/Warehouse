@@ -101,38 +101,39 @@
                                     <div class="row py-1 my-1 border-bottom border-dark">
                                         <div class="col">
                                             <label for="item[<%= i %>][name]">Name:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50">
+                                            <input type="hidden" name="item[product_id]" value="<%= (data.items[i].product_id) %>">
+                                            <input type='text' class="form-control text" name="item[name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50">
                                         </div>
                                         <div class="col">
                                             <label for="item[<%= i %>][count]">Count:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
+                                            <input type='text' class="form-control text" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
                                         </div>
                                         <div class="col">
                                             <label for="item[<%= i %>][completed]">Completed:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
+                                            <input type='text' class="form-control text" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
                                         </div>
                                         <div class="col">
                                             <label for="item[<%= i %>][stock_id]">Stock Id:</label>
-                                            <input type='text' class="form-control text" name="item[<%= i %>][stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>">
+                                            <input type='text' class="form-control text" name="item[stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>">
                                         </div>
                                     </div>
                                 <% }for(i = 0 ; i < 2 ; i++){ %>
                                     <div class="row py-1 my-1 border-bottom border-dark">
                                         <div class="col">
                                             <label for="up_item[<%= i %>][name]">Name:</label>
-                                            <input type='text' class="form-control text" name="up_item[<%= i %>][name]" id="up_item[<%= i %>][name]" value="" size="50">
+                                            <input type='text' class="form-control text" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50">
                                         </div>
                                         <div class="col">
                                             <label for="up_item[<%= i %>][count]">Count:</label>
-                                            <input type='text' class="form-control text" name="up_item[<%= i %>][count]" id="up_item[<%= i %>][count]" value="" size="10">
+                                            <input type='text' class="form-control text" name="up_item[count]" id="up_item[<%= i %>][count]" value="" size="10">
                                         </div>
                                         <div class="col">
                                             <label for="up_item[<%= i %>][completed]">Completed:</label>
-                                            <input type='text' class="form-control text" name="up_item[<%= i %>][completed]" id="up_item[<%= i %>][completed]" value="">
+                                            <input type='text' class="form-control text" name="up_item[completed]" id="up_item[<%= i %>][completed]" value="">
                                         </div>
                                         <div class="col">
                                             <label for="up_item[<%= i %>][stock_id]">Stock Id:</label>
-                                            <input type='text' class="form-control text" name="up_item[<%= i %>][stock_id]" id="up_item[<%= i %>][stock_id]" value="">
+                                            <input type='text' class="form-control text" name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]" value="">
                                         </div>
                                     </div>
                                 <% }%>

@@ -28,7 +28,7 @@
                     <div class="col">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="/user">User</a></li>
+                            <li class="breadcrumb-item"><a href="/user">User/Admin</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><%= data._id? data.user_id : 'Craete User' %></li>
                         </ol>
                     </div>
@@ -63,7 +63,7 @@
                             <label for="password">Password:</label>
                         </div>
                         <div class="col">
-                            <input type="password" id="password" name="password" class="form-control" placeholder="password">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="password" maxlength="16">
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                             <label for="confirm_password">Confirm Password:</label>
                         </div>
                         <div class="col">
-                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="confirm password">
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="confirm password" maxlength="16">
                         </div>
                     </div>
 

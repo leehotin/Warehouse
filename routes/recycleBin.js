@@ -13,6 +13,7 @@ router.get('/',async function(req, res, next) {
         await iOemuSys.connect();
 
         if(req.session.user_id){
+            //console.log(req.query.sort);
             req.query.sort= 1 ? 1 : -1
             let data = await iOemuSys.Read('垃圾桶',iOemuSys.CreatedbIndex('recycleBin'),['recycleBin',req.query.sort]);
             res.render('recycleBin/index',{datas:data,sort:req.query.sort}) ;
@@ -57,6 +58,29 @@ router.get('/',async function(req, res, next) {
         await iOemuSys.disconnect();
     }
     //當路由是get並且傳入sort時做的處理  
+}).get('/rollback',async function(req, res, next) {
+    try{
+        //進行連線
+        let steck = [] ;
+        await iOemuSys.connect();
+        //宣告變數存在
+        await iOemuSys.rollBack(dbName='Warehouse_In_Out_System',req.query.rollback_no) ;
+        //let inquire;
+        //正如上面第一個普通的get路由，這次後面要傳入一個陣列並且有三個元素，共2項資料4個元素，其中第一個是直接傳入剛宣告的，
+        //如果呼叫的處理方法沒有對該項做預載參數，便會出現報錯，而後面陣列的由於已知在這邊的路由是對products做處理，所以陣列前兩個元素已知
+        //而陣列第三個元素要透過get方法來取得，所以是ejs設計好的一步
+        //let data = await iOemuSys.sort(inquire,['Warehouse_In_Out_System','products',req.query.seq]);
+        //console.log(typeof(req.query.seq));
+        //這邊的用意是，如果get方法收到的seq項回傳的值不是-1的話，把inquire的值變成傳來的sort值以進行下一個程序的ejs設計項，因為inquire已用完所以再用一下
+        if(req.query.seq!=-1){
+            inquire = req.query.sort ;
+        }
+        //res.render('productlist/index',{data:data,sort:inquire});
+    }
+    finally{
+        //關閉連線
+        await iOemuSys.disconnect();
+    }  
 }).get('/sort',async function(req, res, next) {
     try{
         //進行連線
