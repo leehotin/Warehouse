@@ -44,28 +44,40 @@ router.get('/info', async (req,res,next)=>{
     try{
         await client.connect();
         const products = client.db(dbName).collection("products");
-        let data = await products.aggregate([ // join table
-            {
-                $match: { _id: ObjectId.createFromHexString('667cbf81ac08f2d70899ad0e')} //找出符合條件的products
-            },
-            {
-                $lookup:{
-                    from:"stocks", //目標table
-                    localField:"stock_id", // 自己的col 
-                    foreignField:"_id", // 目標的col
-                    as: "stocks"// 取得資料後的名稱
-                }
-            },
-            {
-                $limit: 1 //輸出數量
+
+        let productcreative = [];
+        if (typeof req.query.productcreative!=="undefined" &&req.query.productcreative!=""){
+            productcreative.push({
+                $match: { _id: ObjectId.createFromHexString(req.query.productcreative)} //找出符合條件的products
+            });
+        } else {productcreative.push({
+            $match: { _id:""} //找出符合條件的products
+            });
+        }
+        
+        productcreative.push({
+            $lookup:{
+                from:"stocks", //目標table
+                localField:"stock_id", // 自己的col 
+                foreignField:"_id", // 目標的col
+                as: "stocks"// 取得資料後的名稱
             }
-        ]).toArray();
+        });
+        productcreative.push({
+            $limit: 1 //輸出數量
+        });
+
+        let data = await products.aggregate(productcreative).toArray();
+        if(data.length == 0){
+            data[0] =[]
+        }
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
-        console.log(data);
+        
         res.render('product/info',{data:data[0],stocks:stocks});
     }finally{
         await client.close();
     }
+
 });
 
 router.post('/delete',checkLogin,async (req,res,next) =>{
@@ -103,21 +115,21 @@ router.post('/save',async (req,res,next) =>{
        
         const productsCollection = client.db(dbName).collection("products");
         if(productUpdata._id){
-            await productsCollection.updateOne({ _id: productUpdata._id }, { $set: productUpdata });
-        } else {
             //update data to DB
             //find by _id
+            await productsCollection.updateOne({ _id: productUpdata._id }, { $set: productUpdata });
+        
+        } else {
+            //create data to DB (return data)
+            //find by data.insertedId
             const result = await productsCollection.insertOne(productUpdata);
             productUpdata._id = result.insertedId;
         }
-            //create data to DB (return data)
-            //find by data.insertedId
-            res.redirect("/product/info?id=" + productUpdata._id.toHexString());
+            res.redirect("/product/info?id=" + productUpdata._id);
         } catch (err) {
             console.error(err);
         //return product info get data by _id    
-               next(err);
-    }finally{
+        }finally{
         await client.close();
     }
 });

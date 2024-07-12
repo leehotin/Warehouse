@@ -9,7 +9,7 @@
     <h1>4角有限公司</h1>
       
     <form action="/product/save" method="post">
-      <input type="text" name="_id" value="<%= data._id %>" hidden>
+      <input type="text" name="_id" value="<%= data._id %>" hidden> 
 
       <table>
         <tr>
@@ -33,13 +33,18 @@
         <tr>
           <td>
             <label for="Type">Type:</label> 
-          </td>
-          <td>
-            <input type="text" id="type" name="type" value="<%= data.Type %>" placeholder="Type" required>
-          </td>
-        </tr>
-
-        <tr>
+            </td>
+            <td>
+                  <select>
+                  <option value="coffee" <%= data.Type === 'coffee' ? 'selected' : '' %>>Coffee</option>
+                  <option value="noodle" <%= data.Type === 'noodle' ? 'selected' : '' %>>Noodle</option>
+                  <option value="drink" <%= data.Type === 'drink' ? 'selected' : '' %>>Drink</option>
+                  <option value="beer" <%= data.Type === 'beer' ? 'selected' : '' %>>Beer</option>
+                  <option value="tissue" <%= data.Type === 'tissue' ? 'selected' : '' %>>Tissue</option>
+                </select>
+              </tr>
+           
+       
           <td>
             <label for="Brand">Brand:</label> 
           </td>
@@ -62,7 +67,7 @@
             <label for="Count">Count:</label> 
           </td>
           <td>
-            <input type="text" id="Count" name="Count" value="<%= data.Count %>" placeholder="Count" required>
+          <input type="number" id="Count" name="Count" value="<%= data.Count %>" placeholder="Count" min="1" required>
           </td>
         </tr>
         
@@ -81,7 +86,10 @@
 
         <tr>
           <td> 
-            <Button type="submit">Submit</Button> 
+
+
+            <Button type="submit">Submit </Button> 
+                
           </td>
         </tr>
       </table>
@@ -90,10 +98,6 @@
     <a href="/products">Back to stock List</a></br>
     <a href="/products">Back to Index</a></br>
      
-    <% let count= 0  ;
-    for(const value in Object.values(data.Date)){ let Arr = [] ; %>
-    <% Arr.push((Object.keys(data.Date))[value]) %><% Arr.push((Object.values(data.Date))[value]) %><% count +=Object.values(data.Date)[value] ; %>
-    <a><%= Arr %></a></br><% } %>
-    總貨量為：<%= count %>
+    
   </body>
 </html>

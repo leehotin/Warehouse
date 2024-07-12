@@ -123,6 +123,7 @@ router.post('/login', async(req,res,next)=>{
     };
     console.log(query);
     user = await client.db(dbName).collection('users').countDocuments(query);
+console.log("user:", user);
     if(user>1){
       req.session.errorMessage = '使用者錯誤，請通知管理員更正';
       res.redirect('/user/login');
@@ -132,7 +133,9 @@ router.post('/login', async(req,res,next)=>{
       res.redirect('/user/login');
     }
     else {
+console.log("try to find");
       user = await client.db(dbName).collection('users').findOne({username:{'$regex':req.body.username,'$options':'i'}});
+console.log("user pwd", user.password);
       if(pw===user.password){
         req.session.user_id = user._id;
         req.session.role = user.role;
