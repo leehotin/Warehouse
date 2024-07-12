@@ -27,7 +27,7 @@ router.get('/',checkLogin, async (req, res, next)=>{
         value: "1"
       },
     ]
-
+    let header = req.query.role??'User/Admin'
     let whereData = {};
 
     if (typeof req.query.user_id !== "undefined" &&req.query.user_id != ""){
@@ -39,12 +39,21 @@ router.get('/',checkLogin, async (req, res, next)=>{
     }
     if (typeof req.query.role !== "undefined" &&req.query.role != ""){
       whereData.role = req.query.role;
+      switch(req.query.role){
+        case "0":
+          header = "Admin";
+          break;
+        case "1":
+          header = "User";
+          break;
+      }
+
     }
     whereData.deleted_at = null;
 
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data,roles: roles});
+    res.render('user/index',{datas:data,roles: roles,header:header});
   }finally{
     await client.close();
   }
