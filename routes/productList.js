@@ -9,6 +9,8 @@ const iOemuSys = new IOemuSys();
 
 router.get('/',async function(req, res, next) {
     try{
+        //darkmode checking
+        let darkMode = req.session.darkmode??'white';
         //進行連線
         await iOemuSys.connect();
         //宣告變數存在，其實可以直接傳入想要的東西
@@ -43,7 +45,7 @@ router.get('/',async function(req, res, next) {
             //Arr.push(pushData);
        // };
         //console.log(Arr);
-        res.render('productlist/index',{data:data,sort:inquire});
+        res.render('productlist/index',{data:data,sort:inquire,darkmode:darkMode});
     }
     finally{
         //關閉連線

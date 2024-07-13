@@ -11,12 +11,14 @@ router.get('/',async function(req, res, next) {
     try{
         //進行連線
         await iOemuSys.connect();
+        //darkmode checking
+        let darkMode = req.session.darkmode??'white';
 
         if(req.session.user_id){
             //console.log(req.query.sort);
             req.query.sort= 1 ? 1 : -1
             let data = await iOemuSys.Read('垃圾桶',iOemuSys.CreatedbIndex('recycleBin'),['recycleBin',req.query.sort]);
-            res.render('recycleBin/index',{datas:data,sort:req.query.sort}) ;
+            res.render('recycleBin/index',{datas:data,sort:req.query.sort,darkmode:darkMode}) ;
         }
         else res.redirect('user/login') ;
         //宣告變數存在，其實可以直接傳入想要的東西
