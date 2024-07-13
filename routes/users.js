@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const Crypto = require('crypto');
 const hash = Crypto.createHash('sha512');
+const IOemuSys = require('./../callClass/started');
+const iOemuSys = new IOemuSys();
 //console.log(hash.update('123456').digest('hex'));
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
@@ -15,6 +17,7 @@ const dbName = "Warehouse_In_Out_System";
 router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
+
     await client.connect();
     const roles = [
       {
@@ -123,15 +126,29 @@ router.post('/login', async(req,res,next)=>{
     let user ,pw = has(req.body.password);
     console.log(pw);
     const query = {
-      username: { $regex: new RegExp(req.body.username, 'i') },
+      username: { $regex: new RegExp(req.body.username, 'i') },password:pw,
       $expr: {
         $eq: [{ $strLenCP: "$username" }, req.body.username.length]
       }
     };
-    console.log(query);
     user = await client.db(dbName).collection('users').countDocuments(query);
-console.log("user:", user);
-    if(user>1){
+    switch (user) {
+      case 1:
+        user = await client.db(dbName).collection('users').findOne({ username: { '$regex': req.body.username, '$options': 'i' } });
+          req.session.user_id = user._id;
+          req.session.role = user.role;
+          console.log(req.session);
+          res.redirect('/');
+        break;
+      case (user > 1):
+        req.session.errorMessage = '使用者錯誤，請通知管理員更正';
+        res.redirect('/user/login');
+        break;
+      default:
+        req.session.errorMessage = 'username or password error';
+        res.redirect('/user/login');
+    }
+    /*if(user>1){
       req.session.errorMessage = '使用者錯誤，請通知管理員更正';
       res.redirect('/user/login');
     }
@@ -140,9 +157,7 @@ console.log("user:", user);
       res.redirect('/user/login');
     }
     else {
-console.log("try to find");
       user = await client.db(dbName).collection('users').findOne({username:{'$regex':req.body.username,'$options':'i'}});
-console.log("user pwd", user.password);
       if(pw===user.password){
         req.session.user_id = user._id;
         req.session.role = user.role;
@@ -152,7 +167,7 @@ console.log("user pwd", user.password);
         req.session.errorMessage = 'username or password error';
         res.redirect('/user/login');
       }
-    }
+    }*/
     console.log("取得使用者的資料：")
     console.log(user);
 

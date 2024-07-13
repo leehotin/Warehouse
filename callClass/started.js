@@ -22,12 +22,26 @@ class IOemuSys{
         collectionName = collectionName || 'products' ;
         return  ['Warehouse_In_Out_System',collectionName] ;
     }
-    async test(data,id){
+    async tesiit(data,id){
         let da = await this.client.db('Warehouse_In_Out_System').collection('products').replaceOne({_id:id},data);
         //let data = await this.client.db('Warehouse_In_Out_System').collection('products').find().toArray();
 
         return da ;
     }
+    async lookupSheet(lookup){
+        const lookupSheet = lookup || ['stocks', 'stock_id', '_id', 'trans_stock_id' ] ;
+        return lookupSheet ;
+    }
+        
+       async test(){
+        await this.client.db('Warehouse_In_Out_System');
+       }
+ /*   async selectType(setdb){
+        setdb =setdb || this.CreatedbIndex() ;
+       const [dbName, collectionName] = await setdb ;
+       console.log(setdb[0]);
+       await this.client.db(dbName).collection(collectionName).find({}).toArray()//.update({delivery_id:delivery_id},{$set:{delivery_check:String(delivery_check)}});
+   }*/
     //讀取db用，預設是載入db是Warehouse_In_Out_System，而預設集合是products，查詢的集合類型是product，還有一些剩餘參數未使用
     async Read(inquire = 'product', setdb, ...ele) {
         setdb = setdb || this.CreatedbIndex();   //初始化db
@@ -71,11 +85,16 @@ class IOemuSys{
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
     }
     //對所想要進行的資料進行排序，預設是對Name排序
-    async sort(setdb,matchCol,targetValue,from,localField,foreignField,as,inquire='Name',...ele){
+    async sort(inquire,setdb,lookupSheet,reqQuery,...ele){
+        setdb = setdb || this.CreatedbIndex();
+        const [dbName, collectionName] =  await setdb ;
+        lookupSheet = lookupSheet || this.lookupSheet() ;
+        const [from, localField, foreignField, as] = await lookupSheet ;
+        let [sort, sequence] = reqQuery ;
         console.log('前台使用排序功能對'+setdb[0]+'資料庫中的'+setdb[1]+'集合裡的'+inquire+'項進行排序，做到了~~');
-        if(setdb[2]=="1")
-            setdb[2] = 1 ;
-        else setdb[2] = -1 ;
+        if(sequence=="1")
+            sequence = 1 ;
+        else sequence = -1 ;
         //把找到的資料依想要排序的項目進行排序並裝入data裡
         //const data = await this.client.db(setdb[0]).collection(setdb[1]).find().sort({[inquire]:setdb[2]}).toArray();
         //回傳到呼叫的函數的地方data所載的東西然後再由那邊處理
@@ -86,8 +105,9 @@ class IOemuSys{
                 value = ObjectId.createFromHexString(value);
             }*/
             //setdb[3]
-            let v = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}];
-            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(v//[//{
+            let query = [{$lookup:{from,localField,foreignField,as}},{$sort:{[sort]:sequence}}] ; 
+           // let v = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}];
+            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(query//[//{
                     //$match:{[matchCol]:value}
                 //},
               /*  {
@@ -376,6 +396,7 @@ class IOemuSys{
         else return err = '糟了，文件有危險，因為是世界奇觀~' ;   
                 //因為我不想想太多，如有這麼個 岡刂 岡刂 女子 土褱 木幾 我鳥 者阝 手高 口吾 手店 ...*/
      }
+
 }
 
 module.exports = IOemuSys ;

@@ -71,25 +71,25 @@
                     <% for(x in data){ %>
                         <div class="row py-2 border-bottom border-dark">
                             <div class="col">
-                                <%= data[x].Product_id %>
+                                <a href='/product/info?call_info=<%= data[x].Product_id %>'><%= data[x].Product_id %></a>
                             </div>
                             <div class="col">
-                                <%= data[x].Type %>
+                                <a href='/productlist/title?title=<%= data[x].Type %>'><%= data[x].Type %></a>
                             </div>
                             <div class="col">
-                                <%= data[x].Brand %>
+                                <a href='/productlist/title?title=<%= data[x].Brand %>'><%= data[x].Brand %></a>
                             </div>
                             <div class="col">
-                                <%= data[x].Name %>
+                                <a href='/productlist/title?title=<%= data[x].Name %>'><%= data[x].Name %></a>
                             </div>
                             <div class="col">
-                                <%= data[x].Origin %>
+                                <a href='/productlist/title?title=<%= data[x].Origin %>'><%= data[x].Origin %></a>
                             </div>
                             <div class="col">
-                                <%= data[x].Count %>
+                                <a href='/productlist/title?title=<%= data[x].Count %>'><%= data[x].Count %></a>
                             </div>
                             <div class="col">
-                                <%= data[x].trans_stock_id[0].name %>
+                                <a href='/productlist/title?title=<%= data[x].trans_stock_id[0].name %>'><%= data[x].trans_stock_id[0].name %></a>
                             </div>
                             <div class="col">
                                 <%
