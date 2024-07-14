@@ -30,7 +30,9 @@ app.use('/user', usersRouter);
 app.use('/product',productRouter);
 app.use('/stock',stockRouter);
 app.use('/deliveryOrder',deliveryOrderRouter);
+
 app.use('/productlist', listRouter);
+app.use('/getlayout', listRouter);         //另外響應的路由，都指向同一個路由做解釋，為了應付不同地方傳來的只要回傳JSON查詢用的詳見該路由最後一個.get方法
 app.use('/recycleBin', recycleBinRouter);
 
 // catch 404 and forward to error handler

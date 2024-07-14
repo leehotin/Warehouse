@@ -1,100 +1,118 @@
 //const { AllSubstringsIndexStrategy } = require('js-search');
 //const { filter } = require('domutils');   //不知為什麼會有XD
-const {MongoClient, ObjectId} = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 //const ObjectId = require('mongodb').ObjectId;
 
-class IOemuSys{
+class IOemuSys {
     //建構函數用
-    constructor(){
-        this.client = null ;
+    constructor() {
+        this.client = null;
     }
 
     //創造連線用
-    async connect(){        
-        this.client = await MongoClient.connect("mongodb://localhost:27017/") ;
-         await this.client.connect();
+    async connect() {
+        this.client = await MongoClient.connect("mongodb://localhost:27017/");
+        await this.client.connect();
     }
     //中斷連線用
-    async disconnect(){
+    async disconnect() {
         await this.client.close();
     }
-    async CreatedbIndex(collectionName){
-        collectionName = collectionName || 'products' ;
-        return  ['Warehouse_In_Out_System',collectionName] ;
+    async CreatedbIndex(collectionName) {
+        collectionName = collectionName || 'products';
+        return ['Warehouse_In_Out_System', collectionName];
     }
-    async tesiit(data,id){
-        let da = await this.client.db('Warehouse_In_Out_System').collection('products').replaceOne({_id:id},data);
+    async tesiit(data, id) {
+        let da = await this.client.db('Warehouse_In_Out_System').collection('products').replaceOne({ _id: id }, data);
         //let data = await this.client.db('Warehouse_In_Out_System').collection('products').find().toArray();
 
-        return da ;
+        return da;
     }
-    async lookupSheet(lookup){
-        const lookupSheet = lookup || ['stocks', 'stock_id', '_id', 'trans_stock_id' ] ;
-        return lookupSheet ;
+    async lookupSheet(lookup) {
+        const lookupSheet = lookup || ['stocks', 'stock_id', '_id', 'trans_stock_id'];
+        return lookupSheet;
     }
-        
-       async test(){
-        await this.client.db('Warehouse_In_Out_System');
-       }
- /*   async selectType(setdb){
-        setdb =setdb || this.CreatedbIndex() ;
-       const [dbName, collectionName] = await setdb ;
-       console.log(setdb[0]);
-       await this.client.db(dbName).collection(collectionName).find({}).toArray()//.update({delivery_id:delivery_id},{$set:{delivery_check:String(delivery_check)}});
-   }*/
+    /*   沒有使用的功能 預期是把想要轉換的文檔字段轉成想要的型別
+        async selectType(setdb) {
+            setdb = setdb || this.CreatedbIndex();
+            const [dbName, collectionName] = await setdb;
+            //let d =await this.client.db(dbName).collection(collectionName).find({}).toArray()//.update({delivery_id:delivery_id},{$set:{delivery_check:String(delivery_check)}});
+            //console.log(d);
+        }
+    */
+
+
     //讀取db用，預設是載入db是Warehouse_In_Out_System，而預設集合是products，查詢的集合類型是product，還有一些剩餘參數未使用
     async Read(inquire = 'product', setdb, ...ele) {
         setdb = setdb || this.CreatedbIndex();   //初始化db
-        const [dbName, collectionName] = await setdb ; 
+        const [dbName, collectionName] = await setdb;
         //console.log(collectionName) ;                //終極濃縮版....新學來的...
         //console.log('前台進入閱覧' + inquire + '模式，加油~');
         //const setdb = [db, collection];//Rita的舊寫法版本初始化db
-        let data, query, projection = {};
-        if (ele[0][0])       //如果存在就把ele[0][0]的值當成ele[0][1]的鍵 ;
+        let data, projection = {}, pipline = [];
+        if (ele.length !== 0) {
+            //如果剩餘參數長度不為0就把ele[0][0]的值當成ele[0][1]的鍵 ;如果用剩餘參數，前台怎麼都會傳一個數組給後台，所以要檢查是不是長度為0
             projection[ele[0][0]] = ele[0][1];
-        //console.log(projection);//監察數值有沒有進去用  理論上可以刪了(就是設個斷點的用意看程式有沒有進行到這一段)
-        switch (ele[0][0]) {
-            case "Product_id":
-            case "delivery_id":
-                data = await this.client.db(dbName).collection(collectionName).findOne(projection);
-                break;
-            case "username":
-                projection['_id'] = 0;
-                projection['deleted_at'] = 1;
-                data = await this.client.db(dbName).collection(collectionName).find({}, { projection }).toArray();
-                break;
-            case "recycleBin":
-                query = {inquire:ele[0][1]} ;    //創建排序方法查詢
+            switch (ele[0][0]) {
+                case "Product_id":
+                case "delivery_id":
+                    data = await this.client.db(dbName).collection(collectionName).findOne(projection);
+                    break;
+                case "Brand":
+                    let Origin = [], Brand;
+                    //這樣把ele[0][0]當索引分組, 其他不用顯示，這邊的sort操作_id不是指原本的_id，不加的話取得的順序會改變
+                    pipline = [{ $group: { _id: `$${ele[0][0]}` } }, { $sort: { _id: 1 } }];
+                    Origin = [{ $group: { _id: "$Origin" } }, { $sort: { _id: 1 } }, { $project: { _id: 0, Origin: "$_id" } }];
 
-               // data = await this.client.db(dbName).collection(collectionName).find({}).toArray() ;
-                data = await this.client.db(dbName).collection(collectionName).find().sort(query).toArray();
-                break;
-            default :
+                    //console.log(pipline);
+                    Brand = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    Origin = await this.client.db(dbName).collection(collectionName).aggregate(Origin).toArray();
+                    data = [Brand, Origin];
+                    break;
+                case "username":
+                    projection['_id'] = 0;
+                    projection['deleted_at'] = 1;
+                    data = await this.client.db(dbName).collection(collectionName).find({}, { projection }).toArray();
+                    break;
+                case "recycleBin":
+                    pipline = { inquire: ele[0][1] };    //創建排序方法查詢
+                    // data = await this.client.db(dbName).collection(collectionName).find({}).toArray() ;
+                    data = await this.client.db(dbName).collection(collectionName).find().sort(query).toArray();
+                    break;
+                default:
+            }
         }
+        else data = await this.client.db(dbName).collection(collectionName).find().toArray();
         //把找到的所有結果放入data裡
         //回傳到呼叫函數的地方data所載的東西然後再由那邊處理
         //console.log(data);
         return data;
     }
-    async search(a){
-        console.log('前台有人進行了1次搜尋作業');
-        const setdb = ['Warehouse_In_Out_System','products'] ;
+    async search(inquire, setdb, query) {
+        setdb = setdb || this.CreatedbIndex();
+        const [dbName, collectionName] = await setdb;
+        const [group, search, limit] = await query;
+        console.log('前台有人進行了1次' + inquire + '操作');
+        let pipline = [{ $match: { [search]: limit } }, { $group: { _id: `$${group}` } }, { $sort: { _id: 1 } }];
+        let data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).createIndex({"$**":"text"});
-        var data = await this.client.db(setdb[0]).collection(setdb[1]).find({$text:{$search:a}}).toArray(); 
-        return data ;
+        //var data = await this.client.db(setdb[0]).collection(setdb[1]).find({$text:{$search:a}}).toArray(); 
+        ///data = await this.client.db(dbName).collection(collectionName).find({}, { projection }).toArray();
+        return data;
         //var data = await this.client.db(setdb[0]).collection(setdb[1]).find().toArray();
     }
     //對所想要進行的資料進行排序，預設是對Name排序
-    async sort(inquire,setdb,lookupSheet,reqQuery,...ele){
+    async sort(inquire, setdb, lookupSheet, reqQuery, ...ele) {
         setdb = setdb || this.CreatedbIndex();
-        const [dbName, collectionName] =  await setdb ;
-        lookupSheet = lookupSheet || this.lookupSheet() ;
-        const [from, localField, foreignField, as] = await lookupSheet ;
-        let [sort, sequence] = reqQuery ;
-        console.log('前台使用排序功能對'+setdb[0]+'資料庫中的'+setdb[1]+'集合裡的'+inquire+'項進行排序，做到了~~');
-        if(sequence=="1")
-            sequence = 1 ;
-        else sequence = -1 ;
+        const [dbName, collectionName] = await setdb;
+        lookupSheet = lookupSheet || this.lookupSheet();
+        const [from, localField, foreignField, as] = await lookupSheet;
+        let [sort, sequence] = reqQuery;
+        let query;
+        console.log('前台使用排序功能對' + dbName + '資料庫中的' + collectionName + '集合裡的' + sort + '項進行' + inquire + '，做到了~~');
+        if (sequence == "1")
+            sequence = 1;
+        else sequence = -1;
         //把找到的資料依想要排序的項目進行排序並裝入data裡
         //const data = await this.client.db(setdb[0]).collection(setdb[1]).find().sort({[inquire]:setdb[2]}).toArray();
         //回傳到呼叫的函數的地方data所載的東西然後再由那邊處理
@@ -104,198 +122,219 @@ class IOemuSys{
                 value = objectId.toHexString();
                 value = ObjectId.createFromHexString(value);
             }*/
-            //setdb[3]
-            let query = [{$lookup:{from,localField,foreignField,as}},{$sort:{[sort]:sequence}}] ; 
-           // let v = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}];
-            let joinData = await this.client.db(setdb[0]).collection(setdb[1]).aggregate(query//[//{
-                    //$match:{[matchCol]:value}
-                //},
-              /*  {
-                    $lookup:{
-                        from:from,
-                        localField:localMatch,
-                        foreignField:targetMatch,
-                        as:setSelector
-                    }
-                },
-                {
-                    $sort:{[inquire]:setdb[2]}
-                }
-            ]*/).toArray();
-            //console.log(joinData)
-                console.log(v);
-        return joinData ;
-    } 
+        ////if(ele)
+        if (ele[0]) {
+            if (ele[0].length == 24)
+                ele[0] = ObjectId.createFromHexString(ele[0]);
+            query = [{ $match: { [sort]: ele[0] } }, { $lookup: { from, localField, foreignField, as } }, { $sort: { [sort]: sequence } }];
+        }
+        else
+            query = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [sort]: sequence } }];
+        //console.log(query) 
+        // let v = [{$lookup:{from,localField,foreignField,as}},{$sort:{[inquire]:setdb[2]}}];
+        let joinData = await this.client.db(dbName).collection(collectionName).aggregate(query).toArray();//[//{
+        //$match:{[matchCol]:value}
+        //},
+        /*  {
+              $lookup:{
+                  from:from,
+                  localField:localMatch,
+                  foreignField:targetMatch,
+                  as:setSelector
+              }
+          },
+          {
+              $sort:{[inquire]:setdb[2]}
+          }
+      ]*/
+        //console.log(joinData)
+        //console.log(v);
+        //joinData['sub']= 'use' ;
+        //console.log(joinData);
+        return joinData;
+    }
 
     //暫時未使用
-    async update(inquire,setdb,query,...ele){
-        setdb = setdb || this.CreatedbIndex() ;
-        const [dbName, collectionName] = await setdb ;
-        let result = [], temp={}, items = [];
-        for (let i = 0; i < query['item[product_id]'].length; i++) {
-            items[i] = {
-                product_id: query['item[product_id]'][i],
-                name: query['item[name]'][i],
-                count: Number(query['item[count]'][i]),
-                completed: Number(query['item[completed]'][i]),
-                stock_id: query['item[stock_id]'][i]
-            };
-        };
-        if(query['up_item[name]'][0]!=''){
-            let j = 0 ;
-            for(let i = query['item[product_id]'].length ; i < query['item[product_id]'].length+2 ; i++){
-                items[i] = {
-                    "product_id": query['up_item[product_id]'][j],
-                    "name": query['up_item[name]'][j],
-                    "count": Number(query['up_item[count]'][j]),
-                    "completed": Number(query['up_item[completed]'][j]),
-                    "stock_id": query['up_item[stock_id]'][j]
+    async update(inquire, setdb, query, ...ele) {
+        setdb = setdb || this.CreatedbIndex();
+        const [dbName, collectionName] = await setdb;
+        let result = [], temp = {}, items = [], data;
+        switch (inquire) {
+            case 'updateDeliveryOrder':
+                for (let i = 0; i < query['item[product_id]'].length; i++) {
+                    items[i] = {
+                        product_id: query['item[product_id]'][i],
+                        name: query['item[name]'][i],
+                        count: Number(query['item[count]'][i]),
+                        completed: Number(query['item[completed]'][i]),
+                        stock_id: query['item[stock_id]'][i]
+                    };
                 };
-                j++ ;
-            }
-        };
-        console.log(items);
-        temp = {
-            "delivery_id":query['delivery_id'],
-            "company":query['company'],
-            "address":query['address'],
-            "phone":Number(query['phone']),
-            "items":items,
-            "type":query['type'],
-            "delivery_check":query['delivery_check'],
-            "delivery_user":query['delivery_user'],
-            "updated_at":new Date()
-        };
-        // const obj = query
-       // console.log(query)
-       console.log("aaa",query['delivery_id'])
-       console.log('bbb',temp);
-        result = [{updateOne:{filter:{delivery_id:query['delivery_id']},$set:temp}}] ; 
-        console.log('ccc',result);
-        //query = [{updateOne:{"filter":}}]
-        let data = await this.client.db(dbName).collection(collectionName).updateOne({delivery_id:query['delivery_id']},{$set:temp}) ;
-        //let data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
-        return data ; 
+                if (query['up_item[name]'][0] != '') {
+                    let j = 0;
+                    for (let i = query['item[product_id]'].length; i < query['item[product_id]'].length + 2; i++) {
+                        items[i] = {
+                            "product_id": query['up_item[product_id]'][j],
+                            "name": query['up_item[name]'][j],
+                            "count": Number(query['up_item[count]'][j]),
+                            "completed": Number(query['up_item[completed]'][j]),
+                            "stock_id": query['up_item[stock_id]'][j]
+                        };
+                        j++;
+                    }
+                };
+                //console.log(items);
+                temp = {
+                    delivery_id: query['delivery_id'],
+                    company: query['company'],
+                    address: query['address'],
+                    phone: query['phone'],
+                    items: items,
+                    type: query['type'],
+                    delivery_check: query['delivery_check'],
+                    delivery_user: query['delivery_user'],
+                    updated_at: new Date()
+                };
+                result = [{
+                    updateOne: {
+                        filter: { delivery_id: query['delivery_id'] },
+                        update: {
+                            $set: temp
+                        },
+                        upset: true
+                    }
+                }];
+                data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
+                break;
+            case 'newProduct':
+                result = [{
+                    insertOne: query
+                }];
+                data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
+                break;
+            default:
+        }
+        return data;
     }
     //只是試驗時有使用，還未進行修改讓所有地方呼叫，所以只是傳入剩餘參數
-    async Create(...ele){
+    async Create(...ele) {
         //未把所有動作分開處理
-        try{
-            var w =  0 ;
+        try {
+            var w = 0;
             //var t = {} ;
             const newObjectlist = ele[2].slice();
             //進行這個物件本身的呼叫方式可以用this.XXXXXX
             await this.connect();
             //因為剩餘參數是以陣列的形式傳入，所以要進行一點陣列操作
-            await this.client.db(ele[0]).createCollection(ele[1]) ;
+            await this.client.db(ele[0]).createCollection(ele[1]);
             console.log(ele[2].length);
             //忘了為什麼會這樣了....
-            while(w< ele[2].length && newObjectlist.length>0){
+            while (w < ele[2].length && newObjectlist.length > 0) {
                 //一個不正統的做法
-                if(await this.client.db(ele[0]).collection(ele[1]).findOne({Product_id:newObjectlist[w].Product_id})){
+                if (await this.client.db(ele[0]).collection(ele[1]).findOne({ Product_id: newObjectlist[w].Product_id })) {
                     //當上面找到的話進行增加的動作
-                    await this.client.db(ele[0]).collection(ele[1]).updateOne({Product_id:newObjectlist[w].Product_id},{"$inc":{"Count":newObjectlist[w].Count}}) ;
+                    await this.client.db(ele[0]).collection(ele[1]).updateOne({ Product_id: newObjectlist[w].Product_id }, { "$inc": { "Count": newObjectlist[w].Count } });
                     //陣列操作
-                    newObjectlist.splice(newObjectlist[w],1) ;
+                    newObjectlist.splice(newObjectlist[w], 1);
                     //這邊好像沒作用
-                    continue ;
-                    
+                    continue;
+
                 }
                 //流程控制
                 w++;
-                
+
                 //console.log(newObjectlist) ;
                 //await this.client.db(ele[0]).collection(ele[1]).insertOne(ele[2][w]) ;
-        
-                    //return console.log('已有資料存在');
-               // console.log(ele[2][w].Product_id);
+
+                //return console.log('已有資料存在');
+                // console.log(ele[2][w].Product_id);
             }//console.log(w);
             //console.log(newObjectlist);
-            if(newObjectlist.length>0)
-                await this.client.db(ele[0]).collection(ele[1]).insertMany(newObjectlist) ;
-          //console.log(dat) ;
+            if (newObjectlist.length > 0)
+                await this.client.db(ele[0]).collection(ele[1]).insertMany(newObjectlist);
+            //console.log(dat) ;
         }
-        finally{
+        finally {
             //呼叫本身的一個叫disconnect的方法
             await this.disconnect();
         }
     }
     //進行刪除東西的操作，預設dbName是Warehouse_In_Out_System，集合2是products，並再傳入一個目標參數，該目標參數是一個陣列，裡面應該有兩個元素
-    async delete(inquire='空值' ,setdb, target){
-       // Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
+    async delete(inquire = '空值', setdb, target) {
+        // Read(inquire='product',db='Warehouse_In_Out_System',collection='products',...ele){
         //設定db成固定參數  await iOemuSys.delete('Warehouse_In_Out_System','products',['Product_id',req.body.call_no]);
         setdb = setdb || this.CreatedbIndex();   //初始化db
-        const [dbName, collectionName] = await setdb ;
-        const junkBin = 'recycleBin' ; 
-        let filter ;
-        let data = await this.Read(inquire,setdb,[target[0],target[1]]);
+        const [dbName, collectionName] = await setdb;
+        const junkBin = 'recycleBin';
+        let filter;
+        let data = await this.Read(inquire, setdb, [target[0], target[1]]);
         //console.log(data);      //一個斷點//讓後台能看到正在進入這一步
-        data['source'] = collectionName ;
-        data['who'] = target[2] ;
+        data['source'] = collectionName;
+        data['who'] = target[2];
         data['original_id'] = data['_id'];
         delete data['_id'];
-        let query = [{insertOne:data}];
-       // let starting = await this.client.db(dbName).collection(junkBin).bulkWrite(query);
-        if(starting){
-            console.log('資料已移轉至垃圾桶，資料如下：') ;
-            console.log(starting) ;
+        let query = [{ insertOne: data }];
+        // let starting = await this.client.db(dbName).collection(junkBin).bulkWrite(query);
+        if (starting) {
+            console.log('資料已移轉至垃圾桶，資料如下：');
+            console.log(starting);
         }
-        else return err = 'Error發生了，文件沒法搬運完成QAQ' ;
+        else return err = 'Error發生了，文件沒法搬運完成QAQ';
         console.log(data);
-        query =[{deleteOne:{filter:{}}}] ;
-         //[{ deleteOne: { filter } }] = query;
-        for(const i in data){
-            if(data.hasOwnProperty(target[0])){
-                filter[target[0]]= target[1] ;
-                break ;
+        query = [{ deleteOne: { filter: {} } }];
+        //[{ deleteOne: { filter } }] = query;
+        for (const i in data) {
+            if (data.hasOwnProperty(target[0])) {
+                filter[target[0]] = target[1];
+                break;
             }
         }
         //let toEnding = await this.client.db(dbName).collection(collectionName).bulkWrite(query)
-        if(toEnding){
-            console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`) ;
+        if (toEnding) {
+            console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`);
             console.log(toEnding);
         }
-        else return err = '糟了，文件有危險，因為是世界奇觀~' ; 
-        return 0 ;
+        else return err = '糟了，文件有危險，因為是世界奇觀~';
+        return 0;
     }
     //檢查Login狀態
-    async checkLogin(data2db){
+    async checkLogin(data2db) {
         //用getdata來裝找到的文檔筆數
-        let getdata = await this.client.db('Warehouse_In_Out_System').collection('users').countDocuments({username:data2db[0]});
+        let getdata = await this.client.db('Warehouse_In_Out_System').collection('users').countDocuments({ username: data2db[0] });
         //如果多於1筆則報錯，並回傳error這個陣列，其中陣列第二個元素用來給呼叫的地方重定向成login那邊的路由
-        if(getdata!=1){
-            let error = [('老兄~~~我找到超過一個使用者叫' + data[0] + '的人耶~~不可能，絕對不可能~'),'login'] ;
-            return error ;
+        if (getdata != 1) {
+            let error = [('老兄~~~我找到超過一個使用者叫' + data[0] + '的人耶~~不可能，絕對不可能~'), 'login'];
+            return error;
         }
         //真的把找到的唯一一筆資料傳入getdata裡面
-        getdata = await this.client.db('Warehouse_In_Out_System').collection('users').findOne({username:data2db[0],password:data2db[1]});
+        getdata = await this.client.db('Warehouse_In_Out_System').collection('users').findOne({ username: data2db[0], password: data2db[1] });
         //如果找不到匹配的資料(username和password)則進行這個if
-        if(!getdata)
+        if (!getdata)
             //回傳一個字串
-            return 'user_call_Version/login' ;
+            return 'user_call_Version/login';
         //有找到的話把結果裝成result的一個陣列，暫定裡面有三個元素，分別是使用者名稱、密碼(已經過sha256處理的結果)[可以不用傳也可]、使用者身份類別等資料
-        let result = [getdata.username, getdata.password, getdata.role] ;
+        let result = [getdata.username, getdata.password, getdata.role];
         //回傳呼叫的地方result陣列
-        return result ;
+        return result;
     }
-    async joinCollection(dbName='Warehouse_In_Out_System',collectionName='products',matchCol,targetValue,fromValue,localMatch,targetMatch,setSelector,...ele){
+    async joinCollection(dbName = 'Warehouse_In_Out_System', collectionName = 'products', matchCol, targetValue, fromValue, localMatch, targetMatch, setSelector, ...ele) {
         //console.log(typeof(targetValue));
-        let value ;
-        if(typeof(targetValue)==='object' ){
-            const objectId = targetValue ;
+        let value;
+        if (typeof (targetValue) === 'object') {
+            const objectId = targetValue;
             value = objectId.toHexString();
             value = ObjectId.createFromHexString(value);
         }
         let joinData = await this.client.db(dbName).collection(collectionName).aggregate([
-           //{
-                //$match:{[matchCol]:value}
+            //{
+            //$match:{[matchCol]:value}
             //},
             {
-                $lookup:{
-                    from:fromValue,
-                    localField:localMatch,
-                    foreignField:targetMatch,
-                    as:setSelector
+                $lookup: {
+                    from: fromValue,
+                    localField: localMatch,
+                    foreignField: targetMatch,
+                    as: setSelector
                 }
             }//,
             //{
@@ -305,62 +344,62 @@ class IOemuSys{
         //value = joinData[0].trans_stock_id ;
         //value = [value[0].area,value[0].name] ;
         //console.log(joinData)        
-        return joinData ;
+        return joinData;
     }
     //以下為呼叫函數系列，都使用剩餘參數
-    async function_Read(...elements){
+    async function_Read(...elements) {
         await this.Read(...elements);
     }
-    async function_Create(...elements){
+    async function_Create(...elements) {
         await this.Create(...elements);
     }
-    async function_update(...elements){
+    async function_update(...elements) {
         await this.update(...elements);
     }
-    async function_joinCollection(...elements){
+    async function_joinCollection(...elements) {
         let Data = await this.joinCollection(...elements);
-        return Data ;
+        return Data;
     }
     //呼叫檢查Login的函數 
-    async function_checkLogin(data){
+    async function_checkLogin(data) {
         //如果沒有資料則回傳errormessage作回應
-        if(!data){
-            let errormessage = '沒有使用者資料或密碼為空，不能進行操作與查閱~' ;
-            return console.log(errormessage) ;
+        if (!data) {
+            let errormessage = '沒有使用者資料或密碼為空，不能進行操作與查閱~';
+            return console.log(errormessage);
         }
         //有兩項資料則才進行資料比對和把結果裝在data2db裡
         let data2db = await this.checkLogin(data);
         //回傳data2db裡的東西(裡面不一定要東西，裡面裝什麼視乎進行的checkLogin()方法得到的東西)//
         return data2db;
     }
-    async rollBack(dbName='Warehouse_In_Out_System',equiueId,...ele){
-        const junkBin = 'recycleBin' ;        //這是垃圾的初始化...
+    async rollBack(dbName = 'Warehouse_In_Out_System', equiueId, ...ele) {
+        const junkBin = 'recycleBin';        //這是垃圾的初始化...
         let query, data, steck, steckNotes, steckStock, steckUsers, temp;
-        for(let i of equiueId){
+        for (let i of equiueId) {
             steck.push(ObjectId.createFromHexString(i));
         }
 
-        query = {_id:{$in:steck}} ;
+        query = { _id: { $in: steck } };
         //console.log(query);
-        data = await this.client.db(dbName).collection(junkBin).find(query).toArray() ;
+        data = await this.client.db(dbName).collection(junkBin).find(query).toArray();
         //const setdb = [dbName, data['source']];  //初始化 db數據
         //data['_id'] = data['original_id'];       //把存在垃圾桶裡的 好東西拿回去的憑證之一
         //delete data['who'];
         //delete data['original_id'];              //把這個憑證刪掉
         //delete data['source'];                   //這是本來的來源地 好東西拿回去的憑證之二
         //query.push(data[i]) ;         //做一個詢問條件句  以藏在下面要用的地方
-        
+
         //console.log(data) ;
-        steck = [] ;
+        steck = [];
         for (let i in data) {
-            temp[i]['collectionName'] = data[i].source ;
-            data[i]['_id'] = data[i].original_id ;
-            delete data[i].original_id ;
-            delete data[i].source ;
-            delete data[i].who ;
+            temp[i]['collectionName'] = data[i].source;
+            data[i]['_id'] = data[i].original_id;
+            delete data[i].original_id;
+            delete data[i].source;
+            delete data[i].who;
             switch (temp[i]['collectionName']) {
                 case "delivery_notes":
-                    steckNotes.push(data[i]) ;
+                    steckNotes.push(data[i]);
                     break;
                 case "products":
                     steck.push(data[i]);
@@ -395,10 +434,8 @@ class IOemuSys{
         }
         else return err = '糟了，文件有危險，因為是世界奇觀~' ;   
                 //因為我不想想太多，如有這麼個 岡刂 岡刂 女子 土褱 木幾 我鳥 者阝 手高 口吾 手店 ...*/
-     }
+    }
 
 }
 
-module.exports = IOemuSys ;
-
-
+module.exports = IOemuSys;

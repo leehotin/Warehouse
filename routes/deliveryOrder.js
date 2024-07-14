@@ -41,11 +41,6 @@ router.get('/',checkLogin, async (req, res, next) =>{
             //console.log(typeof(whereData[data]));
           }
         }
-        let a=[] ;
-        a.length
-        console.log(typeof(whereData.phone));
-        //if(req.query.whereData)
-        //console.log(req.query.whereData);
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
           projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
@@ -71,8 +66,6 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   try{
     //darkmode checking
     let darkMode = req.session.darkmode??'white';
-
-    let db;
     await iOemuSys.connect();
 
 
@@ -84,15 +77,10 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   }
 }).post('/update',checkLogin, async (req,res,next) =>{
   try{
-    //let query ;
     await iOemuSys.connect();
-    console.log(req.body);
-    let data = await iOemuSys.update('Update', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
-    if(data)
-      console.log(data);
-    //let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
-    //let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
-    //await res.render('deliveryOrder/info',{data:da,user:use});
+    //await iOemuSys.selectType(iOemuSys.CreatedbIndex('delivery_notes'));
+    await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
+
   }finally{
     await iOemuSys.disconnect();
   }
