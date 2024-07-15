@@ -13,14 +13,14 @@
         <div class="row row_rita">
             <div class="col-2">
                 <div class="list-group list-group-flush text-center">
-                    <a href="/" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Index</a>
-                    <a href="/productlist" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Products</a>
-                    <a href="/stock" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Stocks</a>
-                    <a href="/deliveryOrder" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Delivery Orders</a>
-                    <a href="/user" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Users</a>
-                    <button type="submit" form="logout" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Logout</button>
-                    <a href="/recycleBin" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Recycle Bin</a>
-                    <a href="/darkmode" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>"><%= darkmode=='dark'?'Daytime Mode':'Darkness Mode' %></a>
+                    <a href="/" class="list-group-item darkmode">Index</a>
+                    <a href="/productlist" class="list-group-item darkmode">Products</a>
+                    <a href="/stock" class="list-group-item darkmode">Stocks</a>
+                    <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
+                    <a href="/user" class="list-group-item darkmode">Users</a>
+                    <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
+                    <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
+                    <label class="list-group-item darkmode" onclick="darkMode(this)">Daytime Mode</label>
                 </div> 
                 
                 <form action="/user/logout" method="post" id="logout">
