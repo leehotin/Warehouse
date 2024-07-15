@@ -18,7 +18,7 @@
         </script>
         <script src="../js/darkMode.js"></script>
     </head>
-    <body class="v1">
+    <body class="v1 darkmode">
         <input class="switch-box" type="checkbox" id="btn" >
         <div class="container">
             <div class="row">
@@ -31,7 +31,7 @@
                         <a href="/user" class="list-group-item darkmode">Users</a>
                         <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
                         <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode" onclick="darkMode(this)">Daytime Mode</label>
+                        <label class="list-group-item darkmode" onclick="darkMode(this)">Dark Mode</label>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -137,4 +137,7 @@
         </div>
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('load', setDarkMode());
+    </script>  
 </html>
