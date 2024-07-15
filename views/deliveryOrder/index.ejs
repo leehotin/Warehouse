@@ -28,8 +28,8 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Delivery Order</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
+                                <li class="breadcrumb-item darkmode active" aria-current="page">Delivery Order</li>
                             </ol>
                         </div>
                         <div class="col">
@@ -92,14 +92,14 @@
                         </div>
                     </div>
                     <% if(datas.length == 0){ %>
-                        <div class="row py-1 border-bottom border-dark text-center">
-                            <label>Not have Delivery Order</label>
+                        <div class="row py-1 border-bottom border-primary text-center">
+                            <label class="darkmode">Not have Delivery Order</label>
                         </div>
                     <% } %>
                     <% for(data of datas){ %>
-                        <div class="row py-2 border-bottom border-dark">
+                        <div class="row py-2 border-bottom border-primary">
                             <div class="col text-center">
-                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                             </div>
                             <div class="col text-center">
                                 <%= data.type %>

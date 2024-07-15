@@ -29,8 +29,8 @@
           <div class="row my-1">
             <div class="col">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">recycleBin</li>
+                    <li class="breadcrumb-item"><a href="/"  class="darkmode">Home</a></li>
+                    <li class="breadcrumb-item active darkmode" aria-current="page">recycleBin</li>
                 </ol>
                 <button type="submit" form="rollback" class="">復原</button>    
             </div>
@@ -42,7 +42,7 @@
               <div class="row text-center">
                 <label>進桶表</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-secondary-subtle">
                 <div class="col fw-bold fs-5 text-center">
                   <label><a href='/recycleBin?sort=<%= sort %>&title=time'>進垃圾桶時間</a></label>
                 </div>
@@ -54,7 +54,7 @@
                 </div>
               </div>
              <% for(data of datas){ %>
-                <div class="row py-1 border-bottom border-dark">
+                <div class="row py-1 border-bottom border-primary">
                     <div class="">
                         <input type="checkbox" value="<%= data._id %>" name="rollback_no" >
                         
@@ -76,7 +76,7 @@
               <div class="row text-center">
                 <label>Not Finish Order</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-secondary-subtle">
                 <div class="col fw-bold fs-5 text-center">
                   <label>Delivery Id</label>
                 </div>
@@ -88,7 +88,7 @@
                 </div>
               </div>
              
-                <div class="row py-1 border-bottom border-dark">
+                <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center">
                     <a href="./deliveryOrder/info?delivery_id="></a>
                   </div>

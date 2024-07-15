@@ -31,9 +31,9 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><%= stock_data._id? (stock_data.area + " " + stock_data.name) : 'Craete Stock' %></li>
+                                <li class="breadcrumb-item darkmode"><a href="/" class="darkmode">Home</a></li>
+                                <li class="breadcrumb-item darkmode"><a href="/stock" class="darkmode">Stock</a></li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page"><%= stock_data._id? (stock_data.area + " " + stock_data.name) : 'Craete Stock' %></li>
                             </ol>
                         </div>
                     </div>
@@ -82,8 +82,6 @@
                 </div>
             </div>
         </div>
-        
-
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>

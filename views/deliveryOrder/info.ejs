@@ -29,10 +29,10 @@
                     <div class="row">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item"><a href="/deliveryOrder">DeliveryOrder</a></li>
-                                <li class="breadcrumb-item">Information</li>
-                                <li class="breadcrumb-item active" aria-current="page"><%= data.delivery_id %></li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/deliveryOrder" class="darkmode">DeliveryOrder</a></li>
+                                <li class="breadcrumb-item darkmode">Information</li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page"><%= data.delivery_id %></li>
                             </ol>
                         </div>
                         <div class="col">
@@ -100,7 +100,7 @@
                                 <label class="fw-bold ">Items：</label>
                                 <div class="col">
                                     <% for(i in data.items){ %>
-                                        <div class="row py-1 my-1 border-bottom border-dark">
+                                        <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
                                                 <label for="item[<%= i %>][name]">Name:</label>
                                                 <input type="hidden" name="item[product_id]" value="<%= (data.items[i].product_id) %>">
@@ -120,7 +120,7 @@
                                             </div>
                                         </div>
                                     <% }for(i = 0 ; i < 2 ; i++){ %>
-                                        <div class="row py-1 my-1 border-bottom border-dark">
+                                        <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][name]">Name:</label>
                                                 <input type='text' class="form-control text" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50">

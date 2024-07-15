@@ -19,7 +19,6 @@
         <script src="/js/darkMode.js"></script>
     </head>
     <body class="v1 darkmode">
-        <input class="switch-box" type="checkbox" id="btn" >
         <div class="container">
             <div class="row">
                 <div class="col-2">
@@ -42,15 +41,15 @@
                     <div class="row">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Product</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page">Product</li>
                             </ol>
                         </div>
                         <div class="col">
                             <a href="/product/create" class="btn btn-primary">Create Product</a>
                         </div>
                     </div>
-                    <div class="row my-2 border-bottom border-dark">
+                    <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                         <div class="col fw-bold fs-5">
                             <a href='/productlist/sort?sort=Product_id&seq=<%= sort==="Product_id"?-1:1 %>'>貨品編號</a>
                         </div>
@@ -80,27 +79,27 @@
                         </div>                  
                     </div>
                     <% for(x in data){ %>
-                        <div class="row py-2 border-bottom border-dark hover">
+                        <div class="row py-2 border-bottom border-primary hover">
                             <div class="col">
-                                <a href='/product/info?call_info=<%= data[x].Product_id %>'><%= data[x].Product_id %></a>
+                                <a href='/product/info?call_info=<%= data[x].Product_id %>' class="darkmode"><%= data[x].Product_id %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=Type&title=<%= data[x].Type %>&seq=<%= sort==="Type"?-1:1 %>'><%= data[x].Type %></a>
+                                <a href='/productlist/title?sort=Type&title=<%= data[x].Type %>&seq=<%= sort==="Type"?-1:1 %>' class="darkmode"><%= data[x].Type %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=Brand&title=<%= data[x].Brand %>&seq=<%= sort==="Brand"?-1:1 %>'><%= data[x].Brand %></a>
+                                <a href='/productlist/title?sort=Brand&title=<%= data[x].Brand %>&seq=<%= sort==="Brand"?-1:1 %>' class="darkmode"><%= data[x].Brand %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=Name&title=<%= data[x].Name %>&seq=<%= sort==="Name"?-1:1 %>'><%= data[x].Name %></a>
+                                <a href='/productlist/title?sort=Name&title=<%= data[x].Name %>&seq=<%= sort==="Name"?-1:1 %>' class="darkmode"><%= data[x].Name %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=Origin&title=<%= data[x].Origin %>&seq=<%= sort==="Origin"?-1:1 %>'><%= data[x].Origin %></a>
+                                <a href='/productlist/title?sort=Origin&title=<%= data[x].Origin %>&seq=<%= sort==="Origin"?-1:1 %>' class="darkmode"><%= data[x].Origin %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=Type&title=<%= data[x].Count %>&seq=<%= sort==="Count"?-1:1 %>'><%= data[x].Count %></a>
+                                <a href='/productlist/title?sort=Type&title=<%= data[x].Count %>&seq=<%= sort==="Count"?-1:1 %>' class="darkmode"><%= data[x].Count %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=stock_id&title=<%= data[x].stock_id %>'><%= data[x].trans_stock_id[0].name %></a>
+                                <a href='/productlist/title?sort=stock_id&title=<%= data[x].stock_id %>' class="darkmode"><%= data[x].trans_stock_id[0].name %></a>
                             </div>
                             <div class="col">
                                 <%

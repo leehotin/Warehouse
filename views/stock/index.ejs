@@ -28,8 +28,8 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stock</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page">Stock</li>
                             </ol>
                         </div>
                         <div class="col">
@@ -70,7 +70,7 @@
                             <input type="submit" value="Search" class="btn btn-primary m-1">
                         </form>
                     </div>
-                    <div class="row my-1 border-bottom border-dark">
+                    <div class="row my-1 border-bottom border-primary">
                         <div class="col-3">
 
                         </div>
@@ -97,12 +97,12 @@
                         </div>
                     </div>
                     <% if(datas.length == 0){ %>
-                        <div class="row py-1 border-bottom border-dark text-center">
+                        <div class="row py-1 border-bottom border-primary text-center">
                             <label>Not have stocks</label>
                         </div>
                     <% } %>
                     <% for(data of datas){ %>
-                        <div class="row py-1 border-bottom border-dark">
+                        <div class="row py-1 border-bottom border-primary">
                             <div class="col text-center">
                                 <%= data.stock_id %>
                             </div>
