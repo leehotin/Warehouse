@@ -29,9 +29,10 @@ a{
 }
 /* dark mode */
 .dark{
-    background-color: black !important;
+    background-color: rgb(36 36 36) !important;
     color: white !important;
 }
+
 /* daytime mode */
 .white{
     background-color: var(--bg-color) !important;
