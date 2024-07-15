@@ -12,8 +12,6 @@ const dbName = "Warehouse_In_Out_System";
 router.get('/',checkLogin, async (req, res, next) =>{
   try{
     await client.connect();
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
 
     //sort by data
     let sort = {
@@ -37,7 +35,7 @@ router.get('/',checkLogin, async (req, res, next) =>{
     
     let data = await client.db(dbName).collection("stocks").find(whereData,{sort:sort}).toArray();
     
-    res.render('stock/index',{ datas: data, sort:sort, darkmode:darkMode });
+    res.render('stock/index',{ datas: data, sort:sort });
   }finally{
     await client.close();
   }
@@ -47,8 +45,6 @@ router.get('/',checkLogin, async (req, res, next) =>{
 router.get('/info',checkLogin, async (req, res,next) => {
   try {
     await client.connect();
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
 
     // Retrieve stock data based on stockId
     const stockData = await client.db(dbName).collection('stocks').findOne({_id: ObjectId.createFromHexString(req.query.stock_id)});
@@ -58,7 +54,7 @@ router.get('/info',checkLogin, async (req, res,next) => {
     // Process stockData (e.g., display it or perform additional actions)
     // ..
   
-    res.render('stock/enquiry', {stock_data: stockData, darkmode:darkMode});
+    res.render('stock/enquiry', {stock_data: stockData});
 
     // Close the MongoDB connection
   } catch (error) {
@@ -71,9 +67,7 @@ router.get('/info',checkLogin, async (req, res,next) => {
 });
 
 router.get('/create',checkLogin,(req,res,next)=>{
-  //darkmode checking
-  let darkMode = req.session.darkmode??'white';
-  res.render('stock/enquiry', {stock_data: [], darkmode:darkMode});
+  res.render('stock/enquiry', {stock_data: []});
 })
 
 router.post('/save',checkLogin, async (req,res,next) =>{

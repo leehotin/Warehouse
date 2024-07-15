@@ -17,7 +17,6 @@ const dbName = "Warehouse_In_Out_System";
 router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
-
     await client.connect();
     const roles = [
       {
@@ -29,8 +28,6 @@ router.get('/',checkLogin, async (req, res, next)=>{
         value: "1"
       },
     ]
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
 
     let header = req.query.role??'User/Admin'
     let whereData = {};
@@ -57,7 +54,7 @@ router.get('/',checkLogin, async (req, res, next)=>{
     whereData.deleted_at = null;
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data,roles: roles,header:header, darkmode:darkMode});
+    res.render('user/index',{datas:data,roles: roles,header:header});
   }finally{
     await client.close();
   }
@@ -67,8 +64,6 @@ router.get('/info/:id',checkLogin, async (req, res, next)=>{
   // read user info
   try{
     await client.connect();
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
 
     let data = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.params.id)});
     const roles = [
@@ -88,7 +83,7 @@ router.get('/info/:id',checkLogin, async (req, res, next)=>{
     }
     req.session.message = null;
 
-    res.render('user/info',{data:data,roles:roles,message:message, darkmode:darkMode});
+    res.render('user/info',{data:data,roles:roles,message:message});
   }finally{
     await client.close();
   }
@@ -106,8 +101,6 @@ router.get('/create',checkLogin, (req, res, next)=>{
       value: "1"
     },
   ]
-  //darkmode checking
-  let darkMode = req.session.darkmode??'white';
 
   let message = "";
   if(req.session.message){
@@ -115,7 +108,7 @@ router.get('/create',checkLogin, (req, res, next)=>{
   }
   req.session.message = null;
 
-  res.render('user/info',{data:[],roles:roles,message:message,darkmode:darkMode});
+  res.render('user/info',{data:[],roles:roles,message:message});
 
 });
 
