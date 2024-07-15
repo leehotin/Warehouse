@@ -71,6 +71,25 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   }finally{
     await iOemuSys.disconnect();
   }
+}).get('/create',checkLogin,async(req,res,next)=>{
+  try{
+    await iOemuSys.connect();
+    let use = await iOemuSys.Read('',iOemuSys.CreatedbIndex('users'),['_id',req.session.user_id] );
+    console.log('a',use)
+    res.render('deliveryOrder/create',{data:'',user:use});
+  }
+  finally{
+    await iOemuSys.disconnect();
+  }
+}).post('/create',checkLogin,async(req,res,next)=>{
+  try{
+    await iOemuSys.connect();
+    await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),req.body)
+    res.redirect('/deliveryOrder');
+  }
+  finally{
+    await iOemuSys.disconnect();
+  }
 }).post('/update',checkLogin, async (req,res,next) =>{
   try{
     await iOemuSys.connect();
@@ -88,7 +107,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
     let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
     console.log(data)
-    res.render('deliveryOrder/index',{ datas: data, search: search,darkmode:''});
+    res.render('deliveryOrder/index',{ datas: data, search: search});
 
   }finally{
     await iOemuSys.disconnect();

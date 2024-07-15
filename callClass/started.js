@@ -43,11 +43,11 @@ class IOemuSys {
 
     async Read(inquire = 'product', setdb, ...ele) {
         setdb = setdb || this.CreatedbIndex();   //初始化db
-        const [dbName, collectionName] = await setdb;
-        //console.log(collectionName) ;                //終極濃縮版....新學來的...
+        const [dbName, collectionName] = await setdb;              //終極濃縮版....新學來的...
         //console.log('前台進入閱覧' + inquire + '模式，加油~');
         //const setdb = [db, collection];//Rita的舊寫法版本初始化db
         let data, projection = {}, pipline = [];
+        
         if (ele.length !== 0) {
             //如果剩餘參數長度不為0就把ele[0][0]的值當成ele[0][1]的鍵 ;如果用剩餘參數，前台怎麼都會傳一個數組給後台，所以要檢查是不是長度為0
             projection[ele[0][0]] = ele[0][1];
@@ -76,6 +76,12 @@ class IOemuSys {
                 case "recycleBin":
                     pipline = { inquire: ele[0][1] };    //創建排序方法查詢
                     data = await this.client.db(dbName).collection(collectionName).find().sort(pipline).toArray();
+                    break;
+                case "_id":
+                    pipline ={_id:0,username:1};    //創建排序方法查詢
+                    console.log(pipline)
+
+                    data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},{$project:{_id:0,username:1}});
                     break;
                 default:
             }
@@ -175,6 +181,7 @@ class IOemuSys {
                 }];
                 data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
                 break;
+            case 'createDeliveryOrder':
             default:
         }
         return data;
@@ -195,23 +202,23 @@ class IOemuSys {
         data['original_id'] = data['_id'];
         delete data['_id'];
         let query = [{ insertOne: data }];
-         let starting = await this.client.db(dbName).collection(junkBin).bulkWrite(query);
+        let starting = await this.client.db(dbName).collection(junkBin).bulkWrite(query);
         if (starting) {
             console.log('資料已移轉至垃圾桶，資料如下：');
             console.log(starting);
         }
         else return err = 'Error發生了，文件沒法搬運完成QAQ';
         //console.log(data);
-        query = [{ deleteOne: { filter:{} } }];
+        query = [{ deleteOne: { filter: {} } }];
         //console.log('a',target[1])
         //[{ deleteOne: { filter } }] = query;
         //for (const i in data) {
         //    if (data.hasOwnProperty(target[0])) {
-                filter= {[target[0]]:target[1]};
+        filter = { [target[0]]: target[1] };
         //        break;
         //    }
         //}
-        console.log('a',filter);
+        console.log('a', filter);
         let toEnding = await this.client.db(dbName).collection(collectionName).bulkWrite(query)
         if (toEnding) {
             console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`);
@@ -244,9 +251,9 @@ class IOemuSys {
 
     async rollBack(setdb, equiueId, ...ele) {
         setdb = setdb || this.CreatedbIndex();
-        const [dbName, junkBin] = await setdb ;       //這是垃圾的初始化...
-        let query, datas, steck=[], steckNotes=[], steckStock=[], steckUsers=[], temp=[],starting,toEnding;
-        if(typeof(equiueId)=='string'){
+        const [dbName, junkBin] = await setdb;       //這是垃圾的初始化...
+        let query, datas, steck = [], steckNotes = [], steckStock = [], steckUsers = [], temp = [], starting, toEnding;
+        if (typeof (equiueId) == 'string') {
             equiueId = [equiueId];
         }
         for (let i of equiueId) {
@@ -255,7 +262,7 @@ class IOemuSys {
         query = { _id: { $in: steck } };
         datas = await this.client.db(dbName).collection(junkBin).find(query).toArray();
         steck = [];
-        query = [] ;
+        query = [];
         for (let data of datas) {
             data.collectionName = data.source;
             temp.push(data._id);
@@ -280,36 +287,36 @@ class IOemuSys {
                     steckUsers.push(data);
                     delete data.collectionName;
                     break;
-                default:        
+                default:
             }
         }
-        if(steck.length!=0){
-            query = [] ;
-            for(let data of steck)
-                query.push({insertOne:data})
-        starting = await this.client.db(dbName).collection('products').bulkWrite(query);
+        if (steck.length != 0) {
+            query = [];
+            for (let data of steck)
+                query.push({ insertOne: data })
+            starting = await this.client.db(dbName).collection('products').bulkWrite(query);
         }
-        if(steckNotes.length!=0){
-            query = [] ;
-            for(let data of steckNotes)
-                query.push({insertOne:data})
-        starting = await this.client.db(dbName).collection('delivery_notes').bulkWrite(query);
+        if (steckNotes.length != 0) {
+            query = [];
+            for (let data of steckNotes)
+                query.push({ insertOne: data })
+            starting = await this.client.db(dbName).collection('delivery_notes').bulkWrite(query);
         }
-        if(steckStock.length!=0){
-            query = [] ;
-            for(let data of steckStock)
-                query.push({insertOne:data})
-        starting = await this.client.db(dbName).collection('stocks').bulkWrite(query);
+        if (steckStock.length != 0) {
+            query = [];
+            for (let data of steckStock)
+                query.push({ insertOne: data })
+            starting = await this.client.db(dbName).collection('stocks').bulkWrite(query);
         }
-        if(steckUsers.length!=0){
-            query = [] ;
-            for(let data of steckUsers)
-                query.push({insertOne:data})
-        starting = await this.client.db(dbName).collection('users').bulkWrite(query);
+        if (steckUsers.length != 0) {
+            query = [];
+            for (let data of steckUsers)
+                query.push({ insertOne: data })
+            starting = await this.client.db(dbName).collection('users').bulkWrite(query);
         }
-        query = [] ;
+        query = [];
         console.log(temp);
-        query = [{deleteMany:{filter:{_id:{$in:temp}}}}];
+        query = [{ deleteMany: { filter: { _id: { $in: temp } } } }];
         //console
         console.log(query);
         toEnding = await this.client.db(dbName).collection(junkBin).bulkWrite(query);
