@@ -42,9 +42,9 @@ router.get('/',checkLogin, async (req, res, next) =>{
           }
         }
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
-          projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
+          projection:{_id:1,delivery_id:1,company:1,type:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
-
+        console.log(data);
         res.render('deliveryOrder/index',{ datas: data, search: search,darkmode:darkMode});
       }finally{
         await client.close();
@@ -78,8 +78,21 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).post('/update',checkLogin, async (req,res,next) =>{
   try{
     await iOemuSys.connect();
+    let search = [
+      {displayName: "Delivery Id:",name: "whereData[delivery_id]",placeholder: "Delivery Id",type: "text"},
+      {displayName: "Company:",name: "whereData[company]",placeholder: "Company",type: "text"},
+      {displayName: "Address:",name: "whereData[address]",placeholder: "Address",type: "text"},
+      {displayName: "Phone:",name: "whereData[phone]",placeholder: "Phone",type: "text"},
+      {displayName: "Delivery Type:",name: "whereData[type]",placeholder: "Delivery Type",type: "text"},
+      {displayName: "Delivery Check:",name: "whereData[delivery_check]",placeholder: "Delivery Check",type: "radio",data:[{display_value:"Finish",value:"1"},{display_value:"Not Finish",value:"0"}]},
+      {displayName: "Delivery User:",name: "whereData[delivery_user]",placeholder: "Delivery User",type: "text"},
+      {displayName: "Delivery At:",name: "whereData[delivery_at]",placeholder: "Delivery At",type: "text"},
+    ];
     //await iOemuSys.selectType(iOemuSys.CreatedbIndex('delivery_notes'));
     await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
+    let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
+    console.log(data)
+    res.render('deliveryOrder/index',{ datas: data, search: search,darkmode:''});
 
   }finally{
     await iOemuSys.disconnect();
