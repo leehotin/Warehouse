@@ -57,7 +57,7 @@ class IOemuSys {
                 
                 case "Product_id":
                 case "delivery_id":
-                    data = await this.client.db(dbName).collection(collectionName).findOne(projection);
+                    data = await this.client.db(dbName).collection(collectionName).findOne(projection); 
                     break;
                 case "Brand":
                     let Origin = [], Brand;

@@ -80,6 +80,9 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     await iOemuSys.connect();
     //await iOemuSys.selectType(iOemuSys.CreatedbIndex('delivery_notes'));
     await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
+    let data = await iOemuSys.Read('123',iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']]);
+    res.render('deliveryOrder/index',{ datas: data, search: '',darkmode:''});
+
 
   }finally{
     await iOemuSys.disconnect();
