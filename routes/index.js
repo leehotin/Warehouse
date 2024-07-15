@@ -31,7 +31,7 @@ router.get('/',checkLogin, async (req, res, next)=> {
   }finally{
     await client.close();
   }
-}).get('/download', function(req, res, next) {
+}).get('/download',checkLogin, function(req, res, next) {
   const file = '0.rar';
   res.download(file); // Set disposition and send it.
   //res.render('0.rar');

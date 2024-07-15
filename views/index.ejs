@@ -11,14 +11,14 @@
       <div class="row">
         <div class="col-2">
           <div class="list-group list-group-flush text-center">
-              <a href="/" class="list-group-item darkmode">Index</a>
-              <a href="/productlist" class="list-group-item darkmode">Products</a>
-              <a href="/stock" class="list-group-item darkmode">Stocks</a>
-              <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-              <a href="/user" class="list-group-item darkmode">Users</a>
-              <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-              <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">Dark Mode</label>
-              <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
+              <a href="/" class="list-group-item darkmode">首頁</a>
+              <a href="/productlist" class="list-group-item darkmode">貨品</a>
+              <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+              <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+              <a href="/user" class="list-group-item darkmode">用戶</a>
+              <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+              <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+              <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
           </div> 
           
           <form action="/user/logout" method="post" id="logout">
@@ -29,7 +29,7 @@
           <div class="row my-1">
             <div class="col">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active darkmode" aria-current="page">Home</li>
+                    <li class="breadcrumb-item active darkmode" aria-current="page">首頁</li>
                 </ol>
             </div>
           </div>
@@ -37,19 +37,24 @@
             <div class="col m-1">
               <!-- delivery Order(created_at) == new Date().date  -->
               <div class="row text-center">
-                <label>Today Create Order</label>
+                <label>今天的新貨單</label>
               </div>
               <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Delivery Id</label>
+                  <label>送貨單號</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Company</label>
+                  <label>公司名稱</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Type</label>
+                  <label>貨單類型</label>
                 </div>
               </div>
+              <% if(datas.todayOrders.length == 0){ %>
+                <div class="row py-1 border-bottom border-primary text-center">
+                  <label class="darkmode">今天沒有新貨單</label>
+                </div>
+              <% } %>
               <% for(let data of datas.todayOrders){ %>
                 <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center darkmode">
@@ -59,7 +64,7 @@
                     <%= data.company %>
                   </div>
                   <div class="col text-center">
-                    <%= data.type %>
+                    <%= data.type=='in'? "入貨單" : "出貨單" %>
                   </div>
                 </div>
               <% } %>
@@ -67,19 +72,24 @@
             <div class="col m-1">
               <!-- delivery Order(delivery_check) == 0 && delivery_at == null-->
               <div class="row text-center">
-                <label>Not Finish Order</label>
+                <label>沒有完成的貨單</label>
               </div>
               <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Delivery Id</label>
+                  <label>送貨單號</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Company</label>
+                  <label>公司名稱</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Type</label>
+                  <label>貨單類型</label>
                 </div>
               </div>
+              <% if(datas.notFinishs.length == 0){ %>
+                <div class="row py-1 border-bottom border-primary text-center">
+                  <label class="darkmode">沒有未完成的貨單</label>
+                </div>
+              <% } %>
               <% for(let data of datas.notFinishs){ %>
                 <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center">
@@ -89,7 +99,7 @@
                     <%= data.company %>
                   </div>
                   <div class="col text-center">
-                    <%= data.type %>
+                    <%= data.type=='in'? "入貨單" : "出貨單" %>
                   </div>
                 </div>
               <% } %>

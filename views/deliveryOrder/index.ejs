@@ -10,14 +10,14 @@
             <div class="row">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">Index</a>
-                        <a href="/productlist" class="list-group-item darkmode">Products</a>
-                        <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                        <a href="/user" class="list-group-item darkmode">Users</a>
-                        <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">Dark Mode</label>
-                        <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -28,17 +28,17 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
-                                <li class="breadcrumb-item darkmode active" aria-current="page">Delivery Order</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                                <li class="breadcrumb-item darkmode active" aria-current="page">交貨單</li>
                             </ol>
                         </div>
                         <div class="col">
-                            <a href="/deliveryOrder/create" class="btn btn-primary">Create Delivery Order</a>
+                            <a href="/deliveryOrder/create" class="btn btn-primary">建立交貨單</a>
                         </div>
                     </div>
 
                     <div class="row">
-                        <label class="fs-4">Search data:</label>
+                        <label class="fs-4">搜尋資料:</label>
                         <form action="/deliveryOrder" method="get" class="border m-1">
                             <% for(let data of search){ %>
                                 <div class="row m-1">
@@ -61,39 +61,39 @@
                                 </div>
                             <% } %>
 
-                            <input type="submit" value="Search" class="btn btn-primary m-1">
+                            <input type="submit" value="搜尋" class="btn btn-primary m-1">
                         </form>
                     </div>
 
                     <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                         <div class="col fw-bold fs-5 text-center">
-                            id
+                            貨單編號
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            type
+                            貨單類型
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            company
+                            公司名稱
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            phone
+                            公司電話
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            delivery check
+                            是否已經完成
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            delivery user
+                            確認貨單員工
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            delivery at
+                            完成日期
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            edit
+                            修改資料
                         </div>
                     </div>
                     <% if(datas.length == 0){ %>
                         <div class="row py-1 border-bottom border-primary text-center">
-                            <label class="darkmode">Not have Delivery Order</label>
+                            <label class="darkmode">找不到交貨單</label>
                         </div>
                     <% } %>
                     <% for(data of datas){ %>
@@ -102,7 +102,7 @@
                                 <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                             </div>
                             <div class="col text-center">
-                                <%= data.type %>
+                                <%= data.type=='in'? "入貨單" : "出貨單" %>
                             </div>
                             <div class="col text-center">
                                 <%= data.company %>
@@ -111,7 +111,7 @@
                                 <%= data.phone %>
                             </div>
                             <div class="col text-center">
-                                <%= data.delivery_check==1 ? "Finish": "Not Finish" %>
+                                <%= data.delivery_check==1 ? "已完成": "未完成" %>
                             </div>
                             <div class="col text-center">
                                 <%= data.delivery_user %>
@@ -120,10 +120,10 @@
                                 <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                             </div>
                             <div class="col text-center">
-                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">edit</a>
+                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">修改貨單</a>
                                 <form action="/deliveryOrder/delete" method="post" class="d-inline">
                                     <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
-                                    <input type="submit" class="btn btn-warning" value="delete">
+                                    <input type="submit" class="btn btn-warning" value="刪除貨單">
                                 </form>
                             </div>
                         </div>

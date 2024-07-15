@@ -10,14 +10,14 @@
             <div class="row">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">Index</a>
-                        <a href="/productlist" class="list-group-item darkmode">Products</a>
-                        <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                        <a href="/user" class="list-group-item darkmode">Users</a>
-                        <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">Dark Mode</label>
-                        <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -28,20 +28,20 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb darkmode">
-                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
                                 <li class="breadcrumb-item active darkmode" aria-current="page"><%= header %></li>
                             </ol>
                         </div>
                         <div class="col">
-                            <a href="/user/create" class="btn btn-primary">Create User</a>
+                            <a href="/user/create" class="btn btn-primary">創建用戶</a>
                         </div>
                     </div>
                     <div class="row">
-                        <label class="fs-4">Search data:</label>
+                        <label class="fs-4">搜尋資料:</label>
                         <form action="/user" method="get" class="border m-1">
                             <div class="row my-1">
                                 <div class="col-2">
-                                    <label for="user_id">user Id: </label>
+                                    <label for="user_id">使用者編號: </label>
                                 </div>
                                 <div class="col-10">
                                     <input type="text" id="user_id" name="user_id" class="form-control" placeholder="User Id">
@@ -50,7 +50,7 @@
 
                             <div class="row my-1">
                                 <div class="col-2">
-                                    <label for="name">Name:</label>
+                                    <label for="name">使用者名稱:</label>
                                 </div>
                                 <div class="col-10">
                                     <input type="text" id="name" name="name" class="form-control" placeholder="Name">
@@ -59,7 +59,7 @@
 
                             <div class="row my-1">
                                 <div class="col-2">
-                                    <label for="role">Role:</label>
+                                    <label for="role">使用者類別:</label>
                                 </div>
                                 <div class="col-10">
                                     <% for(role of roles){ %>
@@ -69,27 +69,27 @@
                                 </div>
                             </div>
 
-                            <input type="submit" value="Search" class="btn btn-primary m-1">
+                            <input type="submit" value="搜尋" class="btn btn-primary m-1">
                         </form>
                     </div>
 
                     <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                         <div class="col-3 fw-bold fs-5 text-center">
-                            user Id
+                            使用者編號
                         </div>
                         <div class="col-3 fw-bold fs-5 text-center">
-                            name
+                            使用者名稱
                         </div>
                         <div class="col-3 fw-bold fs-5 text-center">
-                            role
+                            使用者類別
                         </div>
                         <div class="col-3 fw-bold fs-5 text-center">
-                            edit
+                            修改資料
                         </div>
                     </div>
                     <% if(datas.length == 0){ %>
                         <div class="row py-1 border-bottom border-primary text-center">
-                            <label>Not have user</label>
+                            <label>找不到使用者</label>
                         </div>
                     <% } %>
                     <% for(data of datas){ %>
@@ -101,13 +101,13 @@
                                 <%= data.name %>
                             </div>
                             <div class="col text-center">
-                                <%= data.role==0? 'Admin' : data.role==1? 'User' : 'error' %>
+                                <%= data.role==0? '管理員' : data.role==1? '使用者' : '錯誤類型' %>
                             </div>
                             <div class="col text-center">
-                                <a href="/user/info/<%= data._id %>" class="btn btn-primary">edit</a>
+                                <a href="/user/info/<%= data._id %>" class="btn btn-primary">修改用戶</a>
                                 <form action="/user/delete" method="post" class="d-inline">
                                     <input type="text" value="<%= data._id %>" name="user_id" hidden />
-                                    <input type="submit" class="btn btn-warning" value="delete">   
+                                    <input type="submit" class="btn btn-warning" value="刪除用戶">   
                                 </form>
                             </div>
                         </div>

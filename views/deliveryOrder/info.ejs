@@ -11,14 +11,14 @@
             <div class="row row_rita">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">Index</a>
-                        <a href="/productlist" class="list-group-item darkmode">Products</a>
-                        <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                        <a href="/user" class="list-group-item darkmode">Users</a>
-                        <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">Dark Mode</label>
-                        <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -29,15 +29,15 @@
                     <div class="row">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
-                                <li class="breadcrumb-item"><a href="/deliveryOrder" class="darkmode">DeliveryOrder</a></li>
-                                <li class="breadcrumb-item darkmode">Information</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                                <li class="breadcrumb-item"><a href="/deliveryOrder" class="darkmode">交貨單</a></li>
+                                <li class="breadcrumb-item darkmode">貨單資料</li>
                                 <li class="breadcrumb-item active darkmode" aria-current="page"><%= data.delivery_id %></li>
                             </ol>
                         </div>
                         <div class="col">
-                            <button class="btn btn-warning" form="delete">Delete Order</button>
-                            <button class="btn btn-primary" form="update">Update Order</button>
+                            <button class="btn btn-warning" form="delete">刪除貨單</button>
+                            <button class="btn btn-primary" form="update">更新貨單</button>
                         </div>
                         <form action="./delete" method="post" id="delete">
                         </form>
@@ -46,7 +46,7 @@
                         <form action="./update" method="post" id="update">
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    <label for="DeliveryID">Delivery ID:</label>
+                                    <label for="DeliveryID">送貨單號:</label>
                                 </div>
                                 <div class="col">
                                     <input type="text" id="DeliveryID" name="delivery_id" value="<%= data.delivery_id %>" class="form-control text">
@@ -55,7 +55,7 @@
 
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    <label for="Company">Company:</label>
+                                    <label for="Company">公司名稱:</label>
                                 </div>
                                 <div class="col">
                                     <input type="text" id="Company" name="company" value="<%= data.company %>" class="form-control text">
@@ -64,7 +64,7 @@
 
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    <label for="Address">Company Address:</label>
+                                    <label for="Address">公司地址:</label>
                                 </div>
                                 <div class="col">
                                     <input type="text" id="Address" name="address" value="<%= data.address %>" class="form-control text">
@@ -73,7 +73,7 @@
 
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    <label for="Phone">Company Phone:</label>
+                                    <label for="Phone">公司電話:</label>
                                 </div>
                                 <div class="col">
                                     <input type="text" id="Phone" name="phone" value="<%= data.phone %>" class="form-control text">
@@ -82,59 +82,59 @@
 
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    <label>Delivery Type:</label>
+                                    <label>貨單類型:</label>
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <label class="form-check-label" for="in">In</label>
+                                        <label class="form-check-label" for="in">入貨單</label>
                                         <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(data.type==='in'){ %>checked<% } %>> 
                                     </div>
                                     <div class="form-check">
-                                        <label class="form-check-label" for="out">Out</label>
+                                        <label class="form-check-label" for="out">出貨單</label>
                                         <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(data.type==='out'){ %>checked<% } %>>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row my-1">
-                                <label class="fw-bold ">Items：</label>
+                                <label class="fw-bold ">貨品資料：</label>
                                 <div class="col">
                                     <% for(i in data.items){ %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
-                                                <label for="item[<%= i %>][name]">Name:</label>
+                                                <label for="item[<%= i %>][name]">貨品名稱:</label>
                                                 <input type="hidden" name="item[product_id]" value="<%= (data.items[i].product_id) %>">
                                                 <input type='text' class="form-control text" name="item[name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50">
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][count]">Count:</label>
+                                                <label for="item[<%= i %>][count]">總數量:</label>
                                                 <input type='text' class="form-control text" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][completed]">Completed:</label>
+                                                <label for="item[<%= i %>][completed]">已到達數量:</label>
                                                 <input type='text' class="form-control text" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][stock_id]">Stock Id:</label>
+                                                <label for="item[<%= i %>][stock_id]">貨架編號:</label>
                                                 <input type='text' class="form-control text" name="item[stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>">
                                             </div>
                                         </div>
                                     <% }for(i = 0 ; i < 2 ; i++){ %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][name]">Name:</label>
+                                                <label for="up_item[<%= i %>][name]">貨品名稱:</label>
                                                 <input type='text' class="form-control text" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50">
                                             </div>
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][count]">Count:</label>
+                                                <label for="up_item[<%= i %>][count]">總數量:</label>
                                                 <input type='text' class="form-control text" name="up_item[count]" id="up_item[<%= i %>][count]" value="" size="10">
                                             </div>
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][completed]">Completed:</label>
+                                                <label for="up_item[<%= i %>][completed]">已到達數量:</label>
                                                 <input type='text' class="form-control text" name="up_item[completed]" id="up_item[<%= i %>][completed]" value="">
                                             </div>
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][stock_id]">Stock Id:</label>
+                                                <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
                                                 <input type='text' class="form-control text" name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]" value="">
                                             </div>
                                         </div>
@@ -144,20 +144,20 @@
 
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    Delivery Check：
+                                    是否已經完成：
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <label class="form-check-label" for="finish">Finish</label>
+                                        <label class="form-check-label" for="finish">已完成</label>
                                         <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(data.delivery_check===1){ %>checked<% } %>>
                                     </div>
                                     <div class="form-check">
-                                        <label class="form-check-label" for="NotFinish">Not Finish</label>
+                                        <label class="form-check-label" for="NotFinish">未完成</label>
                                         <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(data.delivery_check==='0'){ %>checked<% } %>>
                                     </div>
                                 </div>
                                 <div class="col fw-bold">
-                                    <label for="delivery_user">Delivery User:</label>
+                                    <label for="delivery_user">確認貨單員工:</label>
                                 </div>
                                 <div class="col">
                                     <select name="delivery_user" id="delivery_user" class="form-select form-select-sm">
