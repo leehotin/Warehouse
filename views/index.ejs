@@ -1,75 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Warehouse In Out system</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="../css/style.css" rel="stylesheet" type="text/css">
-    <script>
-      function setClass(name,setClass,removeClass,getBy){
-        switch(getBy){
-          case "id":
-            for(let list of document.getElementById(name)){
-              list.classList.remove(removeClass);
-              list.classList.add(setClass);
-            }
-            break;
-          case "class":
-            for(let list of document.getElementsByClassName(name)){
-              list.classList.remove(removeClass);
-              list.classList.add(setClass);
-            }
-            break;
-          case "tag":
-            for(list of document.getElementsByTagName(name)){
-              list.classList.remove(removeClass);
-              list.classList.add(setClass);
-            };
-            break;
-        }
-      }
-
-      function setDarkMode(){
-        if(sessionStorage.getItem("darkmode")=="dark"){
-          setClass("body","dark","white","tag");
-          setClass("list-group-item","dark","white","class");
-          setClass("breadcrumb-item","dark","white","class");
-        }else{
-          setClass("body","white","dark","tag");
-          setClass("list-group-item","white","dark","class");
-          setClass("breadcrumb-item","white","dark","class");
-        }
-      }
-
-      function changeDarkMode(){
-        if(sessionStorage.getItem("darkmode")=="dark"){
-          sessionStorage.setItem("darkmode","white");
-        }else{
-          sessionStorage.setItem("darkmode","dark");
-        }
-      }
-
-      function darkMode(){
-        changeDarkMode();
-        setDarkMode();
-      }
-
-      setDarkMode();
-    </script>
+    <script src="../js/darkMode.js"></script>
   </head>
-  <body>
+  <body class="darkmode">
     <div class="container">
       <div class="row">
         <div class="col-2">
           <div class="list-group list-group-flush text-center">
-              <a href="/" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Index</a>
-              <a href="/productlist" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Products</a>
-              <a href="/stock" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Stocks</a>
-              <a href="/deliveryOrder" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Delivery Orders</a>
-              <a href="/user" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Users</a>
-              <button type="submit" form="logout" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Logout</button>
-              <a href="/recycleBin" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Recycle Bin</a>
-              <a href="/darkmode" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>"><%= darkmode=='dark'?'Daytime Mode':'Darkness Mode' %></a>
-              <label class="test" onclick="darkMode()">test button</label>
+              <a href="/" class="list-group-item darkmode">Index</a>
+              <a href="/productlist" class="list-group-item darkmode">Products</a>
+              <a href="/stock" class="list-group-item darkmode">Stocks</a>
+              <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
+              <a href="/user" class="list-group-item darkmode">Users</a>
+              <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
+              <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
+              <label class="list-group-item darkmode" onclick="darkMode(this)">Daytime Mode</label>
           </div> 
           
           <form action="/user/logout" method="post" id="logout">
@@ -80,7 +29,7 @@
           <div class="row my-1">
             <div class="col">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">Home</li>
+                    <li class="breadcrumb-item active darkmode" aria-current="page">Home</li>
                 </ol>
             </div>
           </div>
@@ -90,7 +39,7 @@
               <div class="row text-center">
                 <label>Today Create Order</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                 <div class="col fw-bold fs-5 text-center">
                   <label>Delivery Id</label>
                 </div>
@@ -102,9 +51,9 @@
                 </div>
               </div>
               <% for(let data of datas.todayOrders){ %>
-                <div class="row py-1 border-bottom border-dark">
-                  <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                <div class="row py-1 border-bottom border-primary">
+                  <div class="col text-center darkmode">
+                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                   </div>
                   <div class="col text-center">
                     <%= data.company %>
@@ -120,7 +69,7 @@
               <div class="row text-center">
                 <label>Not Finish Order</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                 <div class="col fw-bold fs-5 text-center">
                   <label>Delivery Id</label>
                 </div>
@@ -132,9 +81,9 @@
                 </div>
               </div>
               <% for(let data of datas.notFinishs){ %>
-                <div class="row py-1 border-bottom border-dark">
+                <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                   </div>
                   <div class="col text-center">
                     <%= data.company %>

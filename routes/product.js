@@ -16,8 +16,6 @@ router.get('/', async (req, res, next) => {
 });
 router.post('/info', async (req, res, next) => {
     try {
-        //darkmode checking
-        let darkMode = req.session.darkmode ?? 'white';
         console.log(req.body.call_info)
         await client.connect();
         const products = client.db(dbName).collection("products");
@@ -47,9 +45,6 @@ router.post('/info', async (req, res, next) => {
 });
 router.get('/info', async (req, res, next) => {
     try {
-        //darkmode checking
-        let darkMode = req.session.darkmode ?? 'white';
-
         await client.connect();
         const products = client.db(dbName).collection("products");
 
@@ -82,7 +77,7 @@ router.get('/info', async (req, res, next) => {
         }
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
 
-        res.render('product/info', { data: data[0], stocks: stocks, darkmode: darkMode });
+        res.render('product/info', { data: data[0], stocks: stocks });
     } finally {
         await client.close();
     }
@@ -169,7 +164,7 @@ router.post('/save', async (req, res, next) => {
         let inquire = 'Product_id';
         await iOemuSys.update('newProduct',iOemuSys.CreatedbIndex('products'),req.body);
         let data = await iOemuSys.sort('資料新增',iOemuSys.CreatedbIndex('products'),iOemuSys.lookupSheet(['stocks','stock_id','_id','trans_stock_id']),['Product_id',1],req.body['Product_id']);
-        res.render('productlist/index',{data:data,sort:inquire,darkmode:'',sub:''});
+        res.render('productlist/index',{data:data,sort:inquire,sub:''});
     }
     finally {
         await iOemuSys.disconnect();
