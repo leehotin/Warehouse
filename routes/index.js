@@ -12,8 +12,6 @@ const dbName = "Warehouse_In_Out_System";
 router.get('/',checkLogin, async (req, res, next)=> {
   try{
     await client.connect();
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
     //reset output
     let data = {};
 
@@ -29,7 +27,7 @@ router.get('/',checkLogin, async (req, res, next)=> {
     data.todayOrders = todayOrder;
     data.notFinishs = notFinish;
 
-    res.render('index',{datas:data,darkmode:darkMode});
+    res.render('index',{datas:data});
   }finally{
     await client.close();
   }
@@ -37,16 +35,6 @@ router.get('/',checkLogin, async (req, res, next)=> {
   const file = '0.rar';
   res.download(file); // Set disposition and send it.
   //res.render('0.rar');
-});
-
-router.get('/darkmode',checkLogin, async (req,res,next)=>{
-  if(req.session.darkmode == 'dark'){
-    req.session.darkmode = 'white';
-  }else{
-    req.session.darkmode = 'dark';
-  }
-  //Redirect to previous page
-  res.redirect('back');
 });
 
 async function checkLogin(req,res,next){

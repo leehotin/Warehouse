@@ -9,8 +9,6 @@ const iOemuSys = new IOemuSys();
 router.get('/',async function(req, res, next) {
     try{
         console.log(req.query);
-        //darkmode checking
-        let darkMode = req.session.darkmode??'white';
         //進行連線
         await iOemuSys.connect();
         //宣告變數存在，其實可以直接傳入想要的東西
@@ -47,7 +45,7 @@ router.get('/',async function(req, res, next) {
             //Arr.push(pushData);
        // };
         //console.log(Arr);
-        res.render('productlist/index',{data:data,sort:inquire,darkmode:darkMode,sub:''});
+        res.render('productlist/index',{data:data,sort:inquire,sub:''});
     }
     finally{
         //關閉連線
@@ -57,8 +55,6 @@ router.get('/',async function(req, res, next) {
 }).get('/sort',async function(req, res, next) {
     try{
         //進行連線
-        //darkmode checking
-        let darkMode = req.session.darkmode??'white';
         await iOemuSys.connect();
         //宣告變數存在
         let sort;
@@ -90,7 +86,7 @@ router.get('/',async function(req, res, next) {
         }
         //傳到對應路徑的ejs做處理，其中應該會抓到一大把data資料，會在ejs那邊處理，
         //而sort的值看inquire有沒有改寫，主要影響當相同項目已進行倒排序時要讓接下來的ejs產出順排序的ejs相同項目
-        res.render('productlist/index',{data:data,sort:sort,darkmode:darkMode,sub:''});
+        res.render('productlist/index',{data:data,sort:sort,sub:''});
     }
     finally{
         //關閉連線
@@ -100,8 +96,6 @@ router.get('/',async function(req, res, next) {
 }).get('/title',async function(req, res, next) {
     try{
         //進行連線
-        //darkmode checking
-        let darkMode = req.session.darkmode??'white';
         await iOemuSys.connect();
         //宣告變數存在
         let inquire;
@@ -132,7 +126,7 @@ router.get('/',async function(req, res, next) {
         let sub = 'use' ;
         //傳到對應路徑的ejs做處理，其中應該會抓到一大把data資料，會在ejs那邊處理，
         //而sort的值看inquire有沒有改寫，主要影響當相同項目已進行倒排序時要讓接下來的ejs產出順排序的ejs相同項目
-        res.render('productlist/index',{data:data,sort:inquire,darkmode:darkMode,sub:sub});
+        res.render('productlist/index',{data:data,sort:inquire,sub:sub});
     }
     finally{
         //關閉連線
@@ -142,8 +136,6 @@ router.get('/',async function(req, res, next) {
 }).get('/check',async function(req, res, next) {
     try{
         //進行連線
-        //darkmode checking
-        let darkMode = req.session.darkmode??'white';
         await iOemuSys.connect();
         await iOemuSys.Read('products',iOemuSys.CreatedbIndex('products'))
         //await iOemuSys.up("",iOemuSys.CreatedbIndex('delivery_notes'),iOemuSys.lookupSheet(['products','items']))
@@ -176,7 +168,7 @@ router.get('/',async function(req, res, next) {
         let sub = 'use' ;
         //傳到對應路徑的ejs做處理，其中應該會抓到一大把data資料，會在ejs那邊處理，
         //而sort的值看inquire有沒有改寫，主要影響當相同項目已進行倒排序時要讓接下來的ejs產出順排序的ejs相同項目
-        res.render('productlist/index',{data:data,sort:inquire,darkmode:darkMode,sub:sub});*/
+        res.render('productlist/index',{data:data,sort:inquire,sub:sub});*/
     }
     finally{
         //關閉連線
