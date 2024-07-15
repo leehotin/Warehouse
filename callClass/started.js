@@ -54,6 +54,7 @@ class IOemuSys {
             //如果剩餘參數長度不為0就把ele[0][0]的值當成ele[0][1]的鍵 ;如果用剩餘參數，前台怎麼都會傳一個數組給後台，所以要檢查是不是長度為0
             projection[ele[0][0]] = ele[0][1];
             switch (ele[0][0]) {
+                
                 case "Product_id":
                 case "delivery_id":
                     data = await this.client.db(dbName).collection(collectionName).findOne(projection);
