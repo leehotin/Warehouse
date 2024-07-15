@@ -72,7 +72,7 @@
                 <div class="row py-1 my-1 border-bottom border-dark">
                     <div class="col">
                         <label for="Brand">Brand:</label><select id="selectBoxP" name="Brand">
-                            <option value=''>-----請選擇-----</option>
+                            <option value=''>-----Select-----</option>
                             <% for(let item of brands){ %>
                                 <option value="<%= item %>"><%= item %>
                                 </option>
@@ -83,13 +83,13 @@
                     <div class="col">
                         <label for="Type">Type:</label>
                         <select id="influenceBoxP" name="Type">
-                            <option value=''>-----請選擇-----</option>
+                            <option value=''>-----Select-----</option>
                         </select><br>
                         New Type：<input type='text' class="form-control text" name="new_Type" id="Brand" value="">
                     </div>
                     <div class="col">
                         <label for="Origin">Origin:</label><select name='Origin'>
-                            <option value="">-----請選擇-----</option>
+                            <option value="">-----Select-----</option>
                             <% for(let item of origins){ %>
                                 <option value="<%= item %>">
                                     <%= item %>

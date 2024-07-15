@@ -2,8 +2,10 @@
 export function setupSelectBox(selectBox,influence,Name) {
     var sURLInit = "/getlayout/layout";
     const InfluenceBox = document.getElementById(influence);
+
     selectBox.addEventListener('change', function () { 
-        InfluenceBox.inerHTML = '';       
+        InfluenceBox.innerHTML = "";
+    InfluenceBox.appendChild(new Option('-----Select-----',''));
         let sURL = sURLInit + "?search=" + selectBox.name + "&group=" + InfluenceBox.name+"&Name="+Name+"&limit="+selectBox.value;
         var Request = new XMLHttpRequest();
         Request.open("get", sURL, true);
@@ -16,7 +18,7 @@ export function setupSelectBox(selectBox,influence,Name) {
                     for (let item of json){
                         let option = new Option(item._id,item._id);
                         InfluenceBox.appendChild(option);
-                    }    
+                    }  
                 }
             }
         };

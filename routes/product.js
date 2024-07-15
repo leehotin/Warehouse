@@ -37,7 +37,7 @@ router.post('/info', async (req, res, next) => {
         ]).toArray();
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
         console.log(data);
-        res.render('product/info', { data: data[0], stocks: stocks, darkmode: darkMode });
+        res.render('product/info', { data: data[0], stocks: stocks });
 
     } finally {
         await client.close();
@@ -111,7 +111,7 @@ router.post('/save', async (req, res, next) => {
         productUpdata.Brand = req.body.Brand;
         productUpdata.Origin = req.body.Origin;
         productUpdata.Count = req.body.Count;
-        productUpdata.stock_id = req.body.stock_id;
+        productUpdata.stock_id = ObjectId.createFromHexString(req.body.stock);
         if (!productUpdata._id) {
             productUpdata.created_at = new Date();
         }

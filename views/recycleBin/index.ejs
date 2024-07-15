@@ -35,7 +35,7 @@
                 <button type="submit" form="rollback" class="">復原</button>    
             </div>
           </div>
-          <form action="/recycleBin/rollback" method="get" id="rollback">
+          <form action="/recycleBin/rollback" method="post" id="rollback">
           <div class="row">
             <div class="col m-1">
               <!-- delivery Order(created_at) == new Date().date  -->
@@ -53,20 +53,20 @@
                   <label>來自哪裡</label>
                 </div>
               </div>
-             <% for(data of datas){ %>
+             <% for(i in datas){ %>
                 <div class="row py-1 border-bottom border-dark">
                     <div class="">
-                        <input type="checkbox" value="<%= data._id %>" name="rollback_no" >
+                        <input type="checkbox" value="<%= datas[i]._id %>" name="rollback_no" >
                         
                       </div>  
                   <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id="><%= data._id.getTimestamp() %></a>
+                    <a href="./deliveryOrder/info?delivery_id="><%= datas[i]._id.getTimestamp() %></a>
                   </div>
                   <div class="col text-center">
-                    <%= data.who %>
+                    <%= datas[i].who %>
                   </div>
                   <div class="col text-center">
-                   <%= data.source %>
+                   <%= datas[i].source %>
                   </div>
                 </div>
               <% } %>
