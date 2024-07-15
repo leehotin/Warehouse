@@ -96,7 +96,7 @@
             </select>
           </td>
         </tr>
-
+        
         <tr>
           <td> 
 
@@ -105,9 +105,25 @@
                 
           </td>
         </tr>
+        </form>
+        <tr>
+          <td> 
+            <Button type="submit" form="delete"> Delete </Button>  
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/product/create">
+              <button type="button" class="create-btn">Create</button>
+            </a>
+          </td>
+        </tr>
       </table>
-    </form>
-      
+   
+
+<form action="/product/delete" method = "post" id="delete">
+  <input type="text" name="id" value="<%= data._id %>" hidden>
+</form>      
     <a href="/productlist">Back to ProductList</a></br>
    
      
