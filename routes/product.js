@@ -11,10 +11,10 @@ const IOemuSys = require('./../callClass/started');
 //const { render } = require('../app');////這東西是誰放進來的 令我執行res.render時提醒我有循環依賴的可能
 const iOemuSys = new IOemuSys();
 
-router.get('/', async (req, res, next) => {
-
+router.get('/', checkLogin, async (req, res, next) => {
+    res.redirect("/productlist");
 });
-router.post('/info', async (req, res, next) => {
+router.post('/info', checkLogin, async (req, res, next) => {
     try {
         console.log(req.body.call_info)
         await client.connect();
@@ -43,7 +43,7 @@ router.post('/info', async (req, res, next) => {
         await client.close();
     }
 });
-router.get('/info', async (req, res, next) => {
+router.get('/info', checkLogin, async (req, res, next) => {
     try {
         await client.connect();
         const products = client.db(dbName).collection("products");
@@ -72,7 +72,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     }
 });
 
-router.post('/save', async (req, res, next) => {
+router.post('/save', checkLogin, async (req, res, next) => {
     try {
         await client.connect();
         let productUpdata = {};
@@ -111,7 +111,7 @@ router.post('/save', async (req, res, next) => {
     } finally {
         await client.close();
     }
-}).get('/create', async (req, res, next) => {
+}).get('/create', checkLogin, async (req, res, next) => {
     try {
         await iOemuSys.connect();
         let stock = await iOemuSys.Read('倉庫', iOemuSys.CreatedbIndex('stocks'));
@@ -123,7 +123,7 @@ router.post('/save', async (req, res, next) => {
     finally {
         await iOemuSys.disconnect();
     }
-}).post('/saveProduct', async (req, res, next) => {
+}).post('/saveProduct', checkLogin, async (req, res, next) => {
     try {
         await iOemuSys.connect();
         if(req.body['new_Brand'])
