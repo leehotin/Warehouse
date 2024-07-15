@@ -13,14 +13,14 @@
             <div class="row">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">Index</a>
-                        <a href="/productlist" class="list-group-item darkmode">Products</a>
-                        <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                        <a href="/user" class="list-group-item darkmode">Users</a>
-                        <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
-                        <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode" onclick="darkMode(this)">Dark Mode</label>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -31,43 +31,43 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item darkmode"><a href="/" class="darkmode">Home</a></li>
-                                <li class="breadcrumb-item darkmode"><a href="/stock" class="darkmode">Stock</a></li>
-                                <li class="breadcrumb-item active darkmode" aria-current="page"><%= stock_data._id? (stock_data.area + " " + stock_data.name) : 'Craete Stock' %></li>
+                                <li class="breadcrumb-item darkmode"><a href="/" class="darkmode">首頁</a></li>
+                                <li class="breadcrumb-item darkmode"><a href="/stock" class="darkmode">儲存位置</a></li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page"><%= stock_data._id? (stock_data.area + " " + stock_data.name) : '建立儲存位置' %></li>
                             </ol>
                         </div>
                     </div>
-                    <label class="h1">Stock Location Enquiry</label>
+                    <label class="h1"><%= stock_data._id ? "修改儲存位置" : "建立儲存位置" %></label>
                     <form action="/stock/save" method="post">
                         <input type="text" name="_id" value="<%= stock_data._id %>" hidden>
                         <div class="row">
                             <div class="col">
-                                <label for="stock_id">Stock ID:</label>
+                                <label for="stock_id">儲存位置編號:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="stock_id" name="stock_id" value="<%= stock_data.stock_id %>" class="form-control" placeholder="Stock ID" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="area">Region : </label> 
-                            </div>
-                            <div class="col">
-                                <input type="text" id="area" name="area" value="<%= stock_data.area %>" class="form-control" placeholder="Region" required> 
+                                <input type="text" id="stock_id" name="stock_id" value="<%= stock_data.stock_id %>" class="form-control" placeholder="儲存位置編號" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label for="name"> Store location : </label>
+                                <label for="area">儲存區域: </label> 
                             </div>
                             <div class="col">
-                                <input type="text" id="name" name="name" value="<%= stock_data.name %>" class="form-control" placeholder="Store location" required>
+                                <input type="text" id="area" name="area" value="<%= stock_data.area %>" class="form-control" placeholder="儲存區域" required> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="name">貨架位置: </label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="name" name="name" value="<%= stock_data.name %>" class="form-control" placeholder="貨架位置" required>
                             </div>
                         </div>
                         
-                        <input type="submit" value="<%= stock_data._id? 'Update' : 'Create' %>" class="btn btn-primary m-1">
+                        <input type="submit" value="<%= stock_data._id? '更新貨架資料' : '建立新貨架' %>" class="btn btn-primary m-1">
                         <% if(stock_data._id){ %>
-                            <button type="submit" form="delete" class="btn btn-warning">Delete</button>
+                            <button type="submit" form="delete" class="btn btn-warning">刪除貨架</button>
                         <% } %>
                     </form>
 

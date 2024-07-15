@@ -23,14 +23,14 @@
             <div class="row">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">Index</a>
-                        <a href="/productlist" class="list-group-item darkmode">Products</a>
-                        <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                        <a href="/user" class="list-group-item darkmode">Users</a>
-                        <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
-                        <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode" onclick="darkMode(this)">Dark Mode</label>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -41,12 +41,12 @@
                     <div class="row">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
-                                <li class="breadcrumb-item active darkmode" aria-current="page">Product</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page">貨品</li>
                             </ol>
                         </div>
                         <div class="col">
-                            <a href="/product/create" class="btn btn-primary">Create Product</a>
+                            <a href="/product/create" class="btn btn-primary">建立貨品資料</a>
                         </div>
                     </div>
                     <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
@@ -60,7 +60,7 @@
                             <a href='/productlist/sort?sort=Brand&seq=<%= sort==="Brand"?-1:1 %>'>品牌</a>
                         </div>
                         <div class="col fw-bold fs-5">
-                            <a href='/productlist/sort?sort=Name&seq=<%= sort==="Name"?-1:1 %>'>產品名稱</a>
+                            <a href='/productlist/sort?sort=Name&seq=<%= sort==="Name"?-1:1 %>'>貨品名稱</a>
                         </div>
                         <div class="col fw-bold fs-5">
                             <a href='/productlist/sort?sort=Origin&seq=<%= sort==="Origin"?-1:1 %>'>來源地</a>

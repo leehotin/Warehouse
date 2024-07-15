@@ -14,85 +14,85 @@
             <div class="row">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">Index</a>
-                        <a href="/productlist" class="list-group-item darkmode">Products</a>
-                        <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                        <a href="/user" class="list-group-item darkmode">Users</a>
-                        <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
-                        <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                        <label class="list-group-item darkmode" onclick="darkMode(this)">Dark Mode</label>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
                     </form> 
-                </div>
+                  </div>
                 
                 <div class="col-10">
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/" class="darkmode">Home</a></li>
-                                <li class="breadcrumb-item"><a href="/user" class="darkmode">User/Admin</a></li>
-                                <li class="breadcrumb-item active darkmode" aria-current="page"><%= data._id? data.user_id : 'Craete User' %></li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                                <li class="breadcrumb-item"><a href="/user" class="darkmode">使用者/管理員</a></li>
+                                <li class="breadcrumb-item active darkmode" aria-current="page"><%= data._id? data.user_id : '創建用戶' %></li>
                             </ol>
                         </div>
                     </div>
 
                     <div class="row">
-                        <label class="h1"><%= data._id?"User information": "Create User" %></label>
+                        <label class="h1"><%= data._id?"用戶資料": "創建用戶" %></label>
                     </div>
 
                     <form action="/user/save" method="post">
                         <input type="text" name="id" value="<%= data._id %>" hidden />
                         <div class="row my-1">
                             <div class="col">
-                                <label for="user_id">User Id:</label>
+                                <label for="user_id">使用者編號:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="user_id" name="user_id" class="form-control" value="<%= data.user_id %>" placeholder="user Id">
-                            </div>
-                        </div>
-
-                        <div class="row my-1">
-                            <div class="col">
-                                <label for="username">Username:</label>
-                            </div>
-                            <div class="col">
-                                <input type="text" id="username" name="username" class="form-control" value="<%= data.username %>" placeholder="username">
+                                <input type="text" id="user_id" name="user_id" class="form-control" value="<%= data.user_id %>" placeholder="使用者編號">
                             </div>
                         </div>
 
                         <div class="row my-1">
                             <div class="col">
-                                <label for="password">Password:</label>
+                                <label for="username">帳戶名稱:</label>
                             </div>
                             <div class="col">
-                                <input type="password" id="password" name="password" class="form-control" placeholder="password" maxlength="16">
-                            </div>
-                        </div>
-
-                        <div class="row my-1">
-                            <div class="col">
-                                <label for="confirm_password">Confirm Password:</label>
-                            </div>
-                            <div class="col">
-                                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="confirm password" maxlength="16">
+                                <input type="text" id="username" name="username" class="form-control" value="<%= data.username %>" placeholder="帳戶名稱" required>
                             </div>
                         </div>
 
                         <div class="row my-1">
                             <div class="col">
-                                <label for="name">Name:</label>
+                                <label for="password">密碼:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="name" name="name" class="form-control" value="<%= data.name %>" placeholder="name">
+                                <input type="password" id="password" name="password" class="form-control" placeholder="密碼" maxlength="16">
                             </div>
                         </div>
 
                         <div class="row my-1">
                             <div class="col">
-                                <label>Role:</label>
+                                <label for="confirm_password">確認密碼:</label>
+                            </div>
+                            <div class="col">
+                                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="確認密碼" maxlength="16">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col">
+                                <label for="name">姓名:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="name" name="name" class="form-control" value="<%= data.name %>" placeholder="姓名" required>
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col">
+                                <label>使用者類別:</label>
                             </div>
                             <div class="col">
                                 <% for(let role of roles){ %>
@@ -107,9 +107,9 @@
                         <div class="row">
                             <label name="error" class="text-danger"><%= message %></label>
                         </div>
-                        <input type="submit" value="<%= data._id? 'Update user' : 'Create User' %>" class="btn btn-primary my-1">
+                        <input type="submit" value="<%= data._id? '更新用戶資料' : '創建用戶' %>" class="btn btn-primary my-1">
                         <% if(data._id){ %>
-                            <button type="submit" form="delete" class="btn btn-warning">Delete</button>
+                            <button type="submit" form="delete" class="btn btn-warning">刪除用戶</button>
                         <% } %>
                     </form>
 

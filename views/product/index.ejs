@@ -18,18 +18,17 @@
 
 <body class="darkmode">
     <div class="container">
-        <input class="switch-box" type="checkbox" id="btn">
         <div class="row">
             <div class="col-2">
                 <div class="list-group list-group-flush text-center">
-                    <a href="/" class="list-group-item darkmode">Index</a>
-                    <a href="/productlist" class="list-group-item darkmode">Products</a>
-                    <a href="/stock" class="list-group-item darkmode">Stocks</a>
-                    <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-                    <a href="/user" class="list-group-item darkmode">Users</a>
-                    <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
-                    <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-                    <label class="list-group-item darkmode" onclick="darkMode(this)">Daytime Mode</label>
+                    <a href="/" class="list-group-item darkmode">首頁</a>
+                    <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                    <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                    <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                    <a href="/user" class="list-group-item darkmode">用戶</a>
+                    <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                    <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                    <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                 </div> 
                 
                 <form action="/user/logout" method="post" id="logout">
@@ -40,52 +39,53 @@
                 <div class="row my-1">
                     <div class="col">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Delivery Order</li>
+                            <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                            <li class="breadcrumb-item" aria-current="page"><a href="/productlist" class="darkmode">貨品</a></li>
+                            <li class="breadcrumb-item active darkmode" aria-current="page">貨品資料</li>
                         </ol>
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary" form="saveProduct">Create New Product</button>
+                        <button class="btn btn-primary" form="saveProduct">建立貨品資料</button>
                     </div>
                 </div>
 
                 <form action="./saveProduct" method="post" id="saveProduct">
-                    <div class="row my-2 border-bottom border-primary bg-secondary-subtle">
+                    <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                         <div class="col fw-bold fs-5 text-center">
-                            New Product Information 
+                            新貨品資料
                         </div>
                     </div>
                     <div class="row py-1 my-1 border-bottom border-primary">
                         <div class="col">
-                            <label for="Product_id">Product ID:</label>
+                            <label for="Product_id">貨品編號:</label>
                             <input type='text' class="form-control text" name="Product_id" id="Product_id" value=""
                                 size="50">
                         </div>
                         <div class="col">
-                            <label for="Name">Product Name:</label>
+                            <label for="Name">貨品名稱:</label>
                             <input type='text' class="form-control text" name="Name" id="Name" value="" size="10">
                         </div>
                     </div>
                     <div class="row py-1 my-1 border-bottom border-primary">
                         <div class="col">
-                            <label for="Brand">Brand:</label><select id="selectBoxP" name="Brand">
+                            <label for="Brand">生產公司:</label><select id="selectBoxP" name="Brand">
                                 <option value=''>-----請選擇-----</option>
                                 <% for(let item of brands){ %>
                                     <option value="<%= item %>"><%= item %>
                                     </option>
                                     <% } %>
                             </select><br>
-                            New Brand：<input type='text' class="form-control text" name="new_Brand" id="Type" value="">
+                            新生產公司：<input type='text' class="form-control text" name="new_Brand" id="Type" value="">
                         </div>
                         <div class="col">
-                            <label for="Type">Type:</label>
+                            <label for="Type">貨品類型:</label>
                             <select id="influenceBoxP" name="Type">
                                 <option value=''>-----請選擇-----</option>
                             </select><br>
-                            New Type：<input type='text' class="form-control text" name="new_Type" id="Brand" value="">
+                            貨品類型：<input type='text' class="form-control text" name="new_Type" id="Brand" value="">
                         </div>
                         <div class="col">
-                            <label for="Origin">Origin:</label><select name='Origin'>
+                            <label for="Origin">產地:</label><select name='Origin'>
                                 <option value="">-----請選擇-----</option>
                                 <% for(let item of origins){ %>
                                     <option value="<%= item %>">
@@ -93,11 +93,11 @@
                                     </option>
                                     <% } %>
                             </select><br>
-                            New Origin：<input type='text' class="form-control text" name="new_Origin" id="Origin" value=""
+                            新產地：<input type='text' class="form-control text" name="new_Origin" id="Origin" value=""
                                 size="50">
                         </div>
                         <div class="col">
-                            <label for="stock">Stock:</label><select name='stock_id'>
+                            <label for="stock">儲存位置:</label><select name='stock_id'>
                                 <% for(let item of stocks){ %>
                                     <option value="<%= item._id %>">
                                         <%= item.name %>

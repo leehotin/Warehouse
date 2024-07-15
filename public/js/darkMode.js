@@ -24,8 +24,10 @@ function setClass(name,setClass,removeClass,getBy){
 function setDarkMode(){
     if(localStorage.getItem("darkmode")=="dark"){
         setClass("darkmode","dark","white","class");
+        document.getElementsByClassName("darkmode-btn")[0].innerHTML = "日間模式";
     }else{
         setClass("darkmode","white","dark","class");
+        document.getElementsByClassName("darkmode-btn")[0].innerHTML = "夜間模式";
     }
 }
 
@@ -40,9 +42,4 @@ function changeDarkMode(){
 function darkMode(btn){
     changeDarkMode();
     setDarkMode();
-    if(localStorage.getItem("darkmode")=="dark"){
-        btn.innerHTML = "Daytime Mode";
-    }else{
-        btn.innerHTML = "Dark Mode";
-    }
 }
