@@ -38,8 +38,8 @@
                     </div>
 
                     <div class="row">
-                        <label class="fs-4">搜尋資料:</label>
-                        <form action="/deliveryOrder" method="get" class="border m-1">
+                        <label class="fs-4" onclick="hiddenById('search')">搜尋資料:</label>
+                        <form action="/deliveryOrder" method="get" class="border m-1" id="search" hidden>
                             <% for(let data of search){ %>
                                 <div class="row m-1">
                                     <div class="col-2">

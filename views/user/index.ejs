@@ -37,8 +37,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="fs-4">搜尋資料:</label>
-                        <form action="/user" method="get" class="border m-1">
+                        <label class="fs-4" onclick="hiddenById('search')">搜尋資料:</label>
+                        
+                        <form action="/user" method="get" class="border m-1" id="search" hidden>
                             <div class="row my-1">
                                 <div class="col-2">
                                     <label for="user_id">使用者編號: </label>
