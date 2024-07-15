@@ -22,29 +22,24 @@ function setClass(name,setClass,removeClass,getBy){
 }
 
 function setDarkMode(){
-    if(sessionStorage.getItem("darkmode")=="dark"){
+    if(localStorage.getItem("darkmode")=="dark"){
         setClass("darkmode","dark","white","class");
+        document.getElementsByClassName("darkmode-btn")[0].innerHTML = "日間模式";
     }else{
         setClass("darkmode","white","dark","class");
+        document.getElementsByClassName("darkmode-btn")[0].innerHTML = "夜間模式";
     }
 }
 
 function changeDarkMode(){
-    if(sessionStorage.getItem("darkmode")=="dark"){
-        sessionStorage.setItem("darkmode","white");
+    if(localStorage.getItem("darkmode")=="dark"){
+        localStorage.setItem("darkmode","white");
     }else{
-        sessionStorage.setItem("darkmode","dark");
+        localStorage.setItem("darkmode","dark");
     }
 }
 
 function darkMode(btn){
     changeDarkMode();
     setDarkMode();
-    if(sessionStorage.getItem("darkmode")=="dark"){
-        btn.innerHTML = "Daytime Mode";
-    }else{
-        btn.innerHTML = "Dark Mode";
-    }
 }
-
-setDarkMode();

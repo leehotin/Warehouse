@@ -3,22 +3,22 @@
   <head>
     <title>Warehouse In Out system</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="../css/style.css" rel="stylesheet" type="text/css">
-    <script src="../js/darkMode.js"></script>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <script src="/js/darkMode.js"></script>
   </head>
-  <body>
+  <body class="darkmode">
     <div class="container">
       <div class="row">
         <div class="col-2">
           <div class="list-group list-group-flush text-center">
-              <a href="/" class="list-group-item darkmode">Index</a>
-              <a href="/productlist" class="list-group-item darkmode">Products</a>
-              <a href="/stock" class="list-group-item darkmode">Stocks</a>
-              <a href="/deliveryOrder" class="list-group-item darkmode">Delivery Orders</a>
-              <a href="/user" class="list-group-item darkmode">Users</a>
-              <button type="submit" form="logout" class="list-group-item darkmode">Logout</button>
-              <a href="/recycleBin" class="list-group-item darkmode">Recycle Bin</a>
-              <label class="list-group-item darkmode" onclick="darkMode(this)">Daytime Mode</label>
+              <a href="/" class="list-group-item darkmode">首頁</a>
+              <a href="/productlist" class="list-group-item darkmode">貨品</a>
+              <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+              <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+              <a href="/user" class="list-group-item darkmode">用戶</a>
+              <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+              <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+              <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
           </div> 
           
           <form action="/user/logout" method="post" id="logout">
@@ -29,8 +29,8 @@
           <div class="row my-1">
             <div class="col">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">recycleBin</li>
+                    <li class="breadcrumb-item"><a href="/"  class="darkmode">首頁</a></li>
+                    <li class="breadcrumb-item active darkmode" aria-current="page">recycleBin</li>
                 </ol>
                 <button type="submit" form="rollback" class="">復原</button>    
             </div>
@@ -42,7 +42,7 @@
               <div class="row text-center">
                 <label>進桶表</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-secondary-subtle">
                 <div class="col fw-bold fs-5 text-center">
                   <label><a href='/recycleBin?sort=<%= sort %>&title=time'>進垃圾桶時間</a></label>
                 </div>
@@ -76,19 +76,19 @@
               <div class="row text-center">
                 <label>Not Finish Order</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-secondary-subtle">
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Delivery Id</label>
+                  <label>送貨單號</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Company</label>
+                  <label>公司名稱</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
                   <label>Type</label>
                 </div>
               </div>
              
-                <div class="row py-1 border-bottom border-dark">
+                <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center">
                     <a href="./deliveryOrder/info?delivery_id="></a>
                   </div>
@@ -108,4 +108,7 @@
     </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('load', setDarkMode());
+  </script>  
 </html>
