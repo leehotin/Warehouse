@@ -54,7 +54,7 @@
                             <a href='/productlist/sort?sort=Product_id&seq=<%= sort==="Product_id"?-1:1 %>'>貨品編號</a>
                         </div>
                         <div class="col fw-bold fs-5">
-                            <a href='/productlist/<% if(sub){ %>title<% ;}else{ %>sort<% ;} %>?sort=Type&seq=<%= sort==="Type"?-1:1 %><% if(sub){ %>&title=<%= data[0].Type %><% } %>'>類型</a>
+                            <a href='/productlist/sort?sort=Type&seq=<%= sort==="Type"?-1:1 %>'>類型</a>
                         </div>
                         <div class="col fw-bold fs-5">
                             <a href='/productlist/sort?sort=Brand&seq=<%= sort==="Brand"?-1:1 %>'>品牌</a>
@@ -96,7 +96,7 @@
                                 <a href='/productlist/title?sort=Origin&title=<%= data[x].Origin %>&seq=<%= sort==="Origin"?-1:1 %>' class="darkmode"><%= data[x].Origin %></a>
                             </div>
                             <div class="col">
-                                <a href='/productlist/title?sort=Type&title=<%= data[x].Count %>&seq=<%= sort==="Count"?-1:1 %>' class="darkmode"><%= data[x].Count %></a>
+                                <a href='/productlist/check?sort=Type&match=<%= data[x].Product_id %>' class="darkmode"><%= data[x].Count %></a>
                             </div>
                             <div class="col">
                                 <a href='/productlist/title?sort=stock_id&title=<%= data[x].stock_id %>' class="darkmode"><%= data[x].trans_stock_id[0].name %></a>
