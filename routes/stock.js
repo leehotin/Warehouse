@@ -83,9 +83,9 @@ router.post('/save',checkLogin, async (req,res,next) =>{
     stock.area = req.body.area; 
     stock.name = req.body.name;
     if(!stock._id){
-      user.created_at = new Date();
+      stock.created_at = new Date();
     }
-    user.updated_at = new Date();
+    stock.updated_at = new Date();
 
     let data = {};
     if (typeof stock._id !=="undefined" && stock._id != ""){
