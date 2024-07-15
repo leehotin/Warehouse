@@ -96,7 +96,7 @@ router.get('/',checkLogin,async function(req, res, next) {
         //關閉連線
         await iOemuSys.disconnect();
     }
-}).get('/layout',async function(req, res, next) {
+}).get('/layout',checkLogin,async function(req, res, next) {
     try{
         await iOemuSys.connect();
         let data = await iOemuSys.search('查詢並響應',iOemuSys.CreatedbIndex(req.query.Name),[req.query.group,req.query.search,req.query.limit]);

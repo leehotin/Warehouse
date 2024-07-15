@@ -30,78 +30,47 @@
             <div class="col">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/"  class="darkmode">首頁</a></li>
-                    <li class="breadcrumb-item active darkmode" aria-current="page">recycleBin</li>
+                    <li class="breadcrumb-item active darkmode" aria-current="page">回收箱</li>
                 </ol>
-                <button type="submit" form="rollback" class="">復原</button>    
+                <button type="submit" form="rollback" class="btn btn-warning">復原</button>    
             </div>
           </div>
           <form action="/recycleBin/rollback" method="post" id="rollback">
-          <div class="row">
-            <div class="col m-1">
-              <!-- delivery Order(created_at) == new Date().date  -->
-              <div class="row text-center">
-                <label>進桶表</label>
+            <div class="row">
+              <div class="col m-1">
+                <div class="row text-center">
+                  <label>進桶表</label>
+                </div>
+                <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
+                  <div class="col fw-bold fs-5 text-center">
+                    <label><a href='/recycleBin?sort=<%= sort %>&title=time'>進垃圾桶時間</a></label>
+                  </div>
+                  <div class="col fw-bold fs-5 text-center">
+                    <label>誰經手的</label>
+                  </div>
+                  <div class="col fw-bold fs-5 text-center">
+                    <label>來自哪裡</label>
+                  </div>
+                </div>
+              <% for(i in datas){ %>
+                  <div class="row py-1 border-bottom border-dark">
+                      <div class="">
+                          <input type="checkbox" value="<%= datas[i]._id %>" name="rollback_no" >
+                          
+                        </div>  
+                    <div class="col text-center">
+                      <a href="./deliveryOrder/info?delivery_id="><%= datas[i]._id.getTimestamp() %></a>
+                    </div>
+                    <div class="col text-center">
+                      <%= datas[i].who %>
+                    </div>
+                    <div class="col text-center">
+                    <%= datas[i].source %>
+                    </div>
+                  </div>
+                <% } %>
               </div>
-              <div class="row my-1 border-bottom border-primary bg-secondary-subtle">
-                <div class="col fw-bold fs-5 text-center">
-                  <label><a href='/recycleBin?sort=<%= sort %>&title=time'>進垃圾桶時間</a></label>
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                  <label>誰經手的</label>
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                  <label>來自哪裡</label>
-                </div>
-              </div>
-             <% for(i in datas){ %>
-                <div class="row py-1 border-bottom border-dark">
-                    <div class="">
-                        <input type="checkbox" value="<%= datas[i]._id %>" name="rollback_no" >
-                        
-                      </div>  
-                  <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id="><%= datas[i]._id.getTimestamp() %></a>
-                  </div>
-                  <div class="col text-center">
-                    <%= datas[i].who %>
-                  </div>
-                  <div class="col text-center">
-                   <%= datas[i].source %>
-                  </div>
-                </div>
-              <% } %>
             </div>
-            <div class="col m-1">
-              <!-- delivery Order(delivery_check) == 0 && delivery_at == null-->
-              <div class="row text-center">
-                <label>Not Finish Order</label>
-              </div>
-              <div class="row my-1 border-bottom border-primary bg-secondary-subtle">
-                <div class="col fw-bold fs-5 text-center">
-                  <label>送貨單號</label>
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                  <label>公司名稱</label>
-                </div>
-                <div class="col fw-bold fs-5 text-center">
-                  <label>Type</label>
-                </div>
-              </div>
-             
-                <div class="row py-1 border-bottom border-primary">
-                  <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id="></a>
-                  </div>
-                  <div class="col text-center">
-                    
-                  </div>
-                  <div class="col text-center">
-                    
-                  </div>
-                </div>
-              
-            </div>
-          </div>
           </form>
         </div>
       </div>
