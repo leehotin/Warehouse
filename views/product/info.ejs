@@ -3,102 +3,154 @@
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link href="../css/style.css" rel="stylesheet" type="text/css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      <link href="/css/style.css" rel="stylesheet" type="text/css">
+      <script src="/js/darkMode.js"></script>
       <title>Warehouse In Out system</title>
   </head>
-  <body>
-    <h1>4角有限公司</h1>
-      
-    <form action="/product/save" method="post">
-      <input type="text" name="_id" value="<%= data._id %>" hidden> 
+  <body class="darkmode">
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+          <div class="list-group list-group-flush text-center">
+              <a href="/" class="list-group-item darkmode">首頁</a>
+              <a href="/productlist" class="list-group-item darkmode">貨品</a>
+              <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+              <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+              <a href="/user" class="list-group-item darkmode">用戶</a>
+              <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+              <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+              <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
+          </div> 
+          
+          <form action="/user/logout" method="post" id="logout">
+          </form> 
+        </div>
 
-      <table>
-        <tr>
-          <td>
-            <label for="Product_id">Product ID:</label>
-          </td>
-          <td>
-            <input type="text" id="Product_id" name="Product_id" value="<%= data.Product_id %>" placeholder="Type" required>
-          </td>
-        </tr>
+        <div class="col-10">
+          <div class="row my-1">
+            <div class="col">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a href="/productlist" class="darkmode">貨品</a></li>
+                <li class="breadcrumb-item darkmode" aria-current="page">貨品資料</li>
+                <li class="breadcrumb-item active darkmode" aria-current="page"><%= data.Product_id %></li>
+              </ol>
+            </div>
+          </div>
+            
+          <div class="row">
+            <label class="h1">更新貨品資料</label>
+          </div>
 
-        <tr>
-          <td>
-            <label for="name">Product name:</label> 
-          </td>
-          <td>
-            <input type="text" id="Name" name="Name" value="<%= data.Name %>" placeholder="Type" required>
-          </td>
-        </tr>
+          <form action="/product/save" method="post" id="update">
+            <input type="text" name="_id" value="<%= data._id %>" hidden> 
+            <div class="row my-1">
+              <div class="col">
+                <label for="Product_id">貨品編號:</label>
+              </div>
+              <div class="col">
+                <input type="text" id="Product_id" name="Product_id" value="<%= data.Product_id %>" class="form-control text-center" placeholder="Type" required>
+              </div>
+            </div>
 
-        <tr>
-          <td>
-            <label for="Type">Type:</label> 
-            </td>
-            <td>
-                  <select>
-                  <option value="coffee" <%= data.Type === 'coffee' ? 'selected' : '' %>>Coffee</option>
-                  <option value="noodle" <%= data.Type === 'noodle' ? 'selected' : '' %>>Noodle</option>
-                  <option value="drink" <%= data.Type === 'drink' ? 'selected' : '' %>>Drink</option>
-                  <option value="beer" <%= data.Type === 'beer' ? 'selected' : '' %>>Beer</option>
-                  <option value="tissue" <%= data.Type === 'tissue' ? 'selected' : '' %>>Tissue</option>
+            <div class="row my-1">
+              <div class="col">
+                <label for="name">貨品名稱:</label> 
+              </div>
+              <div class="col">
+                <input type="text" id="Name" name="Name" value="<%= data.Name %>" class="form-control text-center" placeholder="Type" required>
+              </div>
+            </div>
+
+            <div class="row my-1">
+              <div class="col">
+                <label for="Type">貨品類型:</label> 
+              </div>
+              <div class="col">
+                    <select name="Type" class="form-select text">
+                      <option value="baking_soda" <%= data.Type === 'baking_soda' ? 'selected' : '' %>>Baking Soda</option>
+                      <option value="beer" <%= data.Type === 'beer' ? 'selected' : '' %>>Beer</option>
+                      <option value="can" <%= data.Type === 'can' ? 'selected' : '' %>>Can</option>
+                      <option value="coffee" <%= data.Type === 'coffee' ? 'selected' : '' %>>Coffee</option>
+                      <option value="cornmeal" <%= data.Type === 'cornmeal' ? 'selected' : '' %>>Cornmeal</option>
+                      <option value="drink" <%= data.Type === 'drink' ? 'selected' : '' %>>Drink</option>
+                      <option value="dried_beans" <%= data.Type === 'dried_beans' ? 'selected' : '' %>>Dried Beans</option>
+                      <option value="flour" <%= data.Type === 'flour' ? 'selected' : '' %>>Flour</option>
+                      <option value="noodle" <%= data.Type === 'noodle' ? 'selected' : '' %>>Noodle</option>
+                      <option value="oats" <%= data.Type === 'oats' ? 'selected' : '' %>>Oats</option>
+                      <option value="pasta" <%= data.Type === 'pasta' ? 'selected' : '' %>>Pasta</option>
+                      <option value="pepper" <%= data.Type === 'pepper' ? 'selected' : '' %>>Pepper</option>
+                      <option value="rice" <%= data.Type === 'rice' ? 'selected' : '' %>>Rice</option>
+                      <option value="salt" <%= data.Type === 'salt' ? 'selected' : '' %>>Salt</option>
+                      <option value="sugar" <%= data.Type === 'sugar' ? 'selected' : '' %>>Sugar</option>
+                    </select>
+              </div>
+            </div>
+
+            <div class="row my-1">
+              <div class="col">
+                <label for="Brand">生產公司:</label> 
+              </div>
+              <div class="col">
+                <input type="text" id="Brand" name="Brand" value="<%= data.Brand %>" class="form-control text-center" placeholder="Brand" required>
+              </div>
+            </div>
+
+            <div class="row my-1">
+              <div class="col">
+                <label for="Origin">產地:</label> 
+              </div>
+              <div class="col">
+                <input type="text" id="Origin" name="Origin" value="<%= data.Origin %>" class="form-control text-center" placeholder="Origin" required>
+              </div>
+            </div>
+
+            <div class="row my-1">
+              <div class="col">
+                <label for="Count">庫存量:</label> 
+              </div>
+              <div class="col">
+                <input type="number" id="Count" name="Count" value="<%= data.Count %>" class="form-control text-center" placeholder="Count" min="1" required>
+              </div>
+            </div>
+            
+            <div class="row my-1">
+              <div class="col">
+                <label for="stock">儲存位置:</label>
+              </div>
+              <div class="col">
+                <select name="stock" id="stock" class="form-select text">
+                  <% for(let stock of stocks){ %>
+                    <option value="<%= stock._id %>" <%= data.stock_id == stock._id?'selected':'' %> ><%= stock.area %> <%= stock.name %> </option>
+                  <% } %> 
                 </select>
-              </tr>
-           
-       
-          <td>
-            <label for="Brand">Brand:</label> 
-          </td>
-          <td>
-            <input type="text" id="Brand" name="Brand" value="<%= data.Brand %>" placeholder="Brand" required>
-          </td>
-        </tr>
+              </div>
+            </div>
+          </form>
 
-        <tr>
-          <td>
-            <label for="Origin">Origin:</label> 
-          </td>
-          <td>
-            <input type="text" id="Origin" name="Origin" value="<%= data.Origin %>" placeholder="Origin" required>
-          </td>
-        </tr>
+          <div class="row my-1">
+            <div class="col"> 
+              <Button type="submit" form="update" class="btn btn-primary">更新貨品資料 </Button> 
+              <Button type="submit" form="delete" class="btn btn-warning">刪除貨品資料 </Button>  
+            </div>
+          </div>
 
-        <tr>
-          <td>
-            <label for="Count">Count:</label> 
-          </td>
-          <td>
-          <input type="number" id="Count" name="Count" value="<%= data.Count %>" placeholder="Count" min="1" required>
-          </td>
-        </tr>
-        
-        <tr>
-          <td>
-            <label for="stock">stock</label>
-          </td>
-          <td>
-            <select name="stock" id="stock">
-              <% for(let stock of stocks){ %>
-                <option value="<%= stock._id %>" <%= data.stock_id == stock._id?'selected':'' %> ><%= stock.area %> <%= stock.name %> </option>
-              <% } %> 
-            </select>
-          </td>
-        </tr>
-
-        <tr>
-          <td> 
-
-
-            <Button type="submit">Submit </Button> 
-                
-          </td>
-        </tr>
-      </table>
-    </form>
-      
-    <a href="/products">Back to stock List</a></br>
-    <a href="/products">Back to Index</a></br>
-     
-    
+          <div class="row">
+            <div class="col">
+              <a href="/productlist" class="btn btn-primary">回到貨品列表</a></br>
+            </div>
+          </div>
+   
+          <form action="/product/delete" method = "post" id="delete">
+            <input type="text" name="id" value="<%= data._id %>" hidden>
+          </form>      
+        </div>
+      </div>
+    </div>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> 
+  <script>
+    document.addEventListener('load', setDarkMode());
+  </script> 
 </html>

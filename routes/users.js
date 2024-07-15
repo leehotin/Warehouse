@@ -17,22 +17,19 @@ const dbName = "Warehouse_In_Out_System";
 router.get('/',checkLogin, async (req, res, next)=>{
   //list  
   try{
-
     await client.connect();
     const roles = [
       {
-        display_name: "Admin",
+        display_name: "管理員",
         value: "0"
       },
       {
-        display_name: "User",
+        display_name: "使用者",
         value: "1"
       },
     ]
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
 
-    let header = req.query.role??'User/Admin'
+    let header = req.query.role??'使用者/管理員'
     let whereData = {};
 
     if (typeof req.query.user_id !== "undefined" &&req.query.user_id != ""){
@@ -46,10 +43,10 @@ router.get('/',checkLogin, async (req, res, next)=>{
       whereData.role = req.query.role;
       switch(req.query.role){
         case "0":
-          header = "Admin";
+          header = "管理員";
           break;
         case "1":
-          header = "User";
+          header = "使用者";
           break;
       }
 
@@ -57,7 +54,7 @@ router.get('/',checkLogin, async (req, res, next)=>{
     whereData.deleted_at = null;
     let data = await client.db(dbName).collection('users').find(whereData).toArray();
 
-    res.render('user/index',{datas:data,roles: roles,header:header, darkmode:darkMode});
+    res.render('user/index',{datas:data,roles: roles,header:header});
   }finally{
     await client.close();
   }
@@ -67,17 +64,15 @@ router.get('/info/:id',checkLogin, async (req, res, next)=>{
   // read user info
   try{
     await client.connect();
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
 
     let data = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.params.id)});
     const roles = [
       {
-        display_name: "Admin",
+        display_name: "管理員",
         value: "0"
       },
       {
-        display_name: "User",
+        display_name: "使用者",
         value: "1"
       },
     ]
@@ -88,7 +83,7 @@ router.get('/info/:id',checkLogin, async (req, res, next)=>{
     }
     req.session.message = null;
 
-    res.render('user/info',{data:data,roles:roles,message:message, darkmode:darkMode});
+    res.render('user/info',{data:data,roles:roles,message:message});
   }finally{
     await client.close();
   }
@@ -98,16 +93,14 @@ router.get('/create',checkLogin, (req, res, next)=>{
   // create user info
   const roles = [
     {
-      display_name: "Admin",
+      display_name: "管理員",
       value: "0"
     },
     {
-      display_name: "user",
+      display_name: "使用者",
       value: "1"
     },
   ]
-  //darkmode checking
-  let darkMode = req.session.darkmode??'white';
 
   let message = "";
   if(req.session.message){
@@ -115,7 +108,7 @@ router.get('/create',checkLogin, (req, res, next)=>{
   }
   req.session.message = null;
 
-  res.render('user/info',{data:[],roles:roles,message:message,darkmode:darkMode});
+  res.render('user/info',{data:[],roles:roles,message:message});
 
 });
 
@@ -154,7 +147,7 @@ router.post('/login', async(req,res,next)=>{
         res.redirect('/user/login');
         break;
       default:
-        req.session.errorMessage = 'username or password error';
+        req.session.errorMessage = '帳戶或密碼錯誤';
         res.redirect('/user/login');
     }
     /*if(user>1){
@@ -227,7 +220,7 @@ router.post('/save',checkLogin, async (req,res,next)=>{
         data = await client.db(dbName).collection("users").updateOne({_id: ObjectId.createFromHexString(req.body.id)},{$set:user});
         data._id = req.body.id;
       }else{
-        req.session.message = "update input error";
+        req.session.message = "更新帳戶出現錯誤";
         return res.redirect(`/user/info/${user._id}`);
       }
     }else{
@@ -240,11 +233,11 @@ router.post('/save',checkLogin, async (req,res,next)=>{
           await client.db(dbName).collection("logs").insertOne({information: `Create user: ${user.user_id},name: ${user.name},role: ${user.role}.`,type:"create",created_at:new Date(),updated_at:new Date()});
           data._id = data.insertedId;
         }else{
-          req.session.message = "database has this username";
+          req.session.message = "帳戶名稱已經存在";
           return res.redirect('/user/create');
         } 
       }else{
-        req.session.message = "create input error";
+        req.session.message = "建立帳戶出現錯誤";
         return res.redirect('/user/create');
       }
     }

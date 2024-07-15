@@ -16,17 +16,16 @@ router.get('/',checkLogin, async (req, res, next) =>{
         await client.connect();
 
         let search = [
-          {displayName: "Delivery Id:",name: "whereData[delivery_id]",placeholder: "Delivery Id",type: "text"},
-          {displayName: "Company:",name: "whereData[company]",placeholder: "Company",type: "text"},
-          {displayName: "Address:",name: "whereData[address]",placeholder: "Address",type: "text"},
-          {displayName: "Phone:",name: "whereData[phone]",placeholder: "Phone",type: "text"},
-          {displayName: "Delivery Type:",name: "whereData[type]",placeholder: "Delivery Type",type: "text"},
-          {displayName: "Delivery Check:",name: "whereData[delivery_check]",placeholder: "Delivery Check",type: "radio",data:[{display_value:"Finish",value:"1"},{display_value:"Not Finish",value:"0"}]},
-          {displayName: "Delivery User:",name: "whereData[delivery_user]",placeholder: "Delivery User",type: "text"},
-          {displayName: "Delivery At:",name: "whereData[delivery_at]",placeholder: "Delivery At",type: "text"},
+          {displayName: "貨單編號:",name: "whereData[delivery_id]",placeholder: "貨單編號",type: "text"},
+          {displayName: "公司名稱:",name: "whereData[company]",placeholder: "公司名稱",type: "text"},
+          {displayName: "公司地址:",name: "whereData[address]",placeholder: "公司地址",type: "text"},
+          {displayName: "公司電話:",name: "whereData[phone]",placeholder: "公司電話",type: "text"},
+          {displayName: "貨單類型:",name: "whereData[type]",placeholder: "貨單類型",type: "text"},
+          {displayName: "是否已經完成:",name: "whereData[delivery_check]",placeholder: "是否已經完成",type: "radio",data:[{display_value:"已完成",value:"1"},{display_value:"未完成",value:"0"}]},
+          {displayName: "確認貨單員工:",name: "whereData[delivery_user]",placeholder: "確認貨單員工",type: "text"},
+          {displayName: "完成日期:",name: "whereData[delivery_at]",placeholder: "完成日期",type: "text"},
         ];
-        //darkmode checking
-        let darkMode = req.session.darkmode??'white';
+
         //where by data
         let whereData = {};
         
@@ -42,10 +41,10 @@ router.get('/',checkLogin, async (req, res, next) =>{
           }
         }
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
-          projection:{_id:1,delivery_id:1,type:1,company:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
+          projection:{_id:1,delivery_id:1,company:1,type:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
 
-        res.render('deliveryOrder/index',{ datas: data, search: search,darkmode:darkMode});
+        res.render('deliveryOrder/index',{ datas: data, search: search});
       }finally{
         await client.close();
       }
@@ -64,25 +63,57 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   }
 }).get('/info',checkLogin, async (req,res,next) =>{
   try{
-    //darkmode checking
-    let darkMode = req.session.darkmode??'white';
     await iOemuSys.connect();
-
 
     let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
     let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
-    await res.render('deliveryOrder/info',{data:da,user:use,darkmode:darkMode});
+    await res.render('deliveryOrder/info',{data:da,user:use});
   }finally{
+    await iOemuSys.disconnect();
+  }
+}).get('/create',checkLogin,async(req,res,next)=>{
+  try{
+    await iOemuSys.connect();
+    let use = await iOemuSys.Read('',iOemuSys.CreatedbIndex('users'),['_id',req.session.user_id] );
+    console.log('a',use)
+    res.render('deliveryOrder/create',{data:'',user:use});
+  }
+  finally{
+    await iOemuSys.disconnect();
+  }
+}).post('/create',checkLogin,async(req,res,next)=>{
+  try{
+    await iOemuSys.connect();
+    await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),req.body)
+    res.redirect('/deliveryOrder');
+  }
+  finally{
     await iOemuSys.disconnect();
   }
 }).post('/update',checkLogin, async (req,res,next) =>{
   try{
     await iOemuSys.connect();
+    let search = [
+      {displayName: "Delivery Id:",name: "whereData[delivery_id]",placeholder: "Delivery Id",type: "text"},
+      {displayName: "Company:",name: "whereData[company]",placeholder: "Company",type: "text"},
+      {displayName: "Address:",name: "whereData[address]",placeholder: "Address",type: "text"},
+      {displayName: "Phone:",name: "whereData[phone]",placeholder: "Phone",type: "text"},
+      {displayName: "Delivery Type:",name: "whereData[type]",placeholder: "Delivery Type",type: "text"},
+      {displayName: "Delivery Check:",name: "whereData[delivery_check]",placeholder: "Delivery Check",type: "radio",data:[{display_value:"Finish",value:"1"},{display_value:"Not Finish",value:"0"}]},
+      {displayName: "Delivery User:",name: "whereData[delivery_user]",placeholder: "Delivery User",type: "text"},
+      {displayName: "Delivery At:",name: "whereData[delivery_at]",placeholder: "Delivery At",type: "text"},
+    ];
     //await iOemuSys.selectType(iOemuSys.CreatedbIndex('delivery_notes'));
     await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
+<<<<<<< HEAD
     let data = await iOemuSys.Read('123',iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']]);
     res.render('deliveryOrder/index',{ datas: data, search: '',darkmode:''});
 
+=======
+    let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
+    console.log(data)
+    res.render('deliveryOrder/index',{ datas: data, search: search});
+>>>>>>> 5bf22506a91b7b862aafb2a38577b6d6a75bc73e
 
   }finally{
     await iOemuSys.disconnect();

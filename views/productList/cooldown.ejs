@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<head>
+    <script>        document.addEventListener("DOMContentLoaded", function () {
+            var s = 5; var time = document.getElementById('cooldowntime')
+            function showTime() {
+                s--;
+                time.innerHTML = s + "";
+                if (s < 0)
+                    location.href = '/productlist';
+
+            }
+            setInterval(showTime, 1000)
+        })</script>
+</head>
+
+<body>
+    <div>Give YOU <span id="cooldowntime">5</span>s cooldown~</div>
+</body>

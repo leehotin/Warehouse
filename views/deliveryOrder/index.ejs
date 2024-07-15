@@ -2,21 +2,26 @@
     <head>
         <title>Warehouse In Out system</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link href="../css/style.css" rel="stylesheet" type="text/css">
+        <link href="/css/style.css" rel="stylesheet" type="text/css">
+        <script src="/js/darkMode.js"></script>
     </head>
+<<<<<<< HEAD
     <body class="v1">
+=======
+    <body class="darkmode">
+>>>>>>> 5bf22506a91b7b862aafb2a38577b6d6a75bc73e
         <div class="container">
             <div class="row">
                 <div class="col-2">
                     <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Index</a>
-                        <a href="/productlist" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Products</a>
-                        <a href="/stock" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Stocks</a>
-                        <a href="/deliveryOrder" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Delivery Orders</a>
-                        <a href="/user" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Users</a>
-                        <button type="submit" form="logout" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Logout</button>
-                        <a href="/recycleBin" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Recycle Bin</a>
-                        <a href="/darkmode" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>"><%= darkmode=='dark'?'Daytime Mode':'Darkness Mode' %></a>
+                        <a href="/" class="list-group-item darkmode">首頁</a>
+                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/user" class="list-group-item darkmode">用戶</a>
+                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                     </div> 
                     
                     <form action="/user/logout" method="post" id="logout">
@@ -27,18 +32,18 @@
                     <div class="row my-1">
                         <div class="col">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Delivery Order</li>
+                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
+                                <li class="breadcrumb-item darkmode active" aria-current="page">交貨單</li>
                             </ol>
                         </div>
                         <div class="col">
-                            <a href="/deliveryOrder/create" class="btn btn-primary">Create Delivery Order</a>
+                            <a href="/deliveryOrder/create" class="btn btn-primary">建立交貨單</a>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <label class="fs-4">Search data:</label>
-                        <form action="/deliveryOrder" method="get" class="border m-1">
+                    <div class="row border">
+                        <label class="fs-4" onclick="hiddenById('search')">搜尋資料:</label>
+                        <form action="/deliveryOrder" method="get" class="m-1" id="search" hidden>
                             <% for(let data of search){ %>
                                 <div class="row m-1">
                                     <div class="col-2">
@@ -60,48 +65,48 @@
                                 </div>
                             <% } %>
 
-                            <input type="submit" value="Search" class="btn btn-primary m-1">
+                            <input type="submit" value="搜尋" class="btn btn-primary m-1">
                         </form>
                     </div>
 
-                    <div class="row my-2 border-bottom border-dark bg-secondary-subtle">
+                    <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                         <div class="col fw-bold fs-5 text-center">
-                            id
+                            貨單編號
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            type
+                            貨單類型
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            company
+                            公司名稱
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            phone
+                            公司電話
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            delivery check
+                            是否已經完成
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            delivery user
+                            確認貨單員工
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            delivery at
+                            完成日期
                         </div>
                         <div class="col fw-bold fs-5 text-center">
-                            edit
+                            修改資料
                         </div>
                     </div>
                     <% if(datas.length == 0){ %>
-                        <div class="row py-1 border-bottom border-dark text-center">
-                            <label>Not have Delivery Order</label>
+                        <div class="row py-1 border-bottom border-primary text-center">
+                            <label class="darkmode">找不到交貨單</label>
                         </div>
                     <% } %>
                     <% for(data of datas){ %>
-                        <div class="row py-2 border-bottom border-dark">
+                        <div class="row py-2 border-bottom border-primary">
                             <div class="col text-center">
-                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                             </div>
                             <div class="col text-center">
-                                <%= data.type %>
+                                <%= data.type=='in'? "入貨單" : "出貨單" %>
                             </div>
                             <div class="col text-center">
                                 <%= data.company %>
@@ -110,7 +115,7 @@
                                 <%= data.phone %>
                             </div>
                             <div class="col text-center">
-                                <%= data.delivery_check==1 ? "Finish": "Not Finish" %>
+                                <%= data.delivery_check==1 ? "已完成": "未完成" %>
                             </div>
                             <div class="col text-center">
                                 <%= data.delivery_user %>
@@ -119,10 +124,10 @@
                                 <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                             </div>
                             <div class="col text-center">
-                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">edit</a>
+                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">修改貨單</a>
                                 <form action="/deliveryOrder/delete" method="post" class="d-inline">
                                     <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
-                                    <input type="submit" class="btn btn-warning" value="delete">
+                                    <input type="submit" class="btn btn-warning" value="刪除貨單">
                                 </form>
                             </div>
                         </div>
@@ -132,4 +137,7 @@
         </div>
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('load', setDarkMode());
+    </script>  
 </html>

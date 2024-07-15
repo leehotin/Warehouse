@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Warehouse In Out system</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="../css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <script src="/js/darkMode.js"></script>
   </head>
-  <body>
+  <body class="darkmode">
     <div class="container">
       <div class="row">
         <div class="col-2">
           <div class="list-group list-group-flush text-center">
-              <a href="/" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Index</a>
-              <a href="/productlist" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Products</a>
-              <a href="/stock" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Stocks</a>
-              <a href="/deliveryOrder" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Delivery Orders</a>
-              <a href="/user" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Users</a>
-              <button type="submit" form="logout" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Logout</button>
-              <a href="/recycleBin" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>">Recycle Bin</a>
-              <a href="/darkmode" class="list-group-item <%= darkmode=='dark'?'dark':'white' %>"><%= darkmode=='dark'?'Daytime Mode':'Darkness Mode' %></a>
+              <a href="/" class="list-group-item darkmode">首頁</a>
+              <a href="/productlist" class="list-group-item darkmode">貨品</a>
+              <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+              <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+              <a href="/user" class="list-group-item darkmode">用戶</a>
+              <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+              <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+              <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
           </div> 
           
           <form action="/user/logout" method="post" id="logout">
@@ -28,7 +29,7 @@
           <div class="row my-1">
             <div class="col">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">Home</li>
+                    <li class="breadcrumb-item active darkmode" aria-current="page">首頁</li>
                 </ol>
             </div>
           </div>
@@ -36,29 +37,34 @@
             <div class="col m-1">
               <!-- delivery Order(created_at) == new Date().date  -->
               <div class="row text-center">
-                <label>Today Create Order</label>
+                <label>今天的新貨單</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Delivery Id</label>
+                  <label>送貨單號</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Company</label>
+                  <label>公司名稱</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Type</label>
+                  <label>貨單類型</label>
                 </div>
               </div>
+              <% if(datas.todayOrders.length == 0){ %>
+                <div class="row py-1 border-bottom border-primary text-center">
+                  <label class="darkmode">今天沒有新貨單</label>
+                </div>
+              <% } %>
               <% for(let data of datas.todayOrders){ %>
-                <div class="row py-1 border-bottom border-dark">
-                  <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                <div class="row py-1 border-bottom border-primary">
+                  <div class="col text-center darkmode">
+                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                   </div>
                   <div class="col text-center">
                     <%= data.company %>
                   </div>
                   <div class="col text-center">
-                    <%= data.type %>
+                    <%= data.type=='in'? "入貨單" : "出貨單" %>
                   </div>
                 </div>
               <% } %>
@@ -66,29 +72,34 @@
             <div class="col m-1">
               <!-- delivery Order(delivery_check) == 0 && delivery_at == null-->
               <div class="row text-center">
-                <label>Not Finish Order</label>
+                <label>沒有完成的貨單</label>
               </div>
-              <div class="row my-1 border-bottom border-dark bg-secondary-subtle">
+              <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Delivery Id</label>
+                  <label>送貨單號</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Company</label>
+                  <label>公司名稱</label>
                 </div>
                 <div class="col fw-bold fs-5 text-center">
-                  <label>Type</label>
+                  <label>貨單類型</label>
                 </div>
               </div>
+              <% if(datas.notFinishs.length == 0){ %>
+                <div class="row py-1 border-bottom border-primary text-center">
+                  <label class="darkmode">沒有未完成的貨單</label>
+                </div>
+              <% } %>
               <% for(let data of datas.notFinishs){ %>
-                <div class="row py-1 border-bottom border-dark">
+                <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>"><%= data.delivery_id %></a>
+                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                   </div>
                   <div class="col text-center">
                     <%= data.company %>
                   </div>
                   <div class="col text-center">
-                    <%= data.type %>
+                    <%= data.type=='in'? "入貨單" : "出貨單" %>
                   </div>
                 </div>
               <% } %>
@@ -98,5 +109,8 @@
       </div>
     </div>
   </body>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> 
+  <script>
+    document.addEventListener('load', setDarkMode());
+  </script>  
 </html>

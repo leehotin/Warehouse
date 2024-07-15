@@ -36,14 +36,14 @@
                             </ol>
                         </div>
                         <div class="col">
-                            <button class="btn btn-warning" form="delete">刪除貨單</button>
-                            <button class="btn btn-primary" form="update">更新貨單</button>
+                            <!--<button class="btn btn-warning" form="delete">刪除貨單</button>-->
+                            <button class="btn btn-primary" form="create">新增貨單</button>
                         </div>
-                        <form action="./delete" method="post" id="delete">
-                        </form>
+                        <!--<form action="./delete" method="post" id="delete">
+                        </form>-->
                     </div>
                     <div class="row">
-                        <form action="./update" method="post" id="update">
+                        <form action="./create" method="post" id="create">
                             <div class="row my-1">
                                 <div class="col fw-bold ">
                                     <label for="DeliveryID">送貨單號:</label>
@@ -143,31 +143,11 @@
                             </div>
 
                             <div class="row my-1">
-                                <div class="col fw-bold ">
-                                    是否已經完成：
-                                </div>
-                                <div class="col">
-                                    <div class="form-check">
-                                        <label class="form-check-label" for="finish">已完成</label>
-                                        <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(data.delivery_check===1){ %>checked<% } %>>
-                                    </div>
-                                    <div class="form-check">
-                                        <label class="form-check-label" for="NotFinish">未完成</label>
-                                        <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(data.delivery_check==='0'){ %>checked<% } %>>
-                                    </div>
-                                </div>
                                 <div class="col fw-bold">
                                     <label for="delivery_user">確認貨單員工:</label>
                                 </div>
                                 <div class="col">
-                                    <select name="delivery_user" id="delivery_user" class="form-select form-select-sm text-center">
-                                        <option>請選擇</option>
-                                        <% let j ; for(i of user){ %>
-                                        <option value="<%= Object.values(i) %>"<% if(Object.values(i)==data.delivery_user){ j='exsits'; %>selected <% } %>>
-                                            <%= Object.values(i) %>
-                                        </option>
-                                        <% } %><% if(j!='exsits'){ %><option name='delivery_user' value="<%= data.delivery_user %>" selected><%= data.delivery_user %></option> <% } %> 
-                                    </select>
+                                    <input name="delivery_user" value="<%= user %>">
                                 </div>
                             </div>
                         </form>

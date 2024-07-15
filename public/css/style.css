@@ -29,13 +29,14 @@ a{
 }
 /* dark mode */
 .dark{
-    background-color: black;
-    color: white;
+    background-color: rgb(36 36 36) !important;
+    color: white !important;
 }
+
 /* daytime mode */
 .white{
-    background-color: var(--bg-color);
-    color:var(--link-color);
+    background-color: var(--bg-color) !important;
+    color:var(--link-color) !important;
 }
 .v1{
     background-color: #FFFFFF;

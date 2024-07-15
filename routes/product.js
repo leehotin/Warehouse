@@ -11,13 +11,11 @@ const IOemuSys = require('./../callClass/started');
 //const { render } = require('../app');////這東西是誰放進來的 令我執行res.render時提醒我有循環依賴的可能
 const iOemuSys = new IOemuSys();
 
-router.get('/', async (req, res, next) => {
-
+router.get('/', checkLogin, async (req, res, next) => {
+    res.redirect("/productlist");
 });
-router.post('/info', async (req, res, next) => {
+router.post('/info', checkLogin, async (req, res, next) => {
     try {
-        //darkmode checking
-        let darkMode = req.session.darkmode ?? 'white';
         console.log(req.body.call_info)
         await client.connect();
         const products = client.db(dbName).collection("products");
@@ -39,50 +37,22 @@ router.post('/info', async (req, res, next) => {
         ]).toArray();
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
         console.log(data);
-        res.render('product/info', { data: data[0], stocks: stocks, darkmode: darkMode });
+        res.render('product/info', { data: data[0], stocks: stocks});
 
     } finally {
         await client.close();
     }
 });
-router.get('/info', async (req, res, next) => {
+router.get('/info', checkLogin, async (req, res, next) => {
     try {
-        //darkmode checking
-        let darkMode = req.session.darkmode ?? 'white';
-
         await client.connect();
         const products = client.db(dbName).collection("products");
 
-        let productcreative = [];
-        if (typeof req.query.productcreative !== "undefined" && req.query.productcreative != "") {
-            productcreative.push({
-                $match: { _id: ObjectId.createFromHexString(req.query.productcreative) } //找出符合條件的products
-            });
-        } else {
-            productcreative.push({
-                $match: { _id: "" } //找出符合條件的products
-            });
-        }
+        let data = await products.findOne({_id: ObjectId.createFromHexString(req.query.id)});
 
-        productcreative.push({
-            $lookup: {
-                from: "stocks", //目標table
-                localField: "stock_id", // 自己的col 
-                foreignField: "_id", // 目標的col
-                as: "stocks"// 取得資料後的名稱
-            }
-        });
-        productcreative.push({
-            $limit: 1 //輸出數量
-        });
-
-        let data = await products.aggregate(productcreative).toArray();
-        if (data.length == 0) {
-            data[0] = []
-        }
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
 
-        res.render('product/info', { data: data[0], stocks: stocks, darkmode: darkMode });
+        res.render('product/info', { data: data, stocks: stocks });
     } finally {
         await client.close();
     }
@@ -102,7 +72,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     }
 });
 
-router.post('/save', async (req, res, next) => {
+router.post('/save', checkLogin, async (req, res, next) => {
     try {
         await client.connect();
         let productUpdata = {};
@@ -116,7 +86,7 @@ router.post('/save', async (req, res, next) => {
         productUpdata.Brand = req.body.Brand;
         productUpdata.Origin = req.body.Origin;
         productUpdata.Count = req.body.Count;
-        productUpdata.stock_id = req.body.stock_id;
+        productUpdata.stock_id = ObjectId.createFromHexString(req.body.stock);
         if (!productUpdata._id) {
             productUpdata.created_at = new Date();
         }
@@ -141,7 +111,7 @@ router.post('/save', async (req, res, next) => {
     } finally {
         await client.close();
     }
-}).get('/create', async (req, res, next) => {
+}).get('/create', checkLogin, async (req, res, next) => {
     try {
         await iOemuSys.connect();
         let stock = await iOemuSys.Read('倉庫', iOemuSys.CreatedbIndex('stocks'));
@@ -153,7 +123,7 @@ router.post('/save', async (req, res, next) => {
     finally {
         await iOemuSys.disconnect();
     }
-}).post('/saveProduct', async (req, res, next) => {
+}).post('/saveProduct', checkLogin, async (req, res, next) => {
     try {
         await iOemuSys.connect();
         if(req.body['new_Brand'])
@@ -169,7 +139,7 @@ router.post('/save', async (req, res, next) => {
         let inquire = 'Product_id';
         await iOemuSys.update('newProduct',iOemuSys.CreatedbIndex('products'),req.body);
         let data = await iOemuSys.sort('資料新增',iOemuSys.CreatedbIndex('products'),iOemuSys.lookupSheet(['stocks','stock_id','_id','trans_stock_id']),['Product_id',1],req.body['Product_id']);
-        res.render('productlist/index',{data:data,sort:inquire,darkmode:'',sub:''});
+        res.render('productlist/index',{data:data,sort:inquire,sub:''});
     }
     finally {
         await iOemuSys.disconnect();
