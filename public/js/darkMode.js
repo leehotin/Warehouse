@@ -43,3 +43,11 @@ function darkMode(btn){
     changeDarkMode();
     setDarkMode();
 }
+
+function hiddenById(id){
+    if(document.getElementById(id).hidden){
+        document.getElementById(id).hidden = false;
+    }else{
+        document.getElementById(id).hidden = true;
+    }
+}
