@@ -49,7 +49,7 @@
                                     <label for="DeliveryID">送貨單號:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="DeliveryID" name="delivery_id" value="<%= data.delivery_id %>" class="form-control text">
+                                    <input type="text" id="DeliveryID" name="delivery_id" value="<%= data.delivery_id %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -58,7 +58,7 @@
                                     <label for="Company">公司名稱:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="Company" name="company" value="<%= data.company %>" class="form-control text">
+                                    <input type="text" id="Company" name="company" value="<%= data.company %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -67,7 +67,7 @@
                                     <label for="Address">公司地址:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="Address" name="address" value="<%= data.address %>" class="form-control text">
+                                    <input type="text" id="Address" name="address" value="<%= data.address %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -76,7 +76,7 @@
                                     <label for="Phone">公司電話:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="Phone" name="phone" value="<%= data.phone %>" class="form-control text">
+                                    <input type="text" id="Phone" name="phone" value="<%= data.phone %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -104,38 +104,38 @@
                                             <div class="col">
                                                 <label for="item[<%= i %>][name]">貨品名稱:</label>
                                                 <input type="hidden" name="item[product_id]" value="<%= (data.items[i].product_id) %>">
-                                                <input type='text' class="form-control text" name="item[name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50">
+                                                <input type='text' class="form-control text-center" name="item[name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][count]">總數量:</label>
-                                                <input type='text' class="form-control text" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
+                                                <input type='text' class="form-control text-center" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
+                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][stock_id]">貨架編號:</label>
-                                                <input type='text' class="form-control text" name="item[stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>">
+                                                <input type='text' class="form-control text-center" name="item[stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>">
                                             </div>
                                         </div>
                                     <% }for(i = 0 ; i < 2 ; i++){ %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][name]">貨品名稱:</label>
-                                                <input type='text' class="form-control text" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50">
+                                                <input type='text' class="form-control text-center" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50">
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][count]">總數量:</label>
-                                                <input type='text' class="form-control text" name="up_item[count]" id="up_item[<%= i %>][count]" value="" size="10">
+                                                <input type='text' class="form-control text-center" name="up_item[count]" id="up_item[<%= i %>][count]" value="" size="10">
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text" name="up_item[completed]" id="up_item[<%= i %>][completed]" value="">
+                                                <input type='text' class="form-control text-center" name="up_item[completed]" id="up_item[<%= i %>][completed]" value="">
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
-                                                <input type='text' class="form-control text" name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]" value="">
+                                                <input type='text' class="form-control text-center" name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]" value="">
                                             </div>
                                         </div>
                                     <% }%>
@@ -160,7 +160,7 @@
                                     <label for="delivery_user">確認貨單員工:</label>
                                 </div>
                                 <div class="col">
-                                    <select name="delivery_user" id="delivery_user" class="form-select form-select-sm">
+                                    <select name="delivery_user" id="delivery_user" class="form-select form-select-sm text-center">
                                         <option>請選擇</option>
                                         <% let j ; for(i of user){ %>
                                         <option value="<%= Object.values(i) %>"<% if(Object.values(i)==data.delivery_user){ j='exsits'; %>selected <% } %>>

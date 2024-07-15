@@ -57,7 +57,7 @@ router.get('/',async function(req, res, next) {
         if(req.query.seq==="1")
             req.query.seq = 1 ;
         else req.query.seq = -1 ;
-        let data = await iOemuSys.sort('產品分類',iOemuSys.CreatedbIndex('products'),iOemuSys.lookupSheet(['stocks','stock_id','_id','trans_stock_id']),[req.query.sort,req.query.seq],req.query.title);
+        let data = await iOemuSys.sort('貨品分類',iOemuSys.CreatedbIndex('products'),iOemuSys.lookupSheet(['stocks','stock_id','_id','trans_stock_id']),[req.query.sort,req.query.seq],req.query.title);
         /*let data = await iOemuSys.sort(
             ['Warehouse_In_Out_System',   //   dbName|
             'products',req.query.seq],                  //collectionName|

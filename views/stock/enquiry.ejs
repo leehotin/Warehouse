@@ -40,28 +40,28 @@
                     <label class="h1"><%= stock_data._id ? "修改儲存位置" : "建立儲存位置" %></label>
                     <form action="/stock/save" method="post">
                         <input type="text" name="_id" value="<%= stock_data._id %>" hidden>
-                        <div class="row">
+                        <div class="row my-1">
                             <div class="col">
                                 <label for="stock_id">儲存位置編號:</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="stock_id" name="stock_id" value="<%= stock_data.stock_id %>" class="form-control" placeholder="儲存位置編號" required>
+                                <input type="text" id="stock_id" name="stock_id" value="<%= stock_data.stock_id %>" class="form-control text-center" placeholder="儲存位置編號" required>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row my-1">
                             <div class="col">
                                 <label for="area">儲存區域: </label> 
                             </div>
                             <div class="col">
-                                <input type="text" id="area" name="area" value="<%= stock_data.area %>" class="form-control" placeholder="儲存區域" required> 
+                                <input type="text" id="area" name="area" value="<%= stock_data.area %>" class="form-control text-center" placeholder="儲存區域" required> 
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row my-1">
                             <div class="col">
                                 <label for="name">貨架位置: </label>
                             </div>
                             <div class="col">
-                                <input type="text" id="name" name="name" value="<%= stock_data.name %>" class="form-control" placeholder="貨架位置" required>
+                                <input type="text" id="name" name="name" value="<%= stock_data.name %>" class="form-control text-center" placeholder="貨架位置" required>
                             </div>
                         </div>
                         

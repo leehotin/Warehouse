@@ -58,34 +58,34 @@
                     <div class="row py-1 my-1 border-bottom border-primary">
                         <div class="col">
                             <label for="Product_id">貨品編號:</label>
-                            <input type='text' class="form-control text" name="Product_id" id="Product_id" value=""
+                            <input type='text' class="form-control text-center" name="Product_id" id="Product_id" value=""
                                 size="50">
                         </div>
                         <div class="col">
                             <label for="Name">貨品名稱:</label>
-                            <input type='text' class="form-control text" name="Name" id="Name" value="" size="10">
+                            <input type='text' class="form-control text-center" name="Name" id="Name" value="" size="10">
                         </div>
                     </div>
                     <div class="row py-1 my-1 border-bottom border-primary">
                         <div class="col">
-                            <label for="Brand">生產公司:</label><select id="selectBoxP" name="Brand">
+                            <label for="Brand">生產公司:</label><select id="selectBoxP" name="Brand" class="form-select">
                                 <option value=''>-----請選擇-----</option>
                                 <% for(let item of brands){ %>
                                     <option value="<%= item %>"><%= item %>
                                     </option>
                                     <% } %>
                             </select><br>
-                            新生產公司：<input type='text' class="form-control text" name="new_Brand" id="Type" value="">
+                            新生產公司：<input type='text' class="form-control text-center" name="new_Brand" id="Type" value="">
                         </div>
                         <div class="col">
                             <label for="Type">貨品類型:</label>
-                            <select id="influenceBoxP" name="Type">
+                            <select id="influenceBoxP" name="Type" class="form-select">
                                 <option value=''>-----請選擇-----</option>
                             </select><br>
-                            貨品類型：<input type='text' class="form-control text" name="new_Type" id="Brand" value="">
+                            貨品類型：<input type='text' class="form-control text-center" name="new_Type" id="Brand" value="">
                         </div>
                         <div class="col">
-                            <label for="Origin">產地:</label><select name='Origin'>
+                            <label for="Origin">產地:</label><select name='Origin' class="form-select">
                                 <option value="">-----請選擇-----</option>
                                 <% for(let item of origins){ %>
                                     <option value="<%= item %>">
@@ -93,11 +93,11 @@
                                     </option>
                                     <% } %>
                             </select><br>
-                            新產地：<input type='text' class="form-control text" name="new_Origin" id="Origin" value=""
+                            新產地：<input type='text' class="form-control text-center" name="new_Origin" id="Origin" value=""
                                 size="50">
                         </div>
                         <div class="col">
-                            <label for="stock">儲存位置:</label><select name='stock_id'>
+                            <label for="stock">儲存位置:</label><select name='stock_id' class="form-select">
                                 <% for(let item of stocks){ %>
                                     <option value="<%= item._id %>">
                                         <%= item.name %>

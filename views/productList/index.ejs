@@ -50,58 +50,58 @@
                         </div>
                     </div>
                     <div class="row my-1 border-bottom border-primary bg-primary-subtle text-black">
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=Product_id&seq=<%= sort==="Product_id"?-1:1 %>'>貨品編號</a>
                         </div>
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=Type&seq=<%= sort==="Type"?-1:1 %>'>類型</a>
                         </div>
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=Brand&seq=<%= sort==="Brand"?-1:1 %>'>品牌</a>
                         </div>
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=Name&seq=<%= sort==="Name"?-1:1 %>'>貨品名稱</a>
                         </div>
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=Origin&seq=<%= sort==="Origin"?-1:1 %>'>來源地</a>
                         </div>
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=Count&seq=<%= sort==="Count"?-1:1 %>'>現在庫存</a>
                         </div>
-                        <div class="col fw-bold fs-5">
+                        <div class="col fw-bold fs-5 text-center">
                             <a href='/productlist/sort?sort=stock_id&seq=<%= sort==="stock_id"?-1:1 %>'>所在倉庫區</a>
                         </div>
-                        <div class="col fw-bold fs-5">
-                            <!--<a href='/productlist/sort?sort=&seq=<%= sort===""?-1:1 %>'>快將過期數量</a>-->
-                        </div>
-                        <div class="col fw-bold fs-5">
+                        <!-- <div class="col fw-bold fs-5">
+                            <a href='/productlist/sort?sort=&seq=<%= sort===""?-1:1 %>'>快將過期數量</a>
+                        </div> -->
+                        <div class="col fw-bold fs-5 text-center">
                             
                         </div>                  
                     </div>
                     <% for(x in data){ %>
                         <div class="row py-2 border-bottom border-primary hover">
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/product/info?call_info=<%= data[x].Product_id %>' class="darkmode"><%= data[x].Product_id %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/productlist/title?sort=Type&title=<%= data[x].Type %>&seq=<%= sort==="Type"?-1:1 %>' class="darkmode"><%= data[x].Type %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/productlist/title?sort=Brand&title=<%= data[x].Brand %>&seq=<%= sort==="Brand"?-1:1 %>' class="darkmode"><%= data[x].Brand %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/productlist/title?sort=Name&title=<%= data[x].Name %>&seq=<%= sort==="Name"?-1:1 %>' class="darkmode"><%= data[x].Name %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/productlist/title?sort=Origin&title=<%= data[x].Origin %>&seq=<%= sort==="Origin"?-1:1 %>' class="darkmode"><%= data[x].Origin %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/productlist/check?sort=Type&match=<%= data[x].Product_id %>' class="darkmode"><%= data[x].Count %></a>
                             </div>
-                            <div class="col">
+                            <div class="col text-center">
                                 <a href='/productlist/title?sort=stock_id&title=<%= data[x].stock_id %>' class="darkmode"><%= data[x].trans_stock_id[0].name %></a>
                             </div>
-                            <div class="col">
+                            <!-- <div class="col text-center">
                                 <%
                                 let Arr = [], mod ; 
                                 Arr.push(data[x].Date);
@@ -117,9 +117,9 @@
                                     <%= data[x].Date[i] %><br />
                                     <% } %><%= Arr %><br><br>
                                     
-                            </div>
+                            </div> -->
 
-                            <div class="col">
+                            <div class="col text-center">
                                 <form action="/product/info" method="post">
                                     <input type="hidden" name="call_info" value="<%= data[x].Product_id %>">
                                     <input type="submit" value="修改商品" class="btn btn-primary" onclick="window.confirm(`要修改<%= data[x].Name %>嗎?`)">
