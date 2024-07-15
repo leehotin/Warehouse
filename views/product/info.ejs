@@ -38,13 +38,23 @@
             <label for="Type">Type:</label> 
             </td>
             <td>
-                  <select>
-                  <option value="coffee" <%= data.Type === 'coffee' ? 'selected' : '' %>>Coffee</option>
-                  <option value="noodle" <%= data.Type === 'noodle' ? 'selected' : '' %>>Noodle</option>
-                  <option value="drink" <%= data.Type === 'drink' ? 'selected' : '' %>>Drink</option>
+                  <select name="Type">
+                  <option value="baking_soda" <%= data.Type === 'baking_soda' ? 'selected' : '' %>>Baking Soda</option>
                   <option value="beer" <%= data.Type === 'beer' ? 'selected' : '' %>>Beer</option>
-                  <option value="tissue" <%= data.Type === 'tissue' ? 'selected' : '' %>>Tissue</option>
-                </select>
+                  <option value="can" <%= data.Type === 'can' ? 'selected' : '' %>>Can</option>
+                  <option value="coffee" <%= data.Type === 'coffee' ? 'selected' : '' %>>Coffee</option>
+                  <option value="cornmeal" <%= data.Type === 'cornmeal' ? 'selected' : '' %>>Cornmeal</option>
+                  <option value="drink" <%= data.Type === 'drink' ? 'selected' : '' %>>Drink</option>
+                  <option value="dried_beans" <%= data.Type === 'dried_beans' ? 'selected' : '' %>>Dried Beans</option>
+                  <option value="flour" <%= data.Type === 'flour' ? 'selected' : '' %>>Flour</option>
+                  <option value="noodle" <%= data.Type === 'noodle' ? 'selected' : '' %>>Noodle</option>
+                  <option value="oats" <%= data.Type === 'oats' ? 'selected' : '' %>>Oats</option>
+                  <option value="pasta" <%= data.Type === 'pasta' ? 'selected' : '' %>>Pasta</option>
+                  <option value="pepper" <%= data.Type === 'pepper' ? 'selected' : '' %>>Pepper</option>
+                  <option value="rice" <%= data.Type === 'rice' ? 'selected' : '' %>>Rice</option>
+                  <option value="salt" <%= data.Type === 'salt' ? 'selected' : '' %>>Salt</option>
+                  <option value="sugar" <%= data.Type === 'sugar' ? 'selected' : '' %>>Sugar</option>
+                  </select>
               </tr>
            
        
@@ -98,7 +108,7 @@
       </table>
     </form>
       
-    <a href="/productslist">Back to ProductList</a></br>
+    <a href="/productlist">Back to ProductList</a></br>
    
      
     

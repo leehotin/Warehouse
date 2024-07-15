@@ -37,7 +37,7 @@ router.post('/info', async (req, res, next) => {
         ]).toArray();
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
         console.log(data);
-        res.render('product/info', { data: data[0], stocks: stocks, darkmode: darkMode });
+        res.render('product/info', { data: data[0], stocks: stocks});
 
     } finally {
         await client.close();
@@ -48,36 +48,11 @@ router.get('/info', async (req, res, next) => {
         await client.connect();
         const products = client.db(dbName).collection("products");
 
-        let productcreative = [];
-        if (typeof req.query.productcreative !== "undefined" && req.query.productcreative != "") {
-            productcreative.push({
-                $match: { _id: ObjectId.createFromHexString(req.query.productcreative) } //找出符合條件的products
-            });
-        } else {
-            productcreative.push({
-                $match: { _id: "" } //找出符合條件的products
-            });
-        }
+        let data = await products.findOne({_id: ObjectId.createFromHexString(req.query.id)});
 
-        productcreative.push({
-            $lookup: {
-                from: "stocks", //目標table
-                localField: "stock_id", // 自己的col 
-                foreignField: "_id", // 目標的col
-                as: "stocks"// 取得資料後的名稱
-            }
-        });
-        productcreative.push({
-            $limit: 1 //輸出數量
-        });
-
-        let data = await products.aggregate(productcreative).toArray();
-        if (data.length == 0) {
-            data[0] = []
-        }
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
 
-        res.render('product/info', { data: data[0], stocks: stocks });
+        res.render('product/info', { data: data, stocks: stocks });
     } finally {
         await client.close();
     }
@@ -111,7 +86,7 @@ router.post('/save', async (req, res, next) => {
         productUpdata.Brand = req.body.Brand;
         productUpdata.Origin = req.body.Origin;
         productUpdata.Count = req.body.Count;
-        productUpdata.stock_id = req.body.stock_id;
+        productUpdata.stock_id = ObjectId.createFromHexString(req.body.stock);
         if (!productUpdata._id) {
             productUpdata.created_at = new Date();
         }
