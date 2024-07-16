@@ -176,15 +176,24 @@ class IOemuSys {
         let result = [], temp = {}, items = [], data;
         switch (inquire) {
             case 'updateDeliveryOrder':
+                if(typeof(query['item[product_id]'])!='string'){
                 for (let i = 0; i < query['item[product_id]'].length; i++) {
                     items.push({
                         product_id: query['item[product_id]'][i],
                         name: query['item[name]'][i],
-                        count: Number(query['item[count]'][i]),
-                        completed: Number(query['item[completed]'][i]),
+                        count: isNaN(Number(query['item[count]'][i]))?0:Number(query['item[count]'][i]),
+                        completed: isNaN(Number(query['item[completed]'][i]))?0:Number(query['item[completed]'][i]),
                         stock_id: query['item[stock_id]'][i]
                     });
-                };
+                };console.log("11123242345435",items)}
+                
+                else items.push({
+                    product_id: query['item[product_id]'],
+                    name: query['item[name]'],
+                    count: isNaN(Number(query['item[count]']))?0:Number(query['item[count]']),
+                    completed: isNaN(Number(query['item[completed]']))?0:Number(query['item[completed]']),
+                    stock_id: query['item[stock_id]']
+                });
                 if (typeof (query['up_name']) != 'string') {
                     for (let i in query['up_name']) {
                         //console.log(query['up_product_id'])
@@ -193,8 +202,8 @@ class IOemuSys {
                             items.push({
                                 product_id: query['up_product_id'][i],
                                 name: query['up_name'][i],
-                                count: Number(query['up_count'][i]),
-                                completed: Number(query['up_completed'][i]),
+                                count: isNaN(Number(query['up_count'][i]))?0:Number(query['up_count'][i]),
+                                completed: isNaN(Number(query['up_completed'][i]))?0:Number(query['up_completed'][i]),
                                 stock_id: query['up_stock_id'][i]
                             });
                         }
@@ -204,8 +213,8 @@ class IOemuSys {
                     items.push({
                         product_id: query['up_product_id'],
                         name: query['up_name'],
-                        count: Number(query['up_count']),
-                        completed: Number(query['up_completed']),
+                        count: isNaN(Number(query['up_count']))?0:Number(query['up_count']),
+                        completed: isNaN(Number(query['up_completed']))?0:Number(query['up_completed']),
                         stock_id: query['up_stock_id']
                     });
                 }
