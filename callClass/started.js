@@ -244,6 +244,7 @@ class IOemuSys {
         }
         else return err = 'Error發生了，文件沒法搬運完成QAQ';
         //console.log(data);
+        console.log("b",query);
         query = [{ deleteOne: { filter: {} } }];
         //console.log('a',target[1])
         //[{ deleteOne: { filter } }] = query;
@@ -253,7 +254,7 @@ class IOemuSys {
         //        break;
         //    }
         //}
-        console.log('a', filter);
+        console.log('a',query);
         let toEnding = await this.client.db(dbName).collection(collectionName).bulkWrite(query)
         if (toEnding) {
             console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`);
