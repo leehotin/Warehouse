@@ -80,6 +80,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).get('/create',checkLogin,async(req,res,next)=>{
   try{
     await iOemuSys.connect();
+    req.session.user_id=ObjectId.createFromHexString(req.session.user_id);
     let da = await iOemuSys.Read('貨品列表',iOemuSys.CreatedbIndex('products'),['productsList',1]);
     if(req.session.user_id!=''&&req.session.user_id!=undefined)
       req.session.user_id = ObjectId.createFromHexString(req.session.user_id);
