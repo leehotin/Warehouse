@@ -137,9 +137,21 @@
                                                 <!-- <input type='text' class="form-control text-center" name="item[stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>"> -->
                                             </div>
                                         </div>
-                                    <% }for(i = 0 ; i < 2 ; i++){ %>
+                                        <% } %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
+                                                <label for="up_item[<%= i %>][name]">貨品名稱:</label>
+                                                <input type='text' class="form-control text-center" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50">
+                                            </div>
+                                            <div class="col">
+                                                <label for="up_Stock_id">所在倉庫區:</label>
+                                                <select name="up_stock_id" id="up_Stock_id">
+                                                    <option value="">-----請選擇-----</option>
+                                                    <% for(let data of lists[5]){ %>
+                                                        <option value="<%= data._id %>">
+                                                            <%= data.name%>
+                                                        </option>
+                                                        <% } %>
                                                 <label for="up_item[<%= i %>][product_id]">貨品名稱:</label>
                                                 <!-- hidden up_item name -->
                                                 <input type="hidden" name="up_item[name]" id="up_item[<%= i %>][name]">
@@ -150,15 +162,11 @@
                                                         <option value="<%= product._id %>" ><%= product.Name %></option>
                                                     <% } %>
                                                 </select>
-                                                <!-- <input type='text' class="form-control text-center" name="up_item[name]" id="up_item[<%= i %>][name]" value="" size="50"> -->
                                             </div>
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][count]">總數量:</label>
-                                                <input type='number' class="form-control text-center" name="up_item[count]" id="up_item[<%= i %>][count]" min="0" >
-                                            </div>
-                                            <div class="col">
-                                                <label for="up_item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='number' class="form-control text-center" name="up_item[completed]" id="up_item[<%= i %>][completed]" min="0">
+                                                <label for="up_count">總數量:</label>
+                                                <input type='text' class="form-control text-center" name="up_count" id="up_count"
+                                                    value="" size="10">
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
@@ -171,8 +179,13 @@
 
                                                 <!-- <input type='text' class="form-control text-center" name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]" value=""> -->
                                             </div>
+                                           <!-- <div class="col">
+                                                <label for="stock_id">貨架編號:</label>
+                                                <input type='text' class="form-control text-center" name="stock_id"
+                                                    id="stock_id" value="">
+                                            </div>-->
                                         </div>
-                                    <% }%>
+
                                 </div>
                             </div>
 
