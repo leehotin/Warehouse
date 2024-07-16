@@ -79,9 +79,9 @@ router.post('/save',checkLogin, async (req,res,next) =>{
         stock._id = ObjectId.createFromHexString(req.body._id);
     }
 
-    stock.stock_id = req.body.stock_id;
-    stock.area = req.body.area; 
-    stock.name = req.body.name;
+    stock.stock_id = req.body.stock_id??'';
+    stock.area = req.body.area??''; 
+    stock.name = req.body.name??'';
     if(!stock._id){
       stock.created_at = new Date();
     }
@@ -121,15 +121,11 @@ async function checkLogin(req,res,next){
     let user = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.session.user_id)});
     await client.close();
     if(user){
-      req.session.user_id = user._id;
       req.session.role = user.role;
       return next();
-    }else{
-      return res.redirect('/user/login');
     }
-  }else{
-    return res.redirect('/user/login');
   }
+  return res.redirect('/user/login');
 }
 
 module.exports = router;
