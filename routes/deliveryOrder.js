@@ -20,10 +20,10 @@ router.get('/',checkLogin, async (req, res, next) =>{
           {displayName: "公司名稱:",name: "whereData[company]",placeholder: "公司名稱",type: "text"},
           {displayName: "公司地址:",name: "whereData[address]",placeholder: "公司地址",type: "text"},
           {displayName: "公司電話:",name: "whereData[phone]",placeholder: "公司電話",type: "text"},
-          {displayName: "貨單類型:",name: "whereData[type]",placeholder: "貨單類型",type: "text"},
+          {displayName: "貨單類型:",name: "whereData[type]",placeholder: "貨單類型",type: "radio",data:[{display_value:"入貨單",value:"in"},{display_value:"出貨單",value:"out"}]},
           {displayName: "是否已經完成:",name: "whereData[delivery_check]",placeholder: "是否已經完成",type: "radio",data:[{display_value:"已完成",value:"1"},{display_value:"未完成",value:"0"}]},
           {displayName: "確認貨單員工:",name: "whereData[delivery_user]",placeholder: "確認貨單員工",type: "text"},
-          {displayName: "完成日期:",name: "whereData[delivery_at]",placeholder: "完成日期",type: "text"},
+          {displayName: "完成日期:",name: "whereData[delivery_at]",placeholder: "完成日期",type: "date"},
         ];
 
         //where by data
@@ -31,13 +31,15 @@ router.get('/',checkLogin, async (req, res, next) =>{
         
         for(let data in req.query.whereData){
           if(typeof req.query.whereData[data] !== "undefined" && req.query.whereData[data] != ""){
-            if(req.query.whereData[data]==="1")
-              whereData[data] = 1 ;
-            else if(req.query.whereData.phone)
-              whereData[data] = Number(req.query.whereData.phone);
-            else whereData[data] = req.query.whereData[data] ;
-            //whereData[data] = req.query.whereData[data];
-            //console.log(typeof(whereData[data]));
+            whereData[data] = {};
+            whereData[data].$regex = ".*"+req.query.whereData[data]+".*";
+            if(data == "delivery_at"){
+              let minDate = new Date(req.query.whereData[data]),maxDate= new Date(req.query.whereData[data]);
+              maxDate.setDate(maxDate.getDate()+1);
+              whereData[data] = {};
+              whereData[data].$gte = minDate;
+              whereData[data].$lt = maxDate;
+            }
           }
         }
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
@@ -75,7 +77,10 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
   try{
     await iOemuSys.connect();
     let da = await iOemuSys.Read('貨品列表',iOemuSys.CreatedbIndex('products'),['productsList',1]);
+    if(req.session.user_id!=''&&req.session.user_id!=undefined)
+      req.session.user_id = ObjectId.createFromHexString(req.session.user_id);
     let use = await iOemuSys.Read('',iOemuSys.CreatedbIndex('users'),['_id',req.session.user_id] );
+    console.log(req.session.user_id);
     res.render('deliveryOrder/create',{datas:da,user:use});
   }
   finally{
@@ -84,7 +89,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).post('/create',checkLogin,async(req,res,next)=>{
   try{
     await iOemuSys.connect();
-    let query = {};
+    let items = [];
     if(req.body.type==="in")
       req.body.delivery_id = "INV" + req.body.delivery_id ;
     else req.body.delivery_id = "TRF" + req.body.delivery_id ;
@@ -96,22 +101,39 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     if(req.body.completed!='')
     req.body.completed = Number(req.body.completed)
     req.body.created_at = new Date()
-    if(req.body.items.stock_id!='')
-      req.body.items.stock_id = ObjectId.createFromHexString(req.body.items.stoci_id);
-    for(let i in req.body){
-      //query[i] = req.body['items[]]
+    if(req.body.stock_id!=''&& typeof(req.body.stock_id)!='string')
+      for(i in req.body.stock_id)
+        req.body.stock_id[i] = ObjectId.createFromHexString(req.body.stock_id[i]);
+    else if(req.body.stock_id!='')
+        req.body.stock_id = ObjectId.createFromHexString(req.body.stock_id);
+    console.log(typeof(req.body.product_id))
+    if(typeof(req.body.product_id)!='string'){
+      for(let i in req.body.product_id){
+        items.push({product_id:req.body.product_id[i],
+                    name:req.body.name[i],
+                    count:Number(req.body.count[i]),
+                    completed:Number(req.body.completed[i]),
+                    stock_id:req.body.stock_id[i]
+        })
+      }
     }
+    else {items.push({product_id:req.body.product_id,
+      name:req.body.name,
+      count:Number(req.body.count),
+      completed:Number(req.body.completed),
+      stock_id:req.body.stock_id
+      });console.log('hi')}
     data = {delivery_id:req.body.delivery_id,
             company:req.body.company,
             address:req.body.address,
             phone:req.body.phone,
-            items:query,
+            items,
             type:req.body.type,
             delivery_user:req.body.delivery_user,
             created_at:new Date()
     }
 
-
+    //console.log(data)
     await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),data);
     }
     res.redirect('/deliveryOrder');
