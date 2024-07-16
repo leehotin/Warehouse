@@ -31,17 +31,21 @@ router.get('/',checkLogin, async (req, res, next) =>{
         
         for(let data in req.query.whereData){
           if(typeof req.query.whereData[data] !== "undefined" && req.query.whereData[data] != ""){
-            whereData[data] = {};
-            whereData[data].$regex = ".*"+req.query.whereData[data]+".*";
-            if(data == "delivery_at"){
-              let minDate = new Date(req.query.whereData[data]),maxDate= new Date(req.query.whereData[data]);
-              maxDate.setDate(maxDate.getDate()+1);
-              whereData[data] = {};
-              whereData[data].$gte = minDate;
-              whereData[data].$lt = maxDate;
+            switch(data){
+              case "delivery_at":
+                let minDate = new Date(req.query.whereData[data]),maxDate= new Date(req.query.whereData[data]);
+                maxDate.setDate(maxDate.getDate()+1);
+                whereData[data] = {};
+                whereData[data].$gte = minDate;
+                whereData[data].$lt = maxDate;
+                break;
+              default:
+                whereData[data] = {};
+                whereData[data].$regex = ".*"+req.query.whereData[data]+".*";
             }
           }
         }
+        console.log(whereData);
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
           projection:{_id:1,delivery_id:1,company:1,type:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
