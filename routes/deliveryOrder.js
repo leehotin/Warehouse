@@ -84,7 +84,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).post('/create',checkLogin,async(req,res,next)=>{
   try{
     await iOemuSys.connect();
-    let query = {};
+    let items = [];
     if(req.body.type==="in")
       req.body.delivery_id = "INV" + req.body.delivery_id ;
     else req.body.delivery_id = "TRF" + req.body.delivery_id ;
@@ -96,22 +96,39 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     if(req.body.completed!='')
     req.body.completed = Number(req.body.completed)
     req.body.created_at = new Date()
-    if(req.body.items.stock_id!='')
-      req.body.items.stock_id = ObjectId.createFromHexString(req.body.items.stoci_id);
-    for(let i in req.body){
-      //query[i] = req.body['items[]]
+    if(req.body.stock_id!=''&& typeof(req.body.stock_id)!='string')
+      for(i in req.body.stock_id)
+        req.body.stock_id[i] = ObjectId.createFromHexString(req.body.stock_id[i]);
+    else if(req.body.stock_id!='')
+        req.body.stock_id = ObjectId.createFromHexString(req.body.stock_id);
+    console.log(typeof(req.body.product_id))
+    if(typeof(req.body.product_id)!='string'){
+      for(let i in req.body.product_id){
+        items.push({product_id:req.body.product_id[i],
+                    name:req.body.name[i],
+                    count:Number(req.body.count[i]),
+                    completed:Number(req.body.completed[i]),
+                    stock_id:req.body.stock_id[i]
+        })
+      }
     }
+    else {items.push({product_id:req.body.product_id,
+      name:req.body.name,
+      count:Number(req.body.count),
+      completed:Number(req.body.completed),
+      stock_id:req.body.stock_id
+      });console.log('hi')}
     data = {delivery_id:req.body.delivery_id,
             company:req.body.company,
             address:req.body.address,
             phone:req.body.phone,
-            items:query,
+            items,
             type:req.body.type,
             delivery_user:req.body.delivery_user,
             created_at:new Date()
     }
 
-
+    //console.log(data)
     await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),data);
     }
     res.redirect('/deliveryOrder');

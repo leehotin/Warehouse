@@ -142,7 +142,7 @@
                                     <div class="col">
                                         <input type="hidden" value="" id="_id">
                                         <label for="Product_id">貨品編號:</label>
-                                        <select name="items[product_id]" id="Product_id">
+                                        <select name="product_id" id="Product_id">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[0]){ %>
                                                 <option value="<%= data._id %>">
@@ -153,7 +153,7 @@
                                     </div>
                                     <div class="col">
                                         <label for="Name">貨品名稱:</label>
-                                        <select name="items[name]" id="Name">
+                                        <select name="name" id="Name">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[1]){ %>
                                                 <option value="<%= data._id %>">
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="col">
                                         <label for="Type">類型:</label>
-                                        <select name="type" id="Type">
+                                        <select id="Type">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[2]){ %>
                                                 <option value="<%= data._id %>">
@@ -197,7 +197,7 @@
                                     </div>
                                     <div class="col">
                                         <label for="Stock_id">所在倉庫區:</label>
-                                        <select name="items[stock_id]" id="Stock_id">
+                                        <select name="stock_id" id="Stock_id">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[5]){ %>
                                                 <option value="<%= data.trans_stock_id[0]._id %>">
