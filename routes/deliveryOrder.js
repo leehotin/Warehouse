@@ -45,7 +45,8 @@ router.get('/',checkLogin, async (req, res, next) =>{
             }
           }
         }
-        console.log(whereData);
+        console.log('');
+        //console.log(whereData); 
         let data = await client.db(dbName).collection("delivery_notes").find(whereData,{
           projection:{_id:1,delivery_id:1,company:1,type:1,phone:1,delivery_check:1,delivery_user:1,delivery_at:1}
         }).toArray();
