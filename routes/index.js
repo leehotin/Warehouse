@@ -35,6 +35,9 @@ router.get('/',checkLogin, async (req, res, next)=> {
   const file = '0.rar';
   res.download(file); // Set disposition and send it.
   //res.render('0.rar');
+}).get('/test',(req,res,next)=>{
+  console.log(req.query);
+  res.redirect('/');
 });
 
 async function checkLogin(req,res,next){

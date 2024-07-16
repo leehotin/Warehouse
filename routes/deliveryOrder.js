@@ -73,7 +73,9 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 
     let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
     let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
-    await res.render('deliveryOrder/info',{data:da,user:use});
+    let product = await iOemuSys.Read('貨品列表',iOemuSys.CreatedbIndex('products'));
+    let stock = await iOemuSys.Read('貨架列表',iOemuSys.CreatedbIndex('stocks'));
+    await res.render('deliveryOrder/info',{data:da,user:use,products:product,stocks:stock});
   }finally{
     await iOemuSys.disconnect();
   }
