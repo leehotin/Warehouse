@@ -15,6 +15,7 @@ router.get('/',checkLogin,async function(req, res, next) {
         let inquire;
         //呼叫物件裡的方法
         let data = await iOemuSys.sort('資料排序',iOemuSys.CreatedbIndex('products'),iOemuSys.lookupSheet(['stocks', 'stock_id', '_id', 'trans_stock_id']),[,1]);
+        console.log(data);
         res.render('productlist/index',{data:data,sort:inquire,sub:''});
     }
     finally{
