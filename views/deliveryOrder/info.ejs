@@ -110,7 +110,7 @@
                                                 <input type="hidden" name="item[name]" id="item[<%= i %>][name]" value="<%= data.items[i].name %>">
                                                 <!-- select id , display name -->
                                                 <select name="item[product_id]" id="item[<%= i %>][product_id]" onchange="addName(this,'item[<%= i %>][name]')">
-                                                    <option>請選擇貨品</option>
+                                                    <option value="">請選擇貨品</option>
                                                     <% for (let product of products){ %>
                                                         <option value="<%= product._id %>" <%= product._id == data.items[i].product_id? 'selected':'' %>><%= (product.Name).replace(/\n/g, '') %></option>
                                                     <% } %>
@@ -120,16 +120,16 @@
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][count]">總數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
+                                                <input type='number' class="form-control text-center" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" min="0">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
+                                                <input type='number' class="form-control text-center" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>" min="0">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][stock_id]">貨架編號:</label>
                                                 <select name="item[stock_id]" id="item[<%= i %>][stock_id]">
-                                                    <option>請選擇貨架</option>
+                                                    <option value="">請選擇貨架</option>
                                                     <% for (let stock of stocks){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
                                                     <% } %>
@@ -145,7 +145,7 @@
                                                 <input type="hidden" name="up_item[name]" id="up_item[<%= i %>][name]">
                                                 <!-- select id , display name -->
                                                 <select name="up_item[product_id]" id="up_item[<%= i %>][product_id]" onchange="addName(this,'up_item[<%= i %>][name]')">
-                                                    <option>請選擇貨品</option>
+                                                    <option value="">請選擇貨品</option>
                                                     <% for (let product of products){ %>
                                                         <option value="<%= product._id %>" ><%= product.Name %></option>
                                                     <% } %>
@@ -154,16 +154,16 @@
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][count]">總數量:</label>
-                                                <input type='text' class="form-control text-center" name="up_item[count]" id="up_item[<%= i %>][count]" value="" size="10">
+                                                <input type='number' class="form-control text-center" name="up_item[count]" id="up_item[<%= i %>][count]" min="0" >
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text-center" name="up_item[completed]" id="up_item[<%= i %>][completed]" value="">
+                                                <input type='number' class="form-control text-center" name="up_item[completed]" id="up_item[<%= i %>][completed]" min="0">
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
                                                 <select name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]">
-                                                    <option>請選擇貨架</option>
+                                                    <option value="">請選擇貨架</option>
                                                     <% for (let stock of stocks){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
                                                     <% } %>
