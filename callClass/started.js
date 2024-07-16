@@ -114,7 +114,7 @@ class IOemuSys {
                     let lookupSheet = await this.lookupSheet();
                     const [from, localField, foreignField, as] = await lookupSheet;
                     pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } },{$project:{_id:0,trans_stock_id:1}}];
-                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    data = await this.client.db(dbName).collection('stocks').find().toArray();
                     result.push(data);
                     return result ;
                     default:

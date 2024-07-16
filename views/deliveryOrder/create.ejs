@@ -194,8 +194,8 @@
                                         <select name="stock_id" id="Stock_id">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[5]){ %>
-                                                <option value="<%= data.trans_stock_id[0]._id %>">
-                                                    <%= data.trans_stock_id[0].name%>
+                                                <option value="<%= data._id %>">
+                                                    <%= data.name%>
                                                 </option>
                                                 <% } %>
                                         </select>
