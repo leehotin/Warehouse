@@ -13,7 +13,7 @@
                         <a href="/" class="list-group-item darkmode">首頁</a>
                         <a href="/productlist" class="list-group-item darkmode">貨品</a>
                         <a href="/stock" class="list-group-item darkmode">儲存位置</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">交貨單</a>
+                        <a href="/deliveryOrder" class="list-group-item darkmode">貨單</a>
                         <a href="/user" class="list-group-item darkmode">用戶</a>
                         <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
                         <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
@@ -27,13 +27,11 @@
                 <div class="col-10">
                     <div class="row my-1">
                         <div class="col">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/" class="darkmode">首頁</a></li>
-                                <li class="breadcrumb-item darkmode active" aria-current="page">交貨單</li>
-                            </ol>
+                            <label><a href="/" class="darkmode">首頁</a></label> /
+                            <label class="darkmode">貨單</label>
                         </div>
                         <div class="col">
-                            <a href="/deliveryOrder/create" class="btn btn-primary">建立交貨單</a>
+                            <a href="/deliveryOrder/create" class="btn btn-primary">建立貨單</a>
                         </div>
                     </div>
 
@@ -56,6 +54,11 @@
                                                 <input type="radio" id="<%= radio.display_value %>" name="<%= data.name %>" value="<%= radio.value %>">
                                                 <label for="<%= radio.display_value %>"><%= radio.display_value %></label>
                                             <% } %>
+                                        </div>
+                                    <% } %>
+                                    <% if( data.type == 'date'){ %>
+                                        <div class="col-10">
+                                            <input type="date" id="<%= data.name %>" name="<%= data.name %>" class="form-control" placeholder="<%= data.placeholder %>">
                                         </div>
                                     <% } %>
                                 </div>
@@ -93,7 +96,7 @@
                     </div>
                     <% if(datas.length == 0){ %>
                         <div class="row py-1 border-bottom border-primary text-center">
-                            <label class="darkmode">找不到交貨單</label>
+                            <label class="darkmode">找不到貨單</label>
                         </div>
                     <% } %>
                     <% for(data of datas){ %>
