@@ -146,21 +146,17 @@ router.post('/save', checkLogin, async (req, res, next) => {
     }
 });
 
-async function checkLogin(req, res, next) {
-    if (req.session.user_id) {
+async function checkLogin(req,res,next){
+    if(req.session.user_id){
         await client.connect();
-        let user = await client.db(dbName).collection('users').findOne({ _id: ObjectId.createFromHexString(req.session.user_id) });
+        let user = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.session.user_id)});
         await client.close();
-        if (user) {
-            req.session.user_id = user._id;
-            req.session.role = user.role;
-            return next();
-        } else {
-            return res.redirect('/user/login');
+        if(user){
+        req.session.role = user.role;
+        return next();
         }
-    } else {
-        return res.redirect('/user/login');
     }
+    return res.redirect('/user/login');
 }
 
 module.exports = router;
