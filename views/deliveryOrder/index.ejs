@@ -123,7 +123,7 @@
                                 <%= data.delivery_at ? data.delivery_at : "Not Finish" %>
                             </div>
                             <div class="col text-center">
-                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">修改貨單</a>
+                                <a href="/deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="btn btn-primary">修改貨單</a>
                                 <form action="/deliveryOrder/delete" method="post" class="d-inline">
                                     <input type="text" value="<%= data._id %>" name="delivery_id" hidden>
                                     <input type="submit" class="btn btn-warning" value="刪除貨單">
