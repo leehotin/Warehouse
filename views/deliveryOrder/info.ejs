@@ -145,6 +145,7 @@
                                                 <input type="hidden" name="up_item[name]" id="up_item[<%= i %>][name]">
                                                 <!-- select id , display name -->
                                                 <select name="up_item[product_id]" id="up_item[<%= i %>][product_id]" onchange="addName(this,'up_item[<%= i %>][name]')">
+                                                    <option>請選擇貨品</option>
                                                     <% for (let product of products){ %>
                                                         <option value="<%= product._id %>" ><%= product.Name %></option>
                                                     <% } %>
@@ -162,6 +163,7 @@
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
                                                 <select name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]">
+                                                    <option>請選擇貨架</option>
                                                     <% for (let stock of stocks){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
                                                     <% } %>
