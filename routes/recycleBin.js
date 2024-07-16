@@ -13,6 +13,7 @@ router.get('/', checkLogin, async function (req, res, next) {
         await iOemuSys.connect();
         req.query.sort = 1 ? 1 : -1
         let data = await iOemuSys.Read('垃圾桶', iOemuSys.CreatedbIndex('recycleBin'), ['recycleBin', req.query.sort]);
+        console.log('a'+data+'b')
         res.render('recycleBin/index', { datas: data, sort: req.query.sort });
     }
     finally {

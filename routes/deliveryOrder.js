@@ -74,9 +74,9 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).get('/create',checkLogin,async(req,res,next)=>{
   try{
     await iOemuSys.connect();
+    let da = await iOemuSys.Read('貨品列表',iOemuSys.CreatedbIndex('products'),['productsList',1]);
     let use = await iOemuSys.Read('',iOemuSys.CreatedbIndex('users'),['_id',req.session.user_id] );
-    console.log('a',use)
-    res.render('deliveryOrder/create',{data:'',user:use});
+    res.render('deliveryOrder/create',{datas:da,user:use});
   }
   finally{
     await iOemuSys.disconnect();
@@ -84,7 +84,21 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).post('/create',checkLogin,async(req,res,next)=>{
   try{
     await iOemuSys.connect();
-    await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),req.body)
+    if(req.body.type==="in")
+      req.body.delivery_id = "INV" + req.body.delivery_id ;
+    else req.body.delivery_id = "TRF" + req.body.delivery_id ;
+    let data = await iOemuSys.Read('checkOrderExists',iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body.delivery_id]);
+    if(data===null){
+      console.log(req.body)
+    if(req.body.count!='')
+    req.body.count = Number(req.body.count);
+    if(req.body.completed!='')
+    req.body.completed = Number(req.body.completed)
+    req.body.created_at = new Date()
+    if(req.body.items.stock_id!='')
+      req.body.items.stock_id = ObjectId.createFromHexString(req.body.items.stoci_id);
+    //await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),req.body);
+    }
     res.redirect('/deliveryOrder');
   }
   finally{
@@ -105,15 +119,9 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     ];
     //await iOemuSys.selectType(iOemuSys.CreatedbIndex('delivery_notes'));
     await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
-<<<<<<< HEAD
-    let data = await iOemuSys.Read('123',iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']]);
-    res.render('deliveryOrder/index',{ datas: data, search: '',darkmode:''});
-
-=======
     let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
     console.log(data)
     res.render('deliveryOrder/index',{ datas: data, search: search});
->>>>>>> 5bf22506a91b7b862aafb2a38577b6d6a75bc73e
 
   }finally{
     await iOemuSys.disconnect();

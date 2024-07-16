@@ -127,6 +127,7 @@ router.post('/login', async(req,res,next)=>{
     await client.connect();
     let user ,pw = has(req.body.password);
     console.log(pw);
+    console.log(req.body.username.length)
     const query = {
       username: { $regex: new RegExp(req.body.username, 'i') },password:pw,
       $expr: {
@@ -136,7 +137,7 @@ router.post('/login', async(req,res,next)=>{
     user = await client.db(dbName).collection('users').countDocuments(query);
     switch (user) {
       case 1:
-        user = await client.db(dbName).collection('users').findOne({ username: { '$regex': req.body.username, '$options': 'i' } });
+        user = await client.db(dbName).collection('users').findOne(query);
           req.session.user_id = user._id;
           req.session.role = user.role;
           console.log(req.session);

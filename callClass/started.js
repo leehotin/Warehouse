@@ -51,10 +51,11 @@ class IOemuSys {
         if (ele.length !== 0) {
             //如果剩餘參數長度不為0就把ele[0][0]的值當成ele[0][1]的鍵 ;如果用剩餘參數，前台怎麼都會傳一個數組給後台，所以要檢查是不是長度為0
             projection[ele[0][0]] = ele[0][1];
+            console.log(ele[0][0])
             switch (ele[0][0]) {
-                case "_id":
                 case "Product_id":
                 case "delivery_id":
+                    console.log("bbb",projection)
                     data = await this.client.db(dbName).collection(collectionName).findOne(projection); 
                     break;
                 case "Brand":
@@ -78,12 +79,38 @@ class IOemuSys {
                     data = await this.client.db(dbName).collection(collectionName).find().sort(pipline).toArray();
                     break;
                 case "_id":
-                    pipline ={_id:0,username:1};    //創建排序方法查詢
+                    pipline ={_id:0,username:1,user_id:1};    //創建排序方法查詢
                     console.log(pipline)
-
-                    data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},{$project:{_id:0,username:1}});
+                    console.log("hi")
+                    data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},{projection:pipline})
+                    //data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},pipline);
                     break;
-                default:
+                case "productsList":
+                    let result = [] ;
+                    pipline = [{$group:{_id:"$Product_id"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    result.push(data);
+                    pipline = [{$group:{_id:"$Name"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    result.push(data);
+                    pipline = [{$group:{_id:"$Type"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    result.push(data);
+                    pipline = [{$group:{_id:"$Brand"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    result.push(data);
+                    pipline = [{$group:{_id:"$Origin"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    result.push(data);
+                    pipline = [{$group:{_id:"$"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    let lookupSheet = await this.lookupSheet();
+                    const [from, localField, foreignField, as] = await lookupSheet;
+                    pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } },{$project:{_id:0,trans_stock_id:1}}];
+                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    result.push(data);
+                    return result ;
+                    default:
+                    data = '錯誤訊息發生在有傳入ele元素進Read()方法裡但沒有以上的case項' ;
             }
         }
         else data = await this.client.db(dbName).collection(collectionName).find().toArray();
@@ -94,10 +121,14 @@ class IOemuSys {
         const [dbName, collectionName] = await setdb;
         const [group, search, limit] = await query;
         console.log('前台有人進行了1次' + inquire + '操作');
-        let pipline = [{ $match: { [search]: limit } }, { $group: { _id: `$${group}` } }, { $sort: { _id: 1 } }];
-        let data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
-        return data;
 
+        let pipline ;
+        if(group!='') 
+            pipline = [{ $match: { [search]: limit } }, { $group: { _id: `$${group}` } }, { $sort: { _id: 1 } }];
+        else pipline = [{ $match: { [search]: limit } }, { $sort: { _id: 1 } }];
+        let data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+        console.log(data)
+        return data;
     }
 
     async sort(inquire, setdb, lookupSheet, reqQuery, ...ele) {
@@ -182,6 +213,10 @@ class IOemuSys {
                 data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
                 break;
             case 'createDeliveryOrder':
+                result = [{
+                    insertOne: query
+                }];
+                data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
             default:
         }
         return data;

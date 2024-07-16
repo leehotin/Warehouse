@@ -11,6 +11,7 @@ router.get('/',checkLogin,async function(req, res, next) {
         //進行連線
         await iOemuSys.connect();
         //宣告變數存在，其實可以直接傳入想要的東西
+        console.log(req.session.role)
         let inquire;
         //呼叫物件裡的方法
         let data = await iOemuSys.sort('資料排序',iOemuSys.CreatedbIndex('products'),iOemuSys.lookupSheet(['stocks', 'stock_id', '_id', 'trans_stock_id']),[,1]);
@@ -99,6 +100,7 @@ router.get('/',checkLogin,async function(req, res, next) {
 }).get('/layout',checkLogin,async function(req, res, next) {
     try{
         await iOemuSys.connect();
+        console.log(req.query)
         let data = await iOemuSys.search('查詢並響應',iOemuSys.CreatedbIndex(req.query.Name),[req.query.group,req.query.search,req.query.limit]);
         return res.json(data);
     }
@@ -109,19 +111,17 @@ router.get('/',checkLogin,async function(req, res, next) {
 });
 async function checkLogin(req,res,next){
     if(req.session.user_id){
-      await iOemuSys.connect();
+      /*await iOemuSys.connect();
       let user = await iOemuSys.Read('userData',iOemuSys.CreatedbIndex('users'),['_id', ObjectId.createFromHexString(req.session.user_id)]);
       await iOemuSys.disconnect();
       if(user){
         req.session.user_id = user._id;
-        req.session.role = user.role;
+        req.session.role = user.role;*/
         return next();
-      }else{
+      }else
         return res.redirect('/user/login');
-      }
-    }else{
-      return res.redirect('/user/login');
-    }
+      
+
   }
 
 
