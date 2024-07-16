@@ -39,17 +39,18 @@ class IOemuSys {
             //let d =await this.client.db(dbName).collection(collectionName).find({}).toArray()//.update({delivery_id:delivery_id},{$set:{delivery_check:String(delivery_check)}});
             //console.log(d);
         }
-    */
-
+    */                                    //ele[0][0] = "_id" ,ele[0][1]=new ObjectId('667cbf81ac08f2d70899ad10')
+//                                        ele[0] = ['_id',new ObjectId('667cbf81ac08f2d70899ad10')]
     async Read(inquire = 'product', setdb, ...ele) {
         setdb = setdb || this.CreatedbIndex();   //初始化db
         const [dbName, collectionName] = await setdb;              //終極濃縮版....新學來的...
         //console.log('前台進入閱覧' + inquire + '模式，加油~');
         //const setdb = [db, collection];//Rita的舊寫法版本初始化db
         let data, projection = {}, pipline = [];
-        
+        //ele = [].
         if (ele.length !== 0) {
             //如果剩餘參數長度不為0就把ele[0][0]的值當成ele[0][1]的鍵 ;如果用剩餘參數，前台怎麼都會傳一個數組給後台，所以要檢查是不是長度為0
+            ////projection['abc']=new ObjectId('667cbf81ac08f2d70899ad10') = projection = {abc:=new ObjectId('667cbf81ac08f2d70899ad10') }
             projection[ele[0][0]] = ele[0][1];
             console.log(ele[0][0])
             switch (ele[0][0]) {
@@ -78,6 +79,13 @@ class IOemuSys {
                     pipline = { inquire: ele[0][1] };    //創建排序方法查詢
                     data = await this.client.db(dbName).collection(collectionName).find().sort(pipline).toArray();
                     break;
+                    case "deleteprod":
+                        ele[0][1] = ObjectId.createFromHexString(ele[0][1])
+                        pipline={_id:ele[0][1]}
+                        console.log(dbName)
+                        // db("Warehouse_In_Out_System").('products').findOnd({_id:new ObjectId('667cbf81ac08f2d70899ad10')})
+                        data = await this.client.db(dbName).collection(collectionName).findOne(pipline);
+                        break;
                 case "_id":
                     pipline ={_id:0,username:1,user_id:1};    //創建排序方法查詢
                     console.log(pipline)
@@ -229,7 +237,7 @@ class IOemuSys {
         setdb = setdb || this.CreatedbIndex();   //初始化db
         const [dbName, collectionName] = await setdb;
         const junkBin = 'recycleBin';
-        let filter;
+        let filter;//                                '_id',new ObjectId('667cbf81ac08f2d70899ad10')
         let data = await this.Read(inquire, setdb, [target[0], target[1]]);
         //console.log(data);      //一個斷點//讓後台能看到正在進入這一步
         data['source'] = collectionName;

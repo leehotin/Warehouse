@@ -61,14 +61,24 @@ router.get('/info', checkLogin, async (req, res, next) => {
 
 router.post('/delete', checkLogin, async (req, res, next) => {
     try {
-        let id = ObjectId.createFromHexString(req.body.id);
-        await client.connect();
-        let product = await client.db(dbName).collection("products").findOne({ _id: id });
-        await client.db(dbName).collection("products").updateOne({ _id: id }, { $set: { deleted_at: new Date() } });
-        await client.db(dbName).collection("logs").insertOne({ information: "Delete product " + product.product_id, type: "delete", created_at: new Date(), updated_at: new Date() });
+       // async delete(inquire = '空值', setdb, target) {
+        //await iOemuSys.delete('ProductList',iOemuSys.CreatedbIndex('products'),['Product_id',req.body.call_no,req.session.user_id]);
+        
+        let id = req.body.id;
+        await iOemuSys.connect();
+        //await client.connect();
+        //let product = await client.db(dbName).collection("products").findOne({ _id: id });
+        console.log(id)
+        console.log(req.body)
+        //await client.db(dbName).collection("products").updateOne({ _id: id }, { $set: { deleted_at: new Date() } });
+        //await client.db(dbName).collection("logs").insertOne({ information: "Delete product " + product.product_id, type: "delete", created_at: new Date(), updated_at: new Date() });
+        
+        let data =await iOemuSys.delete('ProductList',iOemuSys.CreatedbIndex('products'),['deleteprod',id,req.session.user_id]);
+        console.log(data);
         res.redirect("/productlist");
     } finally {
-        await client.close();
+        await iOemuSys.disconnect();
+        //await client.close();
     }
 });
 
