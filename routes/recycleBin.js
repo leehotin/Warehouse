@@ -119,17 +119,10 @@ router.get('/', checkLogin, async function (req, res, next) {
 
 async function checkLogin(req, res, next) {
     if (req.session.user_id) {
-        await iOemuSys.connect();
-        let user = await iOemuSys.Read('userData', iOemuSys.CreatedbIndex('users'), ['_id', ObjectId.createFromHexString(req.session.user_id)]);
-        await iOemuSys.disconnect();
-        if (user) {
-            req.session.user_id = user._id;
-            req.session.role = user.role;
+
             return next();
-        } else {
-            return res.redirect('/user/login');
-        }
-    } else {
+        } 
+     else {
         return res.redirect('/user/login');
     }
 }

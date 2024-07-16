@@ -84,6 +84,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
 }).post('/create',checkLogin,async(req,res,next)=>{
   try{
     await iOemuSys.connect();
+    let query = {};
     if(req.body.type==="in")
       req.body.delivery_id = "INV" + req.body.delivery_id ;
     else req.body.delivery_id = "TRF" + req.body.delivery_id ;
@@ -97,7 +98,21 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     req.body.created_at = new Date()
     if(req.body.items.stock_id!='')
       req.body.items.stock_id = ObjectId.createFromHexString(req.body.items.stoci_id);
-    //await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),req.body);
+    for(let i in req.body){
+      //query[i] = req.body['items[]]
+    }
+    data = {delivery_id:req.body.delivery_id,
+            company:req.body.company,
+            address:req.body.address,
+            phone:req.body.phone,
+            items:query,
+            type:req.body.type,
+            delivery_user:req.body.delivery_user,
+            created_at:new Date()
+    }
+
+
+    await iOemuSys.update('createDeliveryOrder',iOemuSys.CreatedbIndex('delivery_notes'),data);
     }
     res.redirect('/deliveryOrder');
   }
