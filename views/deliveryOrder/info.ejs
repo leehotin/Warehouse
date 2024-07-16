@@ -101,41 +101,38 @@
 
                             <div class="row my-1">
                                 <label class="fw-bold ">貨品資料：</label>
-                                <div class="col">
-                                    <% for(i in data.items){ %>
+                                <div class="col"><% let i= 0; %>
+                                    <% for(data of data.items){ %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
                                                 <label for="item[<%= i %>][name]">貨品名稱:</label>
                                                 <!-- hidden item name -->
-                                                <input type="hidden" name="item[name]" id="item[<%= i %>][name]" value="<%= data.items[i].name %>">
+                                                <input type="hidden" name="item[name]" id="item[<%= i %>][name]" value="<%= data.name %>">
                                                 <!-- select id , display name -->
                                                 <select name="item[product_id]" id="item[<%= i %>][product_id]" onchange="addName(this,'item[<%= i %>][name]')">
                                                     <option>請選擇貨品</option>
-                                                    <% for (let product of products){ %>
-                                                        <option value="<%= product._id %>" <%= product._id == data.items[i].product_id? 'selected':'' %>><%= (product.Name).replace(/\n/g, '') %></option>
-                                                    <% } %>
+
+                                                        <option value="<%= data.name %>" selected><%= data.name %></option>
                                                 </select>
 
-                                                <!-- <input type='text' class="form-control text-center" name="item[name]" id="item[<%= i %>][name]" value="<%= (data.items[i].name).replace(/\n/g, '') %>" size="50"> -->
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][count]">總數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.items[i].count) %>" size="10">
+                                                <label for="item[<%= i %>][count]">需求總數量:</label>
+                                                <input type='text' class="form-control text-center" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.count) %>" size="10">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.items[i].completed) %>">
+                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.completed) %>">
                                             </div>
                                             <div class="col">
                                                 <label for="item[<%= i %>][stock_id]">貨架編號:</label>
                                                 <select name="item[stock_id]" id="item[<%= i %>][stock_id]">
                                                     <option>請選擇貨架</option>
-                                                    <% for (let stock of stocks){ %>
+                                                    <% for (let stock of lists[5]){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
                                                     <% } %>
                                                 </select>
-                                                <!-- <input type='text' class="form-control text-center" name="item[stock_id]" id="item[<%= i %>][stock_id]" value="<%= (data.items[i].stock_id) %>"> -->
-                                            </div>
+                                           </div>
                                         </div>
                                         <% } %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
@@ -145,6 +142,7 @@
                                             </div>
                                             <div class="col">
                                                 <label for="up_Stock_id">所在倉庫區:</label>
+
                                                 <select name="up_stock_id" id="up_Stock_id">
                                                     <option value="">-----請選擇-----</option>
                                                     <% for(let data of lists[5]){ %>
@@ -152,27 +150,33 @@
                                                             <%= data.name%>
                                                         </option>
                                                         <% } %>
-                                                <label for="up_item[<%= i %>][product_id]">貨品名稱:</label>
-                                                <!-- hidden up_item name -->
-                                                <input type="hidden" name="up_item[name]" id="up_item[<%= i %>][name]">
-                                                <!-- select id , display name -->
-                                                <select name="up_item[product_id]" id="up_item[<%= i %>][product_id]" onchange="addName(this,'up_item[<%= i %>][name]')">
-                                                    <option>請選擇貨品</option>
-                                                    <% for (let product of products){ %>
-                                                        <option value="<%= product._id %>" ><%= product.Name %></option>
-                                                    <% } %>
                                                 </select>
-                                            </div>
+                                                
+                                                <label for="up_product_id">貨品名稱:</label>
+                                                <!-- hidden up_item name -->
+                                                <!-- select id , display name -->
+                                                <select name="up_name" id="" >
+                                                    <option>請選擇貨品</option>
+                                                    <% for (let product of lists[1]){ %>
+                                                        <option value="<%= product._id %>">
+                                                            <%= product._id %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
+                                                </div>
                                             <div class="col">
                                                 <label for="up_count">總數量:</label>
-                                                <input type='text' class="form-control text-center" name="up_count" id="up_count"
-                                                    value="" size="10">
+                                                <input type='text' class="form-control text-center" name="up_count" id="up_count" value="" size="10">
+                                            </div>
+                                            <div class="col">
+                                                <label for="up_completed">需求總數量:</label>
+                                                <input type='text' class="form-control text-center" name="up_completed" id="up_completed" value="" size="10">
                                             </div>
                                             <div class="col">
                                                 <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
-                                                <select name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]">
+                                                <select name="up_stock_id" id="up_item[<%= i %>][stock_id]">
                                                     <option>請選擇貨架</option>
-                                                    <% for (let stock of stocks){ %>
+                                                    <% for (let stock of lists[5]){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
                                                     <% } %>
                                                 </select>

@@ -93,6 +93,12 @@ class IOemuSys {
                     data = await this.client.db(dbName).collection(collectionName).findOne({ _id: ele[0][1] }, { projection: pipline })
                     //data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},pipline);
                     break;
+                    case 'abc':
+                        //let result = [];
+                        pipline =[{$group:{_id:'$Product_id',name:{$push:"$Name"},type:{$push:"$Type"},brand:{$push:"$Brand"},origin:{$push:"$Origin"},stock_id:{$push:"$stock_id"}}}]
+                        data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                        console.log("勆勆勆勆成戈刃騷刃尸戈",data);
+                        break;
                 case "productsList":
                     let result = [];
                     pipline = [{ $group: { _id: "$Product_id" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
@@ -100,6 +106,7 @@ class IOemuSys {
                     result.push(data);
                     pipline = [{ $group: { _id: "$Name" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    
                     result.push(data);
                     pipline = [{ $group: { _id: "$Type" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
@@ -115,7 +122,7 @@ class IOemuSys {
                     const [from, localField, foreignField, as] = await lookupSheet;
                     pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } }, { $project: { _id: 0, trans_stock_id: 1 } }];
                     data = await this.client.db(dbName).collection('stocks').find().toArray();
-                    result.push(data);
+                    result.push(data)
                     return result;
                 default:
                     data = '錯誤訊息發生在有傳入ele元素進Read()方法裡但沒有以上的case項';

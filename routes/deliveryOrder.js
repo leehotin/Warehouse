@@ -77,7 +77,7 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     if(list==null)
       list = '';
     let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
-    await res.render('deliveryOrder/info',{data:da,user:use});
+    await res.render('deliveryOrder/info',{data:da,user:use,lists:list});
   }finally{
     await iOemuSys.disconnect();
   }
