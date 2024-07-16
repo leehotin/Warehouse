@@ -16,8 +16,12 @@ router.get('/', checkLogin, async (req, res, next) => {
 });
 router.post('/info', checkLogin, async (req, res, next) => {
     try {
-        console.log(req.body.call_info)
+        //console.log(req.body)
+         
+        
         await client.connect();
+        let product = await client.db(dbName).collection("products").findOne({ _id: req.body._id });
+        console.log(product)
         const products = client.db(dbName).collection("products");
         let data = await products.aggregate([ // join table
             {
@@ -36,7 +40,7 @@ router.post('/info', checkLogin, async (req, res, next) => {
             }
         ]).toArray();
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
-        console.log(data);
+        //console.log(data);
         res.render('product/info', { data: data[0], stocks: stocks});
 
     } finally {
@@ -47,12 +51,28 @@ router.get('/info', checkLogin, async (req, res, next) => {
     try {
         await client.connect();
         const products = client.db(dbName).collection("products");
-
-        let data = await products.findOne({_id: ObjectId.createFromHexString(req.query.id)});
-
+        id = ObjectId.createFromHexString(req.query.id);
+        let data = await products.aggregate([ // join table
+            {
+                $match: { _id: id } //找出符合條件的products
+            },
+            {
+                $lookup: {
+                    from: "stocks", //目標table
+                    localField: "stock_id", // 自己的col 
+                    foreignField: "_id", // 目標的col
+                    as: "stocks"// 取得資料後的名稱
+                }
+            },
+            {
+                $limit: 1 //輸出數量
+            }
+        ]).toArray();
+        //let data = await products.findOne({_id: ObjectId.createFromHexString(req.query.id)});
+        console.log('a',data)
         let stocks = await client.db(dbName).collection("stocks").find().toArray();
 
-        res.render('product/info', { data: data, stocks: stocks });
+        res.render('product/info', { data: data[0], stocks: stocks });
     } finally {
         await client.close();
     }
@@ -66,19 +86,13 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         
         let id = req.body.id;
         await iOemuSys.connect();
-        //await client.connect();
-        //let product = await client.db(dbName).collection("products").findOne({ _id: id });
-        console.log(id)
-        console.log(req.body)
-        //await client.db(dbName).collection("products").updateOne({ _id: id }, { $set: { deleted_at: new Date() } });
-        //await client.db(dbName).collection("logs").insertOne({ information: "Delete product " + product.product_id, type: "delete", created_at: new Date(), updated_at: new Date() });
-        
+
+ 
         let data =await iOemuSys.delete('ProductList',iOemuSys.CreatedbIndex('products'),['deleteprod',id,req.session.user_id]);
         console.log(data);
         res.redirect("/productlist");
     } finally {
         await iOemuSys.disconnect();
-        //await client.close();
     }
 });
 
@@ -86,7 +100,7 @@ router.post('/save', checkLogin, async (req, res, next) => {
     try {
         await client.connect();
         let productUpdata = {};
-
+            console.log(req.body)
         if (typeof req.body._id !== "undefined" && req.body._id != "") {
             productUpdata._id = ObjectId.createFromHexString(req.body._id);
         }
@@ -158,13 +172,13 @@ router.post('/save', checkLogin, async (req, res, next) => {
 
 async function checkLogin(req,res,next){
     if(req.session.user_id){
-        await client.connect();
-        let user = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.session.user_id)});
-        await client.close();
-        if(user){
-        req.session.role = user.role;
+        //await client.connect();
+        //console.log(req.session.user_id)
+        //let user = await client.db(dbName).collection('users').findOne({_id: ObjectId.createFromHexString(req.session.user_id)});
+        //await client.close();
+       // if(user){
         return next();
-        }
+        //}
     }
     return res.redirect('/user/login');
 }

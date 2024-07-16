@@ -120,7 +120,7 @@
               <div class="col">
                 <select name="stock" id="stock" class="form-select text">
                   <% for(let stock of stocks){ %>
-                    <option value="<%= stock._id %>" <%= data.stock_id == stock._id?'selected':'' %> ><%= stock.area %> <%= stock.name %> </option>
+                    <option value="<%= stock._id %>" <% if(data.stocks[0]['name']==stock.name){ %>selected<% } %>><%= stock.area %> <%= stock.name %> </option>
                   <% } %> 
                 </select>
               </div>
