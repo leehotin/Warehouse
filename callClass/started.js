@@ -114,7 +114,7 @@ class IOemuSys {
                     let lookupSheet = await this.lookupSheet();
                     const [from, localField, foreignField, as] = await lookupSheet;
                     pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } },{$project:{_id:0,trans_stock_id:1}}];
-                    data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+                    data = await this.client.db(dbName).collection('stocks').find().toArray();
                     result.push(data);
                     return result ;
                     default:
@@ -252,20 +252,21 @@ class IOemuSys {
         }
         else return err = 'Error發生了，文件沒法搬運完成QAQ';
         //console.log(data);
-        query = [{ deleteOne: { filter: {} } }];
+        console.log("b",data);
+        query = [{ deleteOne: { filter: {_id:data['original_id']} } }];
         //console.log('a',target[1])
         //[{ deleteOne: { filter } }] = query;
         //for (const i in data) {
         //    if (data.hasOwnProperty(target[0])) {
-        filter = { [target[0]]: target[1] };
+       // filter = { [target[0]]: target[1] };
         //        break;
         //    }
         //}
-        console.log('a', filter);
+        console.log('a',query);
         let toEnding = await this.client.db(dbName).collection(collectionName).bulkWrite(query)
         if (toEnding) {
             console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`);
-            console.log(toEnding);
+           // console.log(toEnding);
         }
         else return err = '糟了，文件有危險，因為是世界奇觀~';
         return 0;
