@@ -40,7 +40,7 @@ class IOemuSys {
             //console.log(d);
         }
     */                                    //ele[0][0] = "_id" ,ele[0][1]=new ObjectId('667cbf81ac08f2d70899ad10')
-//                                        ele[0] = ['_id',new ObjectId('667cbf81ac08f2d70899ad10')]
+    //                                        ele[0] = ['_id',new ObjectId('667cbf81ac08f2d70899ad10')]
     async Read(inquire = 'product', setdb, ...ele) {
         setdb = setdb || this.CreatedbIndex();   //初始化db
         const [dbName, collectionName] = await setdb;              //終極濃縮版....新學來的...
@@ -56,8 +56,8 @@ class IOemuSys {
             switch (ele[0][0]) {
                 case "Product_id":
                 case "delivery_id":
-                    console.log("bbb",projection)
-                    data = await this.client.db(dbName).collection(collectionName).findOne(projection); 
+                    console.log("bbb", projection)
+                    data = await this.client.db(dbName).collection(collectionName).findOne(projection);
                     break;
                 case "Brand":
                     let Origin = [], Brand;
@@ -79,46 +79,46 @@ class IOemuSys {
                     pipline = { inquire: ele[0][1] };    //創建排序方法查詢
                     data = await this.client.db(dbName).collection(collectionName).find().sort(pipline).toArray();
                     break;
-                    case "deleteprod":
-                        ele[0][1] = ObjectId.createFromHexString(ele[0][1])
-                        pipline={_id:ele[0][1]}
-                        console.log(dbName)
-                        // db("Warehouse_In_Out_System").('products').findOnd({_id:new ObjectId('667cbf81ac08f2d70899ad10')})
-                        data = await this.client.db(dbName).collection(collectionName).findOne(pipline);
-                        break;
+                case "deleteprod":
+                    ele[0][1] = ObjectId.createFromHexString(ele[0][1])
+                    pipline = { _id: ele[0][1] }
+                    console.log(dbName)
+                    // db("Warehouse_In_Out_System").('products').findOnd({_id:new ObjectId('667cbf81ac08f2d70899ad10')})
+                    data = await this.client.db(dbName).collection(collectionName).findOne(pipline);
+                    break;
                 case "_id":
-                    pipline ={_id:0,username:1,user_id:1};    //創建排序方法查詢
+                    pipline = { _id: 0, username: 1, user_id: 1 };    //創建排序方法查詢
                     console.log(pipline)
                     console.log("hi")
-                    data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},{projection:pipline})
+                    data = await this.client.db(dbName).collection(collectionName).findOne({ _id: ele[0][1] }, { projection: pipline })
                     //data = await this.client.db(dbName).collection(collectionName).findOne({_id:ele[0][1]},pipline);
                     break;
                 case "productsList":
-                    let result = [] ;
-                    pipline = [{$group:{_id:"$Product_id"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    let result = [];
+                    pipline = [{ $group: { _id: "$Product_id" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
                     result.push(data);
-                    pipline = [{$group:{_id:"$Name"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    pipline = [{ $group: { _id: "$Name" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
                     result.push(data);
-                    pipline = [{$group:{_id:"$Type"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    pipline = [{ $group: { _id: "$Type" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
                     result.push(data);
-                    pipline = [{$group:{_id:"$Brand"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    pipline = [{ $group: { _id: "$Brand" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
                     result.push(data);
-                    pipline = [{$group:{_id:"$Origin"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    pipline = [{ $group: { _id: "$Origin" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
                     result.push(data);
-                    pipline = [{$group:{_id:"$"}},{$sort:{_id:1}},{$project:{_id:1}}];
+                    pipline = [{ $group: { _id: "$" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     let lookupSheet = await this.lookupSheet();
                     const [from, localField, foreignField, as] = await lookupSheet;
-                    pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } },{$project:{_id:0,trans_stock_id:1}}];
+                    pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } }, { $project: { _id: 0, trans_stock_id: 1 } }];
                     data = await this.client.db(dbName).collection('stocks').find().toArray();
                     result.push(data);
-                    return result ;
-                    default:
-                    data = '錯誤訊息發生在有傳入ele元素進Read()方法裡但沒有以上的case項' ;
+                    return result;
+                default:
+                    data = '錯誤訊息發生在有傳入ele元素進Read()方法裡但沒有以上的case項';
             }
         }
         else data = await this.client.db(dbName).collection(collectionName).find().toArray();
@@ -130,12 +130,11 @@ class IOemuSys {
         const [group, search, limit] = await query;
         console.log('前台有人進行了1次' + inquire + '操作');
 
-        let pipline ;
-        if(group!='') 
+        let pipline;
+        if (group != '')
             pipline = [{ $match: { [search]: limit } }, { $group: { _id: `$${group}` } }, { $sort: { _id: 1 } }];
         else pipline = [{ $match: { [search]: limit } }, { $sort: { _id: 1 } }];
         let data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
-        console.log(data)
         return data;
     }
 
@@ -171,27 +170,38 @@ class IOemuSys {
         switch (inquire) {
             case 'updateDeliveryOrder':
                 for (let i = 0; i < query['item[product_id]'].length; i++) {
-                    items[i] = {
+                    items.push({
                         product_id: query['item[product_id]'][i],
                         name: query['item[name]'][i],
                         count: Number(query['item[count]'][i]),
                         completed: Number(query['item[completed]'][i]),
                         stock_id: query['item[stock_id]'][i]
-                    };
+                    });
                 };
-                if (query['up_item[name]'][0] != '') {
-                    let j = 0;
-                    for (let i = query['item[product_id]'].length; i < query['item[product_id]'].length + 2; i++) {
-                        items[i] = {
-                            "product_id": query['up_item[product_id]'][j],
-                            "name": query['up_item[name]'][j],
-                            "count": Number(query['up_item[count]'][j]),
-                            "completed": Number(query['up_item[completed]'][j]),
-                            "stock_id": query['up_item[stock_id]'][j]
-                        };
-                        j++;
+                if (typeof (query['up_name']) != 'string') {
+                    for (let i in query['up_name']) {
+                        //console.log(query['up_product_id'])
+                        //console.log(i,":",typeof(query['up_name'][i]))
+                        if (query['up_name'][i] !== '') {
+                            items.push({
+                                product_id: query['up_product_id'][i],
+                                name: query['up_name'][i],
+                                count: Number(query['up_count'][i]),
+                                completed: Number(query['up_completed'][i]),
+                                stock_id: query['up_stock_id'][i]
+                            });
+                        }
                     }
-                };
+                }
+                else if (query['up_name'] !== '') {
+                    items.push({
+                        product_id: query['up_product_id'],
+                        name: query['up_name'],
+                        count: Number(query['up_count']),
+                        completed: Number(query['up_completed']),
+                        stock_id: query['up_stock_id']
+                    });
+                }
                 temp = {
                     delivery_id: query['delivery_id'],
                     company: query['company'],
@@ -252,21 +262,21 @@ class IOemuSys {
         }
         else return err = 'Error發生了，文件沒法搬運完成QAQ';
         //console.log(data);
-        console.log("b",data);
-        query = [{ deleteOne: { filter: {_id:data['original_id']} } }];
+        console.log("b", data);
+        query = [{ deleteOne: { filter: { _id: data['original_id'] } } }];
         //console.log('a',target[1])
         //[{ deleteOne: { filter } }] = query;
         //for (const i in data) {
         //    if (data.hasOwnProperty(target[0])) {
-       // filter = { [target[0]]: target[1] };
+        // filter = { [target[0]]: target[1] };
         //        break;
         //    }
         //}
-        console.log('a',query);
+        console.log('a', query);
         let toEnding = await this.client.db(dbName).collection(collectionName).bulkWrite(query)
         if (toEnding) {
             console.log(`資料已從${inquire}移除~~身心舒暢~~那嚿資料如下：`);
-           // console.log(toEnding);
+            // console.log(toEnding);
         }
         else return err = '糟了，文件有危險，因為是世界奇觀~';
         return 0;

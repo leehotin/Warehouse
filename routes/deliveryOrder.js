@@ -72,8 +72,12 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
     await iOemuSys.connect();
 
     let da = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.query.delivery_id]);
+    let list = await iOemuSys.Read('productList',iOemuSys.CreatedbIndex('products'),['productsList',1])
+    if(list==null)
+      list = '';
     let use = await iOemuSys.Read('使用者列表',iOemuSys.CreatedbIndex('users'),['username',1] );
-    await res.render('deliveryOrder/info',{data:da,user:use});
+    console.log(list);
+    await res.render('deliveryOrder/info',{data:da,user:use,lists:list});
   }finally{
     await iOemuSys.disconnect();
   }
@@ -161,9 +165,10 @@ router.post('/delete',checkLogin, async (req,res,next) =>{
       {displayName: "完成日期:",name: "whereData[delivery_at]",placeholder: "完成日期",type: "date"},
     ];
     //await iOemuSys.selectType(iOemuSys.CreatedbIndex('delivery_notes'));
+    //console.log("bbbbbbbbb",req.body)
     await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
     let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
-    console.log(data)
+    //console.log(data)
     res.render('deliveryOrder/index',{ datas: data, search: search});
 
   }finally{
