@@ -102,7 +102,7 @@
                     <% for(data of datas){ %>
                         <div class="row py-2 border-bottom border-primary">
                             <div class="col text-center">
-                                <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
+                                <a href="/deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                             </div>
                             <div class="col text-center">
                                 <%= data.type=='in'? "入貨單" : "出貨單" %>

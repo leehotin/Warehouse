@@ -56,7 +56,7 @@
               <% for(let data of datas.todayOrders){ %>
                 <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center darkmode">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
+                    <a href="/deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                   </div>
                   <div class="col text-center">
                     <%= data.company %>
@@ -91,7 +91,7 @@
               <% for(let data of datas.notFinishs){ %>
                 <div class="row py-1 border-bottom border-primary">
                   <div class="col text-center">
-                    <a href="./deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
+                    <a href="/deliveryOrder/info?delivery_id=<%= data.delivery_id %>" class="darkmode"><%= data.delivery_id %></a>
                   </div>
                   <div class="col text-center">
                     <%= data.company %>
