@@ -5,10 +5,44 @@
         <link href="/css/style.css" rel="stylesheet" type="text/css">
         <script src="/js/darkMode.js"></script>
         <script>
-            function addName(input,output){
-                document.getElementById(output).value = input[input.selectedIndex].text;
-            }
+
+           alert('hi') 
         </script>
+            <script type="module">
+                import { dio, listen, setupSelectCreateForm, createUniqueSelect, lockItem, listenForm, checkValue} from '/js/script.js';
+                document.addEventListener("DOMContentLoaded", function () {
+                    const inputText = document.getElementById('_id-0');
+                    
+                    const selectBox1 = document.getElementById('name-0');
+                    const selectBox2 = document.getElementById('type-0');
+                    const selectBox3 = document.getElementById('brand-0');
+                    const selectBox4 = document.getElementById('origin-0');
+                    const selectBox5 = document.getElementById('stock_id-0');
+                    const selectBox6 = document.getElementById('product_id-0');
+                    let originalOptions = [] ;
+                    //const originalOptions = selectElement.innerHTML ;
+                    const selectBoxs = [selectBox1,selectBox2,selectBox3,selectBox4,selectBox5,selectBox6];
+                    for(let saveOption of selectBoxs){
+                        originalOptions.push(saveOption.innerHTML) ;
+                    }
+                    let uniqueIdCounter = 1;
+                    document.getElementById('addItemButton').addEventListener('click',async function(){
+                        if(!await checkValue()){
+                            //alert('前端被攔下來了，你數字不對~')
+                            return fasle ;
+                        }
+                        await lockItem(uniqueIdCounter);
+                        uniqueIdCounter = await createUniqueSelect(originalOptions,uniqueIdCounter);
+                        
+                    });
+                    dio();
+                    listen();
+                    listenForm();
+        
+                    //createUniqueSelect(originalOptions,uniqueIdCounter);
+                    setupSelectCreateForm(selectBoxs, '', 'products');
+                })
+            </script>
     </head>
 
     <body class="darkmode">
@@ -36,11 +70,12 @@
                             <label><a href="/" class="darkmode">首頁</a></label> / 
                             <label><a href="/deliveryOrder" class="darkmode">貨單</a></label> / 
                             <label class="darkmode">貨單資料</label> / 
-                            <label class="darkmode"><%= data.delivery_id %></label>                    
+                            <label class="darkmode"><%= datas.delivery_id %></label>                    
                         </div>
                         <div class="col">
                             <button class="btn btn-warning" form="delete">刪除貨單</button>
                             <button class="btn btn-primary" form="update">更新貨單</button>
+                            <button class="btn btn-primary" id='addItemButton'>加新物品</button>
                         </div>
                         <form action="/deliveryOrder/delete" method="post" id="delete">
                         </form>
@@ -52,7 +87,7 @@
                                     <label for="DeliveryID">送貨單號:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="DeliveryID" name="delivery_id" value="<%= data.delivery_id %>" class="form-control text-center">
+                                    <input type="text" id="DeliveryID" name="delivery_id" value="<%= datas.delivery_id %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -61,7 +96,7 @@
                                     <label for="Company">公司名稱:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="Company" name="company" value="<%= data.company %>" class="form-control text-center">
+                                    <input type="text" id="Company" name="company" value="<%= datas.company %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -70,7 +105,7 @@
                                     <label for="Address">公司地址:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="Address" name="address" value="<%= data.address %>" class="form-control text-center">
+                                    <input type="text" id="Address" name="address" value="<%= datas.address %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -79,7 +114,7 @@
                                     <label for="Phone">公司電話:</label>
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="Phone" name="phone" value="<%= data.phone %>" class="form-control text-center">
+                                    <input type="text" id="Phone" name="phone" value="<%= datas.phone %>" class="form-control text-center">
                                 </div>
                             </div>
 
@@ -90,26 +125,26 @@
                                 <div class="col">
                                     <div class="form-check">
                                         <label class="form-check-label" for="in">入貨單</label>
-                                        <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(data.type==='in'){ %>checked<% } %>> 
+                                        <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(datas.type==='in'){ %>checked<% } %>> 
                                     </div>
                                     <div class="form-check">
                                         <label class="form-check-label" for="out">出貨單</label>
-                                        <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(data.type==='out'){ %>checked<% } %>>
+                                        <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(datas.type==='out'){ %>checked<% } %>>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row my-1">
                                 <label class="fw-bold ">貨品資料：</label>
-                                <div class="col"><% let i= 0; %>
-                                    <% for(data of data.items){ %>
+                                <div class="col">
+                                    <% for(let data of datas.items){ %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
-                                                <label for="item[<%= i %>][name]">貨品名稱:</label>
+                                                <label for="item[][name]">貨品名稱:</label>
                                                 <!-- hidden item name -->
-                                                <input type="hidden" name="item[name]" id="item[<%= i %>][name]" value="<%= data.name %>">
+                                                <input type="hidden" name="item[name]" id="item[][name]" value="<%= data.name %>">
                                                 <!-- select id , display name -->
-                                                <select name="item[product_id]" id="item[<%= i %>][product_id]" onchange="addName(this,'item[<%= i %>][name]')">
+                                                <select name="item[product_id]" id="item[][product_id]" onchange="addName(this,'item[][name]')">
                                                     <option>請選擇貨品</option>
 
                                                         <option value="<%= data.name %>" selected><%= data.name %></option>
@@ -117,16 +152,16 @@
 
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][count]">需求總數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[count]" id="item[<%= i %>][count]" value="<%= (data.count) %>" size="10">
+                                                <label for="item[][count]">需求總數量:</label>
+                                                <input type='text' class="form-control text-center" name="item[count]" id="item[][count]" value="<%= (data.count) %>" size="10">
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[<%= i %>][completed]" value="<%= (data.completed) %>">
+                                                <label for="item[][completed]">已到達數量:</label>
+                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[][completed]" value="<%= (data.completed) %>">
                                             </div>
                                             <div class="col">
-                                                <label for="item[<%= i %>][stock_id]">貨架編號:</label>
-                                                <select name="item[stock_id]" id="item[<%= i %>][stock_id]">
+                                                <label for="item[][stock_id]">貨架編號:</label>
+                                                <select name="item[stock_id]" id="item[][stock_id]">
                                                     <option>請選擇貨架</option>
                                                     <% for (let stock of lists[5]){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
@@ -137,7 +172,7 @@
                                         <% } %>
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][name]">貨品名稱:</label>
+                                                <label for="up_item[][name]">貨品名稱:</label>
                                            </div>
                                             <div class="col">
                                                 <label for="up_Stock_id">所在倉庫區:</label>
@@ -149,8 +184,157 @@
                                                             <%= data.name%>
                                                         </option>
                                                         <% } %>
-                                                </select>
-                                                
+                                                </select>//////
+                                                <div class="row my-1">
+                                                    <div class="col fw-bold ">
+                                                        <label>貨品資料:</label>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" for="in">入貨單</label>
+                                                            <input type="radio" value="in" id="in" name="Type" class="form-check-input" <% if(datas.type==='in'){ %>checked<% } %>>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <label class="form-check-label" for="out">出貨單</label>
+                                                            <input type="radio" value="out" id="out" name="Type" class="form-check-input" <% if(datas.type==='out'){ %>checked<% } %>>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        <% let uniqueId= 0 ; %>
+                                                <div class="row my-1">
+                                                    <label class="fw-bold ">貨品資料<%= (uniqueId+1) %></label>
+                                                    <div class="col">
+                                                        <% for(let data of datas.items){ %>
+                                                        <div class="row py-1 my-1 border-bottom border-primary">
+                                                            <div class="col">
+                        
+                                                                <input type="hidden" value="" id="_id">
+                                                                
+                                                                <label for="product_id-0">貨品編號:</label>
+                                                                <select name="product_id" id="product_id-0">
+                                                                    <option value="">-----請選擇-----</option>
+                                                                    <% for(let list of lists[0]){ %>
+                                                                        <option value="<%= list._id %>"<% if(data.product_id==list._id){ %>selected <% } %>>
+                                                                            <%= list._id%>
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="name-0">貨品名稱:</label>
+                                                                <select name="name" id="name-0">
+                                                                    <option value="">-----請選擇-----</option>
+                                                                    <% for(let list of lists[1]){ %>
+                                                                        <option value="<%= list._id %>"<% if(data._name==list._id){ %>selected <% } %>>
+                                                                            <%= list._id%>
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="type-0">類型:</label>
+                                                                <select id="type-0">
+                                                                    <option value="">-----請選擇-----</option>
+                                                                    <% for(let list of lists[2]){ %>
+                                                                        <option value="<%= list._id %>">
+                                                                            <%= list._id%>
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="brand-0">品牌:</label>
+                                                                <select name="brand" id="brand-0">
+                                                                    <option value="">-----請選擇-----</option>
+                                                                    <% for(let list of lists[3]){ %>
+                                                                        <option value="<%= list._id %>">
+                                                                            <%= list._id%>
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="origin-0">來源地:</label>
+                                                                <select name="origin" id="origin-0">
+                                                                    <option value="">-----請選擇-----</option>
+                                                                    <% for(let list of lists[4]){ %>
+                                                                        <option value="<%= list._id %>">
+                                                                            <%= list._id%>
+                                                                        </option>>
+                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="stock_id-0">所在倉庫區:</label>
+                                                                <select name="stock_id" id="stock_id-0">
+                                                                    <option value="">-----請選擇-----</option>
+                                                                    <% for(let list of lists[5]){ %>
+                                                                        <option value="<%= list._id %>"<% if(data.stock_id==list._id){ %>selected <% } %>>
+                                                                            <%= list._id%>
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="stock_id-0-0">所在倉庫區(預設):</label>
+                                                                <p id="stock_id-0-0"></p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="count-0">總數量:</label>
+                                                                <input type='text' class="form-control text-center" name="count" id="count-0"
+                                                                    value="" size="10">
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="completed-0">已到達數量:</label>
+                                                                <input type='text' class="form-control text-center" name="completed"
+                                                                    id="completed-0" value="">
+                                                            </div>
+                                                        </div>
+                                                        <% uniqueId++; } %>
+                                                    </div>
+                                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                 <label for="up_product_id">貨品名稱:</label>
                                                 <!-- hidden up_item name -->
                                                 <!-- select id , display name -->
@@ -172,15 +356,15 @@
                                                 <input type='text' class="form-control text-center" name="up_completed" id="up_completed" value="" size="10">
                                             </div>
                                             <div class="col">
-                                                <label for="up_item[<%= i %>][stock_id]">貨架編號:</label>
-                                                <select name="up_stock_id" id="up_item[<%= i %>][stock_id]">
+                                                <label for="up_item[][stock_id]">貨架編號:</label>
+                                                <select name="up_stock_id" id="up_item[][stock_id]">
                                                     <option>請選擇貨架</option>
                                                     <% for (let stock of lists[5]){ %>
                                                         <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
                                                     <% } %>
                                                 </select>
 
-                                                <!-- <input type='text' class="form-control text-center" name="up_item[stock_id]" id="up_item[<%= i %>][stock_id]" value=""> -->
+                                                <!-- <input type='text' class="form-control text-center" name="up_item[stock_id]" id="up_item[][stock_id]" value=""> -->
                                             </div>
                                            <!-- <div class="col">
                                                 <label for="stock_id">貨架編號:</label>
@@ -192,18 +376,18 @@
                                 </div>
                             </div>
 
-                            <div class="row my-1">
+                            <div class="row my-1" id="specificPosition">
                                 <div class="col fw-bold ">
                                     是否已經完成：
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
                                         <label class="form-check-label" for="finish">已完成</label>
-                                        <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(data.delivery_check===1){ %>checked<% } %>>
+                                        <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(datas.delivery_check===1){ %>checked<% } %>>
                                     </div>
                                     <div class="form-check">
                                         <label class="form-check-label" for="NotFinish">未完成</label>
-                                        <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(data.delivery_check==='0'){ %>checked<% } %>>
+                                        <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(datas.delivery_check==='0'){ %>checked<% } %>>
                                     </div>
                                 </div>
                                 <div class="col fw-bold">
@@ -213,10 +397,10 @@
                                     <select name="delivery_user" id="delivery_user" class="form-select form-select-sm text-center">
                                         <option>請選擇</option>
                                         <% let j ; for(i of user){ %>
-                                        <option value="<%= Object.values(i) %>"<% if(Object.values(i)==data.delivery_user){ j='exsits'; %>selected <% } %>>
+                                        <option value="<%= Object.values(i) %>"<% if(Object.values(i)==datas.delivery_user){ j='exsits'; %>selected <% } %>>
                                             <%= Object.values(i) %>
                                         </option>
-                                        <% } %><% if(j!='exsits'){ %><option name='delivery_user' value="<%= data.delivery_user %>" selected><%= data.delivery_user %></option> <% } %> 
+                                        <% } %><% if(j!='exsits'){ %><option name='delivery_user' value="<%= datas.delivery_user %>" selected><%= datas.delivery_user %></option> <% } %> 
                                     </select>
                                 </div>
                             </div>

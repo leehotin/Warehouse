@@ -56,7 +56,6 @@ class IOemuSys {
             switch (ele[0][0]) {
                 case "Product_id":
                 case "delivery_id":
-                    console.log("bbb", projection)
                     data = await this.client.db(dbName).collection(collectionName).findOne(projection);
                     break;
                 case "Brand":
@@ -106,7 +105,6 @@ class IOemuSys {
                     result.push(data);
                     pipline = [{ $group: { _id: "$Name" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
-                    
                     result.push(data);
                     pipline = [{ $group: { _id: "$Type" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
@@ -120,7 +118,7 @@ class IOemuSys {
                     pipline = [{ $group: { _id: "$" } }, { $sort: { _id: 1 } }, { $project: { _id: 1 } }];
                     let lookupSheet = await this.lookupSheet();
                     const [from, localField, foreignField, as] = await lookupSheet;
-                    pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } }, { $project: { _id: 0, trans_stock_id: 1 } }];
+                    pipline = [{ $lookup: { from, localField, foreignField, as } }, { $sort: { [as]: 1 } }, { $project: { _id: 1, trans_stock_id: 1 } }];
                     data = await this.client.db(dbName).collection('stocks').find().toArray();
                     result.push(data)
                     return result;
@@ -135,13 +133,15 @@ class IOemuSys {
         setdb = setdb || this.CreatedbIndex();
         const [dbName, collectionName] = await setdb;
         const [group, search, limit] = await query;
-        console.log('前台有人進行了1次' + inquire + '操作');
+        console.log('前台有人進行了1次' + inquire + '操作',query);
 
         let pipline;
         if (group != '')
             pipline = [{ $match: { [search]: limit } }, { $group: { _id: `$${group}` } }, { $sort: { _id: 1 } }];
-        else pipline = [{ $match: { [search]: limit } }, { $sort: { _id: 1 } }];
+        else pipline = [{ $match: { [search]: limit } }, { $sort: { _id: 1 } }, { $project: { _id: 0,Count:0,stock_id:0 } }];
+        console.log('3',pipline)
         let data = await this.client.db(dbName).collection(collectionName).aggregate(pipline).toArray();
+        console.log(data,'44444');
         return data;
     }
 
@@ -185,7 +185,7 @@ class IOemuSys {
                         completed: isNaN(Number(query['item[completed]'][i]))?0:Number(query['item[completed]'][i]),
                         stock_id: query['item[stock_id]'][i]
                     });
-                };console.log("11123242345435",items)}
+                };}
                 
                 else items.push({
                     product_id: query['item[product_id]'],
@@ -196,8 +196,6 @@ class IOemuSys {
                 });
                 if (typeof (query['up_name']) != 'string') {
                     for (let i in query['up_name']) {
-                        //console.log(query['up_product_id'])
-                        //console.log(i,":",typeof(query['up_name'][i]))
                         if (query['up_name'][i] !== '') {
                             items.push({
                                 product_id: query['up_product_id'][i],
@@ -250,6 +248,7 @@ class IOemuSys {
                 result = [{
                     insertOne: query
                 }];
+                console.log('into',result)
                 data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
             default:
         }

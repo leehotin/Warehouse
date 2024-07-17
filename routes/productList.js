@@ -98,11 +98,19 @@ router.get('/',checkLogin,async function(req, res, next) {
         //關閉連線
         await iOemuSys.disconnect();
     }
+    //創建新貨單有用到這個layout
 }).get('/layout',checkLogin,async function(req, res, next) {
     try{
         await iOemuSys.connect();
-        console.log(req.query)
-        let data = await iOemuSys.search('查詢並響應',iOemuSys.CreatedbIndex(req.query.Name),[req.query.group,req.query.search,req.query.limit]);
+        let search ;
+        if(req.query.search!='' && typeof(req.query.search)=='string'){
+            search = req.query.search ;
+        search = req.query.search.replace(/-\d+$/,'');
+        search = search.charAt(0).toUpperCase() + search.slice(1);
+        console.log('aaaa')
+        }
+        console.log('b:',search) ;
+        let data = await iOemuSys.search('查詢並響應',iOemuSys.CreatedbIndex(req.query.Name),[req.query.group,search,req.query.limit]);
         return res.json(data);
     }
     finally{

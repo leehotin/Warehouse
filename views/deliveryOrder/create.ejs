@@ -8,18 +8,37 @@
     <link href="/css/style.css" rel="stylesheet" type="text/css">
     <script src="/js/darkMode.js"></script>
     <script type="module">
-        import { dio, listen, setupSelectCreateForm } from '/js/script.js';
+        import { dio, listen, setupSelectCreateForm, createUniqueSelect, lockItem, listenForm, checkValue} from '/js/script.js';
         document.addEventListener("DOMContentLoaded", function () {
+            const inputText = document.getElementById('_id-0');
+            
+            const selectBox1 = document.getElementById('name-0');
+            const selectBox2 = document.getElementById('type-0');
+            const selectBox3 = document.getElementById('brand-0');
+            const selectBox4 = document.getElementById('origin-0');
+            const selectBox5 = document.getElementById('stock_id-0');
+            const selectBox6 = document.getElementById('product_id-0');
+            let originalOptions = [] ;
+            //const originalOptions = selectElement.innerHTML ;
+            const selectBoxs = [selectBox1,selectBox2,selectBox3,selectBox4,selectBox5,selectBox6];
+            for(let saveOption of selectBoxs){
+                originalOptions.push(saveOption.innerHTML) ;
+            }
+            let uniqueIdCounter = 1;
+            document.getElementById('addItemButton').addEventListener('click',async function(){
+                if(!await checkValue()){
+                    //alert('前端被攔下來了，你數字不對~')
+                    return fasle ;
+                }
+                await lockItem(uniqueIdCounter);
+                uniqueIdCounter = await createUniqueSelect(originalOptions,uniqueIdCounter);
+                
+            });
             dio();
             listen();
-            const selectBox1 = document.getElementById('_id');
-            const selectBox2 = document.getElementById('Product_id');
-            const selectBox3 = document.getElementById('Name');
-            const selectBox4 = document.getElementById('Type');
-            const selectBox5 = document.getElementById('Brand');
-            const selectBox6 = document.getElementById('Origin');
-            const selectBox7 = document.getElementById('Stock_id');
-            const selectBoxs = [selectBox1,selectBox2,selectBox3,selectBox4,selectBox5,selectBox6,selectBox7];
+            listenForm();
+
+            //createUniqueSelect(originalOptions,uniqueIdCounter);
             setupSelectCreateForm(selectBoxs, '', 'products');
         })
     </script>
@@ -53,13 +72,14 @@
                     </div>
                     <div class="col">
                         <!--<button class="btn btn-warning" form="delete">刪除貨單</button>-->
-                        <button class="btn btn-primary" form="create">新增貨單</button>
+                        <button class="btn btn-primary" type="button" form="create" id="Submit">新增貨單</button>
+                        <button class="btn btn-primary" id='addItemButton'>加新物品</button>
                     </div>
                     <!--<form action="./delete" method="post" id="delete">
                         </form>-->
                 </div>
                 <div class="row">
-                    <form action="/deliveryOrder/create" method="post" id="create">
+                    <form action="/deliveryOrder/create" method="post"  id="create">
                         <div class="row my-1">
                             <div class="col fw-bold ">
                                 <label for="DeliveryID">
@@ -119,11 +139,11 @@
                             <div class="col">
                                 <div class="form-check">
                                     <label class="form-check-label" for="in">入貨單</label>
-                                    <input type="radio" value="in" id="in" name="type" class="form-check-input">
+                                    <input type="radio" value="in" id="in" name="Type" class="form-check-input">
                                 </div>
                                 <div class="form-check">
                                     <label class="form-check-label" for="out">出貨單</label>
-                                    <input type="radio" value="out" id="out" name="type" class="form-check-input">
+                                    <input type="radio" value="out" id="out" name="Type" class="form-check-input">
                                 </div>
                             </div>
                         </div>
@@ -134,9 +154,11 @@
 
                                 <div class="row py-1 my-1 border-bottom border-primary">
                                     <div class="col">
+
                                         <input type="hidden" value="" id="_id">
-                                        <label for="Product_id">貨品編號:</label>
-                                        <select name="product_id" id="Product_id">
+
+                                        <label for="product_id-0">貨品編號:</label>
+                                        <select name="product_id" id="product_id-0">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[0]){ %>
                                                 <option value="<%= data._id %>">
@@ -146,8 +168,8 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="Name">貨品名稱:</label>
-                                        <select name="name" id="Name">
+                                        <label for="name-0">貨品名稱:</label>
+                                        <select name="name" id="name-0">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[1]){ %>
                                                 <option value="<%= data._id %>">
@@ -157,8 +179,8 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="Type">類型:</label>
-                                        <select id="Type">
+                                        <label for="type-0">類型:</label>
+                                        <select id="type-0">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[2]){ %>
                                                 <option value="<%= data._id %>">
@@ -168,8 +190,8 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="Brand">品牌:</label>
-                                        <select name="brand" id="Brand">
+                                        <label for="brand-0">品牌:</label>
+                                        <select name="brand" id="brand-0">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[3]){ %>
                                                 <option value="<%= data._id %>">
@@ -179,8 +201,8 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="Origin">來源地:</label>
-                                        <select name="origin" id="Origin">
+                                        <label for="origin-0">來源地:</label>
+                                        <select name="origin" id="origin-0">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[4]){ %>
                                                 <option value="<%= data._id %>">
@@ -190,8 +212,8 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="Stock_id">所在倉庫區:</label>
-                                        <select name="stock_id" id="Stock_id">
+                                        <label for="stock_id-0">所在倉庫區:</label>
+                                        <select name="stock_id" id="stock_id-0">
                                             <option value="">-----請選擇-----</option>
                                             <% for(let data of datas[5]){ %>
                                                 <option value="<%= data._id %>">
@@ -201,25 +223,24 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="count">總數量:</label>
-                                        <input type='text' class="form-control text-center" name="count" id="count"
+                                        <label for="stock_id-0-0">所在倉庫區(預設):</label>
+                                        <p id="stock_id-0-0"></p>
+                                    </div>
+                                    <div class="col">
+                                        <label for="count-0">總數量:</label>
+                                        <input type='text' class="form-control text-center" name="count" id="count-0"
                                             value="" size="10">
                                     </div>
                                     <div class="col">
-                                        <label for="completed">已到達數量:</label>
+                                        <label for="completed-0">已到達數量:</label>
                                         <input type='text' class="form-control text-center" name="completed"
-                                            id="completed" value="">
+                                            id="completed-0" value="">
                                     </div>
-                                   <!-- <div class="col">
-                                        <label for="stock_id">貨架編號:</label>
-                                        <input type='text' class="form-control text-center" name="stock_id"
-                                            id="stock_id" value="">
-                                    </div>-->
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row my-1">
+                        
+                        <div class="row my-1" id="specificPosition">
                             <div class="col fw-bold">
                                 <label for="delivery_user">創建貨單員工:</label>
                             </div>
