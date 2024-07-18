@@ -75,17 +75,17 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     if(data ==null){
       data = '' ;
     }
-    console.log(data);
+    //console.log('dddd',data);
     let list = await iOemuSys.Read('productList', iOemuSys.CreatedbIndex('products'), ['productsList', 1])
     if (list == null){
       list = '';
     }
-    console.log('bbb',list)
-    let use //= await iOemuSys.Read('使用者列表', iOemuSys.CreatedbIndex('users'), ['username', 1]);
+    //console.log('bbb',list)
+    let use = await iOemuSys.Read('使用者列表', iOemuSys.CreatedbIndex('users'), ['username', 1]);
     if(use == null)
       use = '';
-    console.log('use:',use)
-    await res.render('deliveryOrder/info', { datas: data, user: use, lists: list });
+    //console.log('use:',use)
+     res.render('deliveryOrder/info', { datas: data, user: use, lists: list });
   } finally {
     await iOemuSys.disconnect();
   }
@@ -181,7 +181,6 @@ router.post('/delete', checkLogin, async (req, res, next) => {
       console.log("why", req.body)
       let result = await iOemuSys.update('createDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
       console.log("end", result);
-      ///////}
       res.redirect('/deliveryOrder');
     }
   }
@@ -189,6 +188,14 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     res.redirect('/');
   }*/
   finally {
+    await iOemuSys.disconnect();
+  }
+}).get('/update', checkLogin, async (req, res, next) => {
+  try{
+    await iOemuSys.connect();
+    res.redirect('/deliveryOrder');
+  }
+  finally{
     await iOemuSys.disconnect();
   }
 }).post('/update', checkLogin, async (req, res, next) => {
@@ -204,7 +211,89 @@ router.post('/delete', checkLogin, async (req, res, next) => {
       { displayName: "確認貨單員工:", name: "whereData[delivery_user]", placeholder: "確認貨單員工", type: "text" },
       { displayName: "完成日期:", name: "whereData[delivery_at]", placeholder: "完成日期", type: "date" },
     ];
-    console.log(req.body)
+    //console.log('cde',req.body)
+      await iOemuSys.connect();
+      let items = [];
+      delete req.body.type;
+      if (req.body.Type === "in") {
+        req.body.delivery_id = "INV" + req.body.delivery_id;
+        req.body.type = 'in';
+      }
+      else {
+        req.body.delivery_id = "TRF" + req.body.delivery_id;
+        req.body.type = 'out';
+      }
+      let data = await iOemuSys.Read('checkOrderExists', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.body.delivery_id]);
+      //console.log('data:', data)
+      if (data === null) {
+        //console.log('abc',req.body)
+        if (typeof (req.body.count) != 'string') {
+          for (i in req.body.count) {
+            req.body.count[i] = isNaN(parseInt(req.body.count[i], 10)) ? 0 : parseInt(req.body.count[i], 10);
+          }
+        } else {
+          req.body.count = isNaN(parseInt(req.body.count, 10)) ? 0 : parseInt(req.body.count, 10);
+        }
+        if (typeof (req.body.completed) != 'string') {
+          for (i in req.body.completed) {
+            req.body.completed[i] = isNaN(parseInt(req.body.completed[i], 10)) ? 0 : parseInt(req.body.completed[i], 10);
+          }
+        } else {
+          req.body.completed = isNaN(parseInt(req.body.completed, 10)) ? 0 : parseInt(req.body.completed, 10);
+        }
+        function isString(input){
+          typeof(input)=='string'?input:ObjectId.createFromHexString(input);
+        }
+        if (req.body.stock_id != '' && typeof (req.body.stock_id) != 'string') {
+          for (i in req.body.stock_id) {
+            req.body.stock_id[i]=isString(req.body.stock_id[i]);//?req.body.stock_id: ObjectId.createFromHexString(req.body.stock_id[i]);
+          }
+        }
+        else if (req.body.stock_id != '') {
+          req.body.stock_id = isString(req.body.stock_id);
+          //req.body.stock_id = ObjectId.createFromHexString(req.body.stock_id);
+        }
+        //console.log(typeof(req.body.product_id))
+        if (typeof (req.body.product_id) != 'string' && req.body.product_id != '') {
+          for (let i in req.body.count) {
+            items.push({
+              product_id: req.body.product_id[i],
+              name: req.body.name[i],
+              count: req.body.count[i],
+              completed: req.body.completed[i],
+              stock_id: req.body.stock_id[i]
+            });
+          }
+        }
+        else {
+          items.push({
+            product_id: req.body.product_id,
+            name: req.body.name,
+            count: req.body.count,
+            completed: req.body.completed,
+            stock_id: req.body.stock_id
+          });
+        }
+        req.body.updated_at = new Date();
+        data = {
+          delivery_id: req.body.delivery_id,
+          company: req.body.company,
+          address: req.body.address,
+          phone: req.body.phone,
+          items,
+          type: req.body.type,
+          delivery_user: req.body.delivery_user,
+          created_at: req.body.created_at
+        }
+        //console.log("items:",items)
+        //console.log('data',data);
+        delete displayDelivery_user;
+  
+        //console.log("why", req.body)
+        let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
+        //console.log("end", result);
+        res.redirect('/deliveryOrder');
+      }
     //await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
     //let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
     //console.log(data)

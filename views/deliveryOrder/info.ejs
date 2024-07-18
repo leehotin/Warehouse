@@ -1,380 +1,286 @@
 <html>
-    <head>
-        <title>Warehouse In Out system</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link href="/css/style.css" rel="stylesheet" type="text/css">
-        <script src="/js/darkMode.js"></script>
-        <script>
 
-           alert('hi') 
-        </script>
-            <script type="module">
-                import { dio, listen, setupSelectCreateForm, createUniqueSelect, lockItem, listenForm, checkValue} from '/js/script.js';
-                document.addEventListener("DOMContentLoaded", function () {
-                    const inputText = document.getElementById('_id-0');
-                    
-                    const selectBox1 = document.getElementById('name-0');
-                    const selectBox2 = document.getElementById('type-0');
-                    const selectBox3 = document.getElementById('brand-0');
-                    const selectBox4 = document.getElementById('origin-0');
-                    const selectBox5 = document.getElementById('stock_id-0');
-                    const selectBox6 = document.getElementById('product_id-0');
-                    let originalOptions = [] ;
-                    //const originalOptions = selectElement.innerHTML ;
-                    const selectBoxs = [selectBox1,selectBox2,selectBox3,selectBox4,selectBox5,selectBox6];
-                    for(let saveOption of selectBoxs){
-                        originalOptions.push(saveOption.innerHTML) ;
-                    }
-                    let uniqueIdCounter = 1;
-                    document.getElementById('addItemButton').addEventListener('click',async function(){
-                        if(!await checkValue()){
-                            //alert('前端被攔下來了，你數字不對~')
-                            return fasle ;
-                        }
-                        await lockItem(uniqueIdCounter);
-                        uniqueIdCounter = await createUniqueSelect(originalOptions,uniqueIdCounter);
-                        
-                    });
-                    dio();
-                    listen();
-                    listenForm();
-        
-                    //createUniqueSelect(originalOptions,uniqueIdCounter);
-                    setupSelectCreateForm(selectBoxs, '', 'products');
-                })
-            </script>
-    </head>
+<head>
+    <title>Warehouse In Out system</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <script src="/js/darkMode.js"></script>
+    <script></script>
+    <script type="module">
+        import { dio, listen, setupSelectCreateForm, createUniqueSelect, lockItem, listenForm, checkValue } from '/js/script.js';
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputText = document.getElementById('_id-0');
 
-    <body class="darkmode">
-        <div class="container">
-            <div class="row row_rita">
-                <div class="col-2">
-                    <div class="list-group list-group-flush text-center">
-                        <a href="/" class="list-group-item darkmode">首頁</a>
-                        <a href="/productlist" class="list-group-item darkmode">貨品</a>
-                        <a href="/stock" class="list-group-item darkmode">儲存位置</a>
-                        <a href="/deliveryOrder" class="list-group-item darkmode">貨單</a>
-                        <a href="/user" class="list-group-item darkmode">用戶</a>
-                        <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
-                        <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
-                        <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
-                    </div> 
-                    
-                    <form action="/user/logout" method="post" id="logout">
-                    </form> 
+            const selectBox1 = document.getElementById('name-0-0');
+            const selectBox2 = document.getElementById('type-0-0');
+            const selectBox3 = document.getElementById('brand-0-0');
+            const selectBox4 = document.getElementById('origin-0-0');
+            const selectBox5 = document.getElementById('stock_id-0-0');
+            const selectBox6 = document.getElementById('product_id-0-0');
+            let originalOptions = [];
+            //const originalOptions = selectElement.innerHTML ;
+            const selectBoxs = [selectBox1, selectBox2, selectBox3, selectBox4, selectBox5, selectBox6];
+            for (let saveOption of selectBoxs) {
+                originalOptions.push(saveOption.innerHTML);
+            }
+            let uniqueIdCounter = 1;
+            document.getElementById('addItemButton').addEventListener('click', async function () {
+                if (!await checkValue()) {
+                    //alert('前端被攔下來了，你數字不對~')
+                    return false;
+                }
+                await lockItem(uniqueIdCounter,<%= typeof (datas.items.length) == 'string' ? 0 : datas.items.length ; %> );
+            uniqueIdCounter = await createUniqueSelect(originalOptions, uniqueIdCounter);
+
+        });
+        dio();
+        listen();
+        listenForm();
+
+        //createUniqueSelect(originalOptions,uniqueIdCounter);
+        setupSelectCreateForm(selectBoxs, '', 'products');
+        })
+    </script>
+</head>
+
+<body class="darkmode">
+    <div class="container">
+        <div class="row row_rita">
+            <div class="col-2">
+                <div class="list-group list-group-flush text-center">
+                    <a href="/" class="list-group-item darkmode">首頁</a>
+                    <a href="/productlist" class="list-group-item darkmode">貨品</a>
+                    <a href="/stock" class="list-group-item darkmode">儲存位置</a>
+                    <a href="/deliveryOrder" class="list-group-item darkmode">貨單</a>
+                    <a href="/user" class="list-group-item darkmode">用戶</a>
+                    <a href="/recycleBin" class="list-group-item darkmode">回收箱</a>
+                    <label class="list-group-item darkmode darkmode-btn" onclick="darkMode(this)">夜間模式</label>
+                    <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                 </div>
 
-                <div class="col-10">
-                    <div class="row">
-                        <div class="col">
-                            <label><a href="/" class="darkmode">首頁</a></label> / 
-                            <label><a href="/deliveryOrder" class="darkmode">貨單</a></label> / 
-                            <label class="darkmode">貨單資料</label> / 
-                            <label class="darkmode"><%= datas.delivery_id %></label>                    
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-warning" form="delete">刪除貨單</button>
-                            <button class="btn btn-primary" form="update">更新貨單</button>
-                            <button class="btn btn-primary" id='addItemButton'>加新物品</button>
-                        </div>
-                        <form action="/deliveryOrder/delete" method="post" id="delete">
-                        </form>
+                <form action="/user/logout" method="post" id="logout">
+                </form>
+            </div>
+            <div class="col-10">
+
+                <div class="row">
+
+                    <div class="col">
+                        <label><a href="/" class="darkmode">首頁</a></label> /
+                        <label><a href="/deliveryOrder" class="darkmode">貨單</a></label> /
+                        <label class="darkmode">貨單資料</label> /
+                        <label class="darkmode">
+                            <%= datas.delivery_id %>
+                        </label>
                     </div>
+
+                    <div class="col">
+                        <button class="btn btn-warning" form="delete">刪除貨單</button>
+                        <button class="btn btn-primary" type='button' form="Submit" id="create">更新貨單</button>
+                        <button class="btn btn-primary" id='addItemButton'>加新物品</button>
+                    </div>
+
+                    <form action="/deliveryOrder/delete" method="post" id="delete">
+                    </form>
+
+                </div>
+
+                <form action="/deliveryOrder/update" method="post" type="submit" id="Submit">
                     <div class="row">
-                        <form action="/deliveryOrder/update" method="post" id="update">
-                            <div class="row my-1">
-                                <div class="col fw-bold ">
-                                    <label for="DeliveryID">送貨單號:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="DeliveryID" name="delivery_id" value="<%= datas.delivery_id %>" class="form-control text-center">
-                                </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="DeliveryID">送貨單號:</label>
                             </div>
+                            <div class="col">
+                                <input type="text" id="DeliveryID" name="delivery_id" value="<%= datas.delivery_id %>"
+                                    class="form-control text-center">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="Company">公司名稱:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Company" name="company" value="<%= datas.company %>"
+                                    class="form-control text-center">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="Address">公司地址:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Address" name="address" value="<%= datas.address %>"
+                                    class="form-control text-center">
+                            </div>
+                        </div>
+
+                        <div class="row my-1">
+                            <div class="col fw-bold ">
+                                <label for="Phone">公司電話:</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="Phone" name="phone" value="<%= datas.phone %>"
+                                    class="form-control text-center">
+                            </div>
+                        </div>
+
+                        <% let uniqueFix=0;let k='' %>
 
                             <div class="row my-1">
                                 <div class="col fw-bold ">
-                                    <label for="Company">公司名稱:</label>
+                                    <label>貨品資料:</label>
                                 </div>
-                                <div class="col">
-                                    <input type="text" id="Company" name="company" value="<%= datas.company %>" class="form-control text-center">
-                                </div>
-                            </div>
 
-                            <div class="row my-1">
-                                <div class="col fw-bold ">
-                                    <label for="Address">公司地址:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="Address" name="address" value="<%= datas.address %>" class="form-control text-center">
-                                </div>
-                            </div>
-
-                            <div class="row my-1">
-                                <div class="col fw-bold ">
-                                    <label for="Phone">公司電話:</label>
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="Phone" name="phone" value="<%= datas.phone %>" class="form-control text-center">
-                                </div>
-                            </div>
-
-                            <div class="row my-1">
-                                <div class="col fw-bold ">
-                                    <label>貨單類型:</label>
-                                </div>
                                 <div class="col">
                                     <div class="form-check">
                                         <label class="form-check-label" for="in">入貨單</label>
-                                        <input type="radio" value="in" id="in" name="type"  class="form-check-input" <% if(datas.type==='in'){ %>checked<% } %>> 
+                                        <input type="radio" value="in" id="in" name="Type" class="form-check-input" <%
+                                            if(datas.type==='in' ){ %>checked<% } %>>
                                     </div>
+
                                     <div class="form-check">
                                         <label class="form-check-label" for="out">出貨單</label>
-                                        <input type="radio" value="out" id="out" name="type"  class="form-check-input" <% if(datas.type==='out'){ %>checked<% } %>>
+                                        <input type="radio" value="out" id="out" name="Type" class="form-check-input" <%
+                                            if(datas.type==='out' ){ %>checked<% } %>>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row my-1">
-                                <label class="fw-bold ">貨品資料：</label>
+                                <label class="fw-bold ">貨品資料</label>
                                 <div class="col">
                                     <% for(let data of datas.items){ %>
+
                                         <div class="row py-1 my-1 border-bottom border-primary">
                                             <div class="col">
-                                                <label for="item[][name]">貨品名稱:</label>
-                                                <!-- hidden item name -->
-                                                <input type="hidden" name="item[name]" id="item[][name]" value="<%= data.name %>">
-                                                <!-- select id , display name -->
-                                                <select name="item[product_id]" id="item[][product_id]" onchange="addName(this,'item[][name]')">
-                                                    <option>請選擇貨品</option>
 
-                                                        <option value="<%= data.name %>" selected><%= data.name %></option>
-                                                </select>
+                                                <input type="hidden" value="" id="_id">
 
-                                            </div>
-                                            <div class="col">
-                                                <label for="item[][count]">需求總數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[count]" id="item[][count]" value="<%= (data.count) %>" size="10">
-                                            </div>
-                                            <div class="col">
-                                                <label for="item[][completed]">已到達數量:</label>
-                                                <input type='text' class="form-control text-center" name="item[completed]" id="item[][completed]" value="<%= (data.completed) %>">
-                                            </div>
-                                            <div class="col">
-                                                <label for="item[][stock_id]">貨架編號:</label>
-                                                <select name="item[stock_id]" id="item[][stock_id]">
-                                                    <option>請選擇貨架</option>
-                                                    <% for (let stock of lists[5]){ %>
-                                                        <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
-                                                    <% } %>
-                                                </select>
-                                           </div>
-                                        </div>
-                                        <% } %>
-                                        <div class="row py-1 my-1 border-bottom border-primary">
-                                            <div class="col">
-                                                <label for="up_item[][name]">貨品名稱:</label>
-                                           </div>
-                                            <div class="col">
-                                                <label for="up_Stock_id">所在倉庫區:</label>
-
-                                                <select name="up_stock_id" id="up_Stock_id">
+                                                <label for="product_id-0-<%= `${uniqueFix}` %>">貨品編號:</label>
+                                                <select name="product_id" id="product_id-0-<%= `${uniqueFix}` %>">
                                                     <option value="">-----請選擇-----</option>
-                                                    <% for(let data of lists[5]){ %>
-                                                        <option value="<%= data._id %>">
-                                                            <%= data.name%>
+                                                    <% for(let list of lists[0]){ %>
+
+                                                        <option value="<%= list._id %>" <%
+                                                            if(list._id==data.product_id){k='exsits' %> selected<% } %>>
+                                                                <%= list._id %>
+                                                                    <%= k %>
+                                                        </option>
+
+                                                        <% } %>
+                                                            <% if(k!='exsits' ){ %>
+                                                                <option value="<%= data.product_id %>" selected>
+                                                                    <%= data.product_id %>
+                                                                </option>
+                                                                <% } %>
+                                                </select>
+                                            </div>
+
+                                            <div class="col">
+                                                <label for="name-0-<%= `${uniqueFix}` %>">貨品名稱:</label>
+                                                <select name="name" id="name-0-<%= `${uniqueFix}` %>">
+                                                    <option value="">-----請選擇-----</option>
+
+                                                    <% for(let list of lists[1]){ k='' ; %>
+                                                        <option value="<%= list._id %>" <% if(list._id==data.name){
+                                                            k='exsits' %> selected <% } %>>
+                                                                <%= list._id %>
                                                         </option>
                                                         <% } %>
-                                                </select>//////
-                                                <div class="row my-1">
-                                                    <div class="col fw-bold ">
-                                                        <label>貨品資料:</label>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" for="in">入貨單</label>
-                                                            <input type="radio" value="in" id="in" name="Type" class="form-check-input" <% if(datas.type==='in'){ %>checked<% } %>>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label" for="out">出貨單</label>
-                                                            <input type="radio" value="out" id="out" name="Type" class="form-check-input" <% if(datas.type==='out'){ %>checked<% } %>>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                        <% let uniqueId= 0 ; %>
-                                                <div class="row my-1">
-                                                    <label class="fw-bold ">貨品資料<%= (uniqueId+1) %></label>
-                                                    <div class="col">
-                                                        <% for(let data of datas.items){ %>
-                                                        <div class="row py-1 my-1 border-bottom border-primary">
-                                                            <div class="col">
-                        
-                                                                <input type="hidden" value="" id="_id">
-                                                                
-                                                                <label for="product_id-0">貨品編號:</label>
-                                                                <select name="product_id" id="product_id-0">
-                                                                    <option value="">-----請選擇-----</option>
-                                                                    <% for(let list of lists[0]){ %>
-                                                                        <option value="<%= list._id %>"<% if(data.product_id==list._id){ %>selected <% } %>>
-                                                                            <%= list._id%>
-                                                                        </option>
-                                                                        <% } %>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="name-0">貨品名稱:</label>
-                                                                <select name="name" id="name-0">
-                                                                    <option value="">-----請選擇-----</option>
-                                                                    <% for(let list of lists[1]){ %>
-                                                                        <option value="<%= list._id %>"<% if(data._name==list._id){ %>selected <% } %>>
-                                                                            <%= list._id%>
-                                                                        </option>
-                                                                        <% } %>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="type-0">類型:</label>
-                                                                <select id="type-0">
-                                                                    <option value="">-----請選擇-----</option>
-                                                                    <% for(let list of lists[2]){ %>
-                                                                        <option value="<%= list._id %>">
-                                                                            <%= list._id%>
-                                                                        </option>
-                                                                        <% } %>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="brand-0">品牌:</label>
-                                                                <select name="brand" id="brand-0">
-                                                                    <option value="">-----請選擇-----</option>
-                                                                    <% for(let list of lists[3]){ %>
-                                                                        <option value="<%= list._id %>">
-                                                                            <%= list._id%>
-                                                                        </option>
-                                                                        <% } %>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="origin-0">來源地:</label>
-                                                                <select name="origin" id="origin-0">
-                                                                    <option value="">-----請選擇-----</option>
-                                                                    <% for(let list of lists[4]){ %>
-                                                                        <option value="<%= list._id %>">
-                                                                            <%= list._id%>
-                                                                        </option>>
-                                                                        <% } %>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="stock_id-0">所在倉庫區:</label>
-                                                                <select name="stock_id" id="stock_id-0">
-                                                                    <option value="">-----請選擇-----</option>
-                                                                    <% for(let list of lists[5]){ %>
-                                                                        <option value="<%= list._id %>"<% if(data.stock_id==list._id){ %>selected <% } %>>
-                                                                            <%= list._id%>
-                                                                        </option>
-                                                                        <% } %>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="stock_id-0-0">所在倉庫區(預設):</label>
-                                                                <p id="stock_id-0-0"></p>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="count-0">總數量:</label>
-                                                                <input type='text' class="form-control text-center" name="count" id="count-0"
-                                                                    value="" size="10">
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="completed-0">已到達數量:</label>
-                                                                <input type='text' class="form-control text-center" name="completed"
-                                                                    id="completed-0" value="">
-                                                            </div>
-                                                        </div>
-                                                        <% uniqueId++; } %>
-                                                    </div>
-                                                </div>
+                                                            <% if(k!='exsits' ){%>
+                                                                <option value="<%= data.name %>" selected>
+                                                                    <%= data.name %>
+                                                                </option>
+                                                                <% } %>
+                                                </select>
 
+                                            </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                <label for="up_product_id">貨品名稱:</label>
-                                                <!-- hidden up_item name -->
-                                                <!-- select id , display name -->
-                                                <select name="up_name" id="up_product_id" >
-                                                    <option>請選擇貨品</option>
-                                                    <% for (let product of lists[1]){ %>
-                                                        <option value="<%= product._id %>">
-                                                            <%= product._id %>
+                                            <div class="col">
+                                                <label for="type-0-<%= `${uniqueFix}` %>">類型:</label>
+                                                <select id="type-0-<%= `${uniqueFix}` %>">
+                                                    <option value="">-----請選擇-----</option>
+                                                    <% for(let list of lists[2]){ %>
+                                                        <option value="<%= list._id %>">
+                                                            <%= list._id %>
                                                         </option>
                                                         <% } %>
                                                 </select>
-                                                </div>
-                                            <div class="col">
-                                                <label for="up_count">總數量:</label>
-                                                <input type='text' class="form-control text-center" name="up_count" id="up_count" value="" size="10">
                                             </div>
-                                            <div class="col">
-                                                <label for="up_completed">需求總數量:</label>
-                                                <input type='text' class="form-control text-center" name="up_completed" id="up_completed" value="" size="10">
-                                            </div>
-                                            <div class="col">
-                                                <label for="up_item[][stock_id]">貨架編號:</label>
-                                                <select name="up_stock_id" id="up_item[][stock_id]">
-                                                    <option>請選擇貨架</option>
-                                                    <% for (let stock of lists[5]){ %>
-                                                        <option value="<%= stock._id %>" ><%= stock.area + " " + stock.name %></option>
-                                                    <% } %>
-                                                </select>
 
-                                                <!-- <input type='text' class="form-control text-center" name="up_item[stock_id]" id="up_item[][stock_id]" value=""> -->
+                                            <div class="col">
+                                                <label for="brand-0-<%= `${uniqueFix}` %>">品牌:</label>
+                                                <select name="brand" id="brand-0-<%= `${uniqueFix}` %>">
+                                                    <option value="">-----請選擇-----</option>
+                                                    <% for(let list of lists[3]){ %>
+                                                        <option value="<%= list._id %>">
+                                                            <%= list._id %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
                                             </div>
-                                           <!-- <div class="col">
-                                                <label for="stock_id">貨架編號:</label>
-                                                <input type='text' class="form-control text-center" name="stock_id"
-                                                    id="stock_id" value="">
-                                            </div>-->
+
+                                            <div class="col">
+                                                <label for="origin-0-<%= `${uniqueFix}` %>">來源地:</label>
+                                                <select name="origin" id="origin-0-<%= `${uniqueFix}` %>">
+                                                    <option value="">-----請選擇-----</option>
+                                                    <% for(let list of lists[4]){ %>
+                                                        <option value="<%= list._id %>">
+                                                            <%= list._id %>
+                                                        </option>
+                                                        <% } %>
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col">
+                                                <label for="stock_id-0-<%= `${uniqueFix}` %>">所在倉庫區:</label>
+                                                <select name="stock_id" id="stock_id-0-<%= `${uniqueFix}` %>">
+                                                    <option value="">-----請選擇-----</option>
+                                                    <% for(let list of lists[5]){ k='' ; %>
+                                                        <option value="<%= list._id %>" <% if(list._id==data.stock_id){
+                                                            k='exsits' %> selected <% } %>>
+                                                                <%= list.area + ' ' + list.name %>
+                                                        </option>
+                                                        <% } %>
+                                                            <% if(k!='exsits' ){%>
+                                                                <option value="<%= data.stock_id %>" selected>
+                                                                    <%= data.stock_id %>
+                                                                </option>
+                                                                <% } %>
+                                                </select>
+                                            </div>
+
+                                            <div class="col">
+                                                <label p="stock_id-0-0-<%= `${uniqueFix}` %>">所在倉庫區(預設):</label>
+                                                <p id="stock_id-0-0-<%= `${uniqueFix}` %>"></p>
+                                            </div>
+
+                                            <div class="col">
+                                                <label for="count-0-<%= `${uniqueFix}` %>">總數量:</label>
+                                                <input type='text' class="form-control text-center" name="count"
+                                                    id="count-0-<%= `${uniqueFix}` %>" value="<%= data.count %>"
+                                                    size="10">
+                                            </div>
+
+
+                                            <div class="col">
+                                                <label for="completed-0-<%= `${uniqueFix}` %>">已到達數量:</label>
+                                                <input type='text' class="form-control text-center" name="completed"
+                                                    id="completed-0-<%= `${uniqueFix}` %>"
+                                                    value="<%= data.completed %>">
+                                            </div>
+
                                         </div>
-
+                                        <% uniqueFix++ ; } %>
                                 </div>
                             </div>
+
 
                             <div class="row my-1" id="specificPosition">
                                 <div class="col fw-bold ">
@@ -383,38 +289,56 @@
                                 <div class="col">
                                     <div class="form-check">
                                         <label class="form-check-label" for="finish">已完成</label>
-                                        <input type="radio" value="1" name="delivery_check" id="finish" class="form-check-input" <% if(datas.delivery_check===1){ %>checked<% } %>>
+                                        <input type="radio" value="1" name="delivery_check" id="finish"
+                                            class="form-check-input" <% if(datas.delivery_check==='1' ){ %>checked<% }
+                                            %>>
                                     </div>
                                     <div class="form-check">
                                         <label class="form-check-label" for="NotFinish">未完成</label>
-                                        <input type="radio" value="0" name="delivery_check" id="NotFinish" class="form-check-input" <% if(datas.delivery_check==='0'){ %>checked<% } %>>
+                                        <input type="radio" value="0" name="delivery_check" id="NotFinish"
+                                            class="form-check-input" <% if(datas.delivery_check==='0' ){ %>checked<% }
+                                            %>>
                                     </div>
                                 </div>
                                 <div class="col fw-bold">
                                     <label for="delivery_user">確認貨單員工:</label>
                                 </div>
                                 <div class="col">
-                                    <select name="delivery_user" id="delivery_user" class="form-select form-select-sm text-center">
+                                    <select name="delivery_user" id="delivery_user"
+                                        class="form-select form-select-sm text-center">
                                         <option>請選擇</option>
                                         <% let j ; for(i of user){ %>
-                                        <option value="<%= Object.values(i) %>"<% if(Object.values(i)==datas.delivery_user){ j='exsits'; %>selected <% } %>>
-                                            <%= Object.values(i) %>
-                                        </option>
-                                        <% } %><% if(j!='exsits'){ %><option name='delivery_user' value="<%= datas.delivery_user %>" selected><%= datas.delivery_user %></option> <% } %> 
+                                            <option value="<%= i.username %>" <% if((i.deleted_at)!=''
+                                                &&i.deleted_at!=undefined){ %>
+                                                <% ; %>disabled <% } %>
+                                                        <% if(i.username==datas.delivery_user){ j='exsits' ; %> selected
+                                                            <% } %>>
+                                                                <%= i.username %>
+                                                                    <% if((i.deleted_at)!='' &&i.deleted_at!=undefined){
+                                                                        %>(已離職)<% } %>
+                                            </option>
+                                            <% } %>
+                                                <% if(j!='exsits' ){ %>
+                                                    <option name='delivery_user' value="<%= datas.delivery_user %>"
+                                                        selected>
+                                                        <%= datas.delivery_user %>
+                                                    </option>
+                                                    <% } %>
                                     </select>
                                 </div>
                             </div>
-                        </form>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-    </body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 
-    <script>
-        document.addEventListener('load', setDarkMode());
-    </script>  
+<script>
+    document.addEventListener('load', setDarkMode());
+</script>
+
 </html>
