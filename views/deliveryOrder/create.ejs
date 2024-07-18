@@ -59,7 +59,7 @@
                     <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                 </div>
 
-                <form action="/user/logout" method="post" id="logout">
+                <form action="/user/logout" method="post" id="logout" hidden>
                 </form>
             </div>
 
@@ -80,6 +80,7 @@
                 </div>
                 <div class="row">
                     <form action="/deliveryOrder/create" method="post"  id="submit">
+                        <label class="h4">建立新貨單</label>
                         <div class="row my-1">
                             <div class="col fw-bold ">
                                 <label for="DeliveryID">

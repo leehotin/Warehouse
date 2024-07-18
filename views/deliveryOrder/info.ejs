@@ -60,7 +60,7 @@
                     <button type="submit" form="logout" class="list-group-item darkmode">登出</button>
                 </div>
 
-                <form action="/user/logout" method="post" id="logout">
+                <form action="/user/logout" method="post" id="logout" hidden>
                 </form>
             </div>
             <div class="col-10">
@@ -82,7 +82,7 @@
                         <button class="btn btn-primary" id='addItemButton'>加新物品</button>
                     </div>
 
-                    <form action="/deliveryOrder/delete" method="post" id="delete">
+                    <form action="/deliveryOrder/delete" method="post" id="delete" hidden>
                         <input type="hidden" name="delivery_id" value="<%= datas._id %>">
                     </form>
 
@@ -90,6 +90,8 @@
 
                 <form action="/deliveryOrder/update" method="post" id="submit">
                     <div class="row">
+
+                        <label class="h4">貨單資料</label>
 
                         <div class="row my-1">
                             <div class="col fw-bold ">
