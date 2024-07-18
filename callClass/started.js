@@ -247,7 +247,7 @@ class IOemuSys {
             case 'updateDeliveryOrder':
                 result = [{
                     updateOne: {
-                        filter: { delivery_id: query['delivery_id'] },
+                        filter: { _id: query['_id'] },
                         update: {
                             $set: query
                         },

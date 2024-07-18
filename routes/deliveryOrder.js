@@ -75,7 +75,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     let data = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.query.delivery_id]);
     if(data ==null){
       data = '' ;
-    }
+    }console.log(data);
     //console.log('dddd',data);
     let list = await iOemuSys.Read('productList', iOemuSys.CreatedbIndex('products'), ['productsList', 1])
     if (list == null){
@@ -215,15 +215,16 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     //console.log('cde',req.body)
       await iOemuSys.connect();
       let items = [];
+      id = ObjectId.createFromHexString(req.body._id)
       delete req.body.type;
-      /*if (req.body.Type === "in") {
-        req.body.delivery_id = "INV" + req.body.delivery_id;
+      if (req.body.Type === "in") {
+        //req.body.delivery_id = "INV" + req.body.delivery_id;
         req.body.type = 'in';
       }
       else {
-        req.body.delivery_id = "TRF" + req.body.delivery_id;
+        //req.body.delivery_id = "TRF" + req.body.delivery_id;
         req.body.type = 'out';
-      }*/
+      }
       //let data = await iOemuSys.Read('checkOrderExists', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.body.delivery_id]);
       //console.log('data:', data)
       //console.log(data === null);
@@ -254,7 +255,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         else if (req.body.stock_id != '') {
           req.body.stock_id = isString(req.body.stock_id);
           //req.body.stock_id = ObjectId.createFromHexString(req.body.stock_id);
-        }
+        }//console.log('123456789',req.body)
         //console.log(typeof(req.body.product_id))
         if (typeof (req.body.product_id) != 'string' && req.body.product_id != '') {
           for (let i in req.body.count) {
@@ -278,6 +279,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         }
         req.body.updated_at = new Date();
         data = {
+          _id : id ,
           delivery_id: req.body.delivery_id,
           company: req.body.company,
           address: req.body.address,
@@ -285,10 +287,10 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           items,
           type: req.body.type,
           delivery_user: req.body.delivery_user,
-          created_at: req.body.created_at
+          created_at: req.body.created_at?req.body.created_at:new Date()
         }
-        //console.log("items:",items)
-        //console.log('data',data);
+        console.log("items:",items)
+        console.log('data',data);
         delete displayDelivery_user;
   
         //console.log("why", req.body)

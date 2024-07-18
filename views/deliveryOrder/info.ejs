@@ -92,7 +92,7 @@
                     <div class="row">
 
                         <label class="h4">貨單資料</label>
-
+                        
                         <div class="row my-1">
                             <div class="col fw-bold ">
                                 <label for="DeliveryID">送貨單號:</label>
@@ -106,6 +106,7 @@
                         <div class="row my-1">
                             <div class="col fw-bold ">
                                 <label for="Company">公司名稱:</label>
+                                <input type="hidden" value="<%= datas._id %>" name="_id">
                             </div>
                             <div class="col">
                                 <input type="text" id="Company" name="company" value="<%= datas.company %>"
