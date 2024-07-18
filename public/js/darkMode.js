@@ -13,7 +13,7 @@ function setClass(name,setClass,removeClass,getBy){
             }
             break;
         case "tag":
-            for(list of document.getElementsByTagName(name)){
+            for(let list of document.getElementsByTagName(name)){
                 list.classList.remove(removeClass);
                 list.classList.add(setClass);
             };
