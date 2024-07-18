@@ -251,7 +251,7 @@ class IOemuSys {
                         update: {
                             $set: query
                         },
-                        upset: true
+                        upsert: true
                     }
                 }];
                 console.log('1234',query['delivery_id']);
