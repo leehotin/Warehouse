@@ -175,7 +175,7 @@ class IOemuSys {
         const [dbName, collectionName] = await setdb;
         let result = [], temp = {}, items = [], data;
         switch (inquire) {
-            case 'updateDeliveryOrder':
+            /*case 'updateDeliveryOrder':
                 if(typeof(query['item[product_id]'])!='string'){
                 for (let i = 0; i < query['item[product_id]'].length; i++) {
                     items.push({
@@ -237,13 +237,26 @@ class IOemuSys {
                     }
                 }];
                 data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
-                break;
+                break;*/
             case 'newProduct':
                 result = [{
                     insertOne: query
                 }];
                 data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
                 break;
+            case 'updateDeliveryOrder':
+                result = [{
+                    updateOne: {
+                        filter: { delivery_id: query['delivery_id'] },
+                        update: {
+                            $set: query
+                        },
+                        upset: true
+                    }
+                }];
+                console.log('1234',query['delivery_id']);
+                data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
+                break ; 
             case 'createDeliveryOrder':
                 result = [{
                     insertOne: query
