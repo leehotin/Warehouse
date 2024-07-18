@@ -177,9 +177,8 @@ router.post('/delete', checkLogin, async (req, res, next) => {
       }
       delete displayDelivery_user;
 
-      console.log("STRANGE", req.body)
       let result = await iOemuSys.update('createDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
-      console.log("end", result);
+
       res.redirect('/deliveryOrder');
     }
   }
@@ -202,7 +201,6 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     //console.log('cde',req.body)
       await iOemuSys.connect();
       let items = [];
-      console.log(req.body._id);
       id = ObjectId.createFromHexString(req.body._id)
       delete req.body.type;
       if (req.body.Type === "in") {
@@ -265,8 +263,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
             stock_id: req.body.stock_id
           });
         }
-        if(req.body.delivery_check == '1')
-          req.body.delivery_at = new Date() ;
+
          req.body.updated_at = new Date();
         data = {
           _id : id ,
