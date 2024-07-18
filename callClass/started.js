@@ -247,7 +247,7 @@ class IOemuSys {
             case 'updateDeliveryOrder':
                 result = [{
                     updateOne: {
-                        filter: { delivery_id: query['delivery_id'] },
+                        filter: { _id: ObjectId.createFromHexString(ele[0]) },
                         update: {
                             $set: query
                         },

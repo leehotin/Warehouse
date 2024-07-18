@@ -282,7 +282,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         //console.log("why", req.body)
         console.log('req',req.body)
         console.log('data',data);
-        let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
+        let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data,req.body._id);
         console.log("222",result);
         //console.log("end", result);
       
