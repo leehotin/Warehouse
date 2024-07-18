@@ -42,6 +42,7 @@
         setupSelectCreateForm(selectBoxs, '', 'products');
         })
     </script>
+    
 </head>
 
 <body class="darkmode">
@@ -77,7 +78,7 @@
 
                     <div class="col">
                         <button class="btn btn-warning" form="delete">刪除貨單</button>
-                        <button class="btn btn-primary" type='button' form="Submit" id="create">更新貨單</button>
+                        <button class="btn btn-primary" type='button' id="create">更新貨單</button>
                         <button class="btn btn-primary" id='addItemButton'>加新物品</button>
                     </div>
 
@@ -86,7 +87,7 @@
 
                 </div>
 
-                <form action="/deliveryOrder/update" method="post" type="submit" id="Submit">
+                <form action="/deliveryOrder/update" method="post" id="submit">
                     <div class="row">
 
                         <div class="row my-1">

@@ -216,17 +216,18 @@ router.post('/delete', checkLogin, async (req, res, next) => {
       await iOemuSys.connect();
       let items = [];
       delete req.body.type;
-      if (req.body.Type === "in") {
+      /*if (req.body.Type === "in") {
         req.body.delivery_id = "INV" + req.body.delivery_id;
         req.body.type = 'in';
       }
       else {
         req.body.delivery_id = "TRF" + req.body.delivery_id;
         req.body.type = 'out';
-      }
-      let data = await iOemuSys.Read('checkOrderExists', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.body.delivery_id]);
+      }*/
+      //let data = await iOemuSys.Read('checkOrderExists', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.body.delivery_id]);
       //console.log('data:', data)
-      if (data === null) {
+      //console.log(data === null);
+      //if (data === null) {
         //console.log('abc',req.body)
         if (typeof (req.body.count) != 'string') {
           for (i in req.body.count) {
@@ -292,10 +293,11 @@ router.post('/delete', checkLogin, async (req, res, next) => {
   
         //console.log("why", req.body)
         let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
+        console.log("222",result);
         //console.log("end", result);
-        res.redirect('/deliveryOrder');
-      }
-    //await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
+      
+      res.redirect('/deliveryOrder');
+      //await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
     //let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
     //console.log(data)
     //res.render('deliveryOrder/index',{ datas: data, search: search});

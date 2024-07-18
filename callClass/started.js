@@ -254,7 +254,7 @@ class IOemuSys {
                         upset: true
                     }
                 }];
-                console.log('1234',result);
+                console.log('1234',query['delivery_id']);
                 data = await this.client.db(dbName).collection(collectionName).bulkWrite(result);
                 break ; 
             case 'createDeliveryOrder':

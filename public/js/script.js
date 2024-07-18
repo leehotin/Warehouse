@@ -138,16 +138,17 @@ export async function listenForm() {
             return false;
         }
         await enableAllInputsAndSelects();
-        await fetch('/deliveryOrder/update', {
-            method: "POST",
-            headers:'',//customHeaders,
-            body: document.body,//JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            });
-        await document.Submit.submit();
+        // await fetch('/deliveryOrder/update', {
+        //     method: "POST",
+        //     headers:'',//customHeaders,
+        //     body: document.body,//JSON.stringify(data),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         console.log(data);
+        //     });
+        console.log(SubmitForm.innerHTML);
+        SubmitForm.submit();
         //await SubmitForm.submit();
 
         //await SubmitForm.submit() ;
