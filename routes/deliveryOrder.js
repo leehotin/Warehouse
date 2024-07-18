@@ -231,7 +231,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           req.body.completed = isNaN(parseInt(req.body.completed, 10)) ? 0 : parseInt(req.body.completed, 10);
         }
         function isString(input){
-          typeof(input)=='string'?input:ObjectId.createFromHexString(input);
+          return typeof(input)=='string'?input:ObjectId.createFromHexString(input);
         }
         if (req.body.stock_id != '' && typeof (req.body.stock_id) != 'string') {
           for (i in req.body.stock_id) {
@@ -278,8 +278,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         delete displayDelivery_user;
   
         //console.log("why", req.body)
-        console.log('req',req.body)
-        console.log('data',data);
+
         let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data,req.body._id);
         console.log("222",result);
         //console.log("end", result);
