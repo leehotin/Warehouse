@@ -201,17 +201,6 @@ router.post('/delete', checkLogin, async (req, res, next) => {
   }
 }).post('/update', checkLogin, async (req, res, next) => {
   try {
-    await iOemuSys.connect();
-    let search = [
-      { displayName: "貨單編號:", name: "whereData[delivery_id]", placeholder: "貨單編號", type: "text" },
-      { displayName: "公司名稱:", name: "whereData[company]", placeholder: "公司名稱", type: "text" },
-      { displayName: "公司地址:", name: "whereData[address]", placeholder: "公司地址", type: "text" },
-      { displayName: "公司電話:", name: "whereData[phone]", placeholder: "公司電話", type: "text" },
-      { displayName: "貨單類型:", name: "whereData[type]", placeholder: "貨單類型", type: "radio", data: [{ display_value: "入貨單", value: "in" }, { display_value: "出貨單", value: "out" }] },
-      { displayName: "是否已經完成:", name: "whereData[delivery_check]", placeholder: "是否已經完成", type: "radio", data: [{ display_value: "已完成", value: "1" }, { display_value: "未完成", value: "0" }] },
-      { displayName: "確認貨單員工:", name: "whereData[delivery_user]", placeholder: "確認貨單員工", type: "text" },
-      { displayName: "完成日期:", name: "whereData[delivery_at]", placeholder: "完成日期", type: "date" },
-    ];
     //console.log('cde',req.body)
       await iOemuSys.connect();
       let items = [];
@@ -245,7 +234,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           req.body.completed = isNaN(parseInt(req.body.completed, 10)) ? 0 : parseInt(req.body.completed, 10);
         }
         function isString(input){
-          typeof(input)=='string'?input:ObjectId.createFromHexString(input);
+          return typeof(input)=='string'?input:ObjectId.createFromHexString(input);
         }
         if (req.body.stock_id != '' && typeof (req.body.stock_id) != 'string') {
           for (i in req.body.stock_id) {
@@ -285,7 +274,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           address: req.body.address,
           phone: req.body.phone,
           items,
-          type: req.body.type,
+          type: req.body.Type,
           delivery_user: req.body.delivery_user,
           created_at: req.body.created_at?req.body.created_at:new Date()
         }
@@ -294,7 +283,8 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         delete displayDelivery_user;
   
         //console.log("why", req.body)
-        let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
+
+        let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data,req.body._id);
         console.log("222",result);
         //console.log("end", result);
       
