@@ -17,11 +17,8 @@ router.get('/', checkLogin, async (req, res, next) => {
 router.post('/info', checkLogin, async (req, res, next) => {
     try {
         //console.log(req.body)
-         
-        
         await client.connect();
-        let product = await client.db(dbName).collection("products").findOne({ _id: req.body._id });
-        console.log(product)
+
         const products = client.db(dbName).collection("products");
         let data = await products.aggregate([ // join table
             {

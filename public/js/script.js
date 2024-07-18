@@ -229,7 +229,7 @@ export async function createUniqueSelect(Options, uniqueIdCounter) {
     const uniqueId_id = `hidden_id-${uniqueIdCounter}`;
     const uniqueIdCount = `count-${uniqueIdCounter}`;
     const uniqueIdCompleted = `completed-${uniqueIdCounter}`;
-    const nameLib = [/*0*/'name',  /*1*/   'type',/*2*/'brand',/*3*/'origin', /*4*/ 'stock_id',  /*5*/'count',  /*6*/'completed', /*7*/ 'product_id',/*8*/'_id'];
+    const nameLib = [/*0*/'name',  /*1*/   'type',/*2*/'brand',/*3*/'origin', /*4*/ 'stock_id',  /*5*/'count',  /*6*/'completed', /*7*/ 'product_id',/*8*/'data_id'];
     const labelTexts = [/*0*/'貨品名稱:',/*1*/'類型:',/*2*/'品牌:',/*3*/'來源地:',/*4*/'所在倉庫區:',/*5*/'總數量:',/*6*/'已到達數量',/*7*/'貨品編號:',/*8*/'所在倉庫區(預設):']
     const newUniqueID = [/*0*/uniqueIdName,/*1*/uniqueIdType,/*2*/uniqueIdBrand,/*3*/uniqueIdOrigin,/*4*/uniqueIdStock_id];
     const newinputTextId = [/*0*/uniqueIdCount,/*1*/uniqueIdCompleted];

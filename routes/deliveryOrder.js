@@ -234,7 +234,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           req.body.completed = isNaN(parseInt(req.body.completed, 10)) ? 0 : parseInt(req.body.completed, 10);
         }
         function isString(input){
-          return typeof(input)=='string'?input:ObjectId.createFromHexString(input);
+          return typeof(input)=='string'?ObjectId.createFromHexString(input):input;
         }
         if (req.body.stock_id != '' && typeof (req.body.stock_id) != 'string') {
           for (i in req.body.stock_id) {
@@ -275,19 +275,21 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           phone: req.body.phone,
           items,
           type: req.body.Type,
+          delivery_check: req.body.delivery_check,
           delivery_user: req.body.delivery_user,
-          created_at: req.body.created_at?req.body.created_at:new Date()
+          updated_at: new Date()
         }
-        console.log("items:",items)
-        console.log('data',data);
-        delete displayDelivery_user;
-  
-        //console.log("why", req.body)
+        if(data.delivery_check == "1"){
+          data.delivery_at = new Date();
+        }else{
+          data.delivery_at = null;
+        }
 
+        delete displayDelivery_user;
+        
         let result = await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data,req.body._id);
         console.log("222",result);
-        //console.log("end", result);
-      
+
       res.redirect('/deliveryOrder');
       //await iOemuSys.update('updateDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'),req.body) ;
     //let data = [await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'),['delivery_id',req.body['delivery_id']])];
