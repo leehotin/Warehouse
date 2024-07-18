@@ -374,9 +374,12 @@ class IOemuSys {
         }
         if (steck.length != 0) {
             query = [];
-            for (let data of steck)
+            for (let data of steck)//{
                 query.push({ insertOne: data })
-            starting = await this.client.db(dbName).collection('products').bulkWrite(query);
+            //let find = await this.client.db(dbName).collection('products').findOne({_id:data['_id']})
+            //}
+            //if(find==null)
+                starting = await this.client.db(dbName).collection('products').bulkWrite(query);
         }
         if (steckNotes.length != 0) {
             query = [];
