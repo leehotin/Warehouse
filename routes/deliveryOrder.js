@@ -72,10 +72,12 @@ router.post('/delete', checkLogin, async (req, res, next) => {
 }).get('/info', checkLogin, async (req, res, next) => {
   try {
     await iOemuSys.connect();
-    let data = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.query.delivery_id]);
+    let today = [] ;
+    today= await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'), ['', req.query._id]);
+    console.log(req.query);
     if(data ==null){
       data = '' ;
-    }console.log(data);
+    }//console.log('jklghnafkgjh',data.stock_id);
     //console.log('dddd',data);
     let list = await iOemuSys.Read('productList', iOemuSys.CreatedbIndex('products'), ['productsList', 1])
     if (list == null){
@@ -202,6 +204,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     //console.log('cde',req.body)
       await iOemuSys.connect();
       let items = [];
+      console.log(req.body._id);
       id = ObjectId.createFromHexString(req.body._id)
       delete req.body.type;
       if (req.body.Type === "in") {
@@ -264,7 +267,9 @@ router.post('/delete', checkLogin, async (req, res, next) => {
             stock_id: req.body.stock_id
           });
         }
-        req.body.updated_at = new Date();
+        if(req.body.delivery_check == '1')
+          req.body.delivery_at = new Date() ;
+         req.body.updated_at = new Date();
         data = {
           _id : id ,
           delivery_id: req.body.delivery_id,
@@ -274,6 +279,8 @@ router.post('/delete', checkLogin, async (req, res, next) => {
           items,
           type: req.body.Type,
           delivery_user: req.body.delivery_user,
+          delivery_check:req.body.delivery_check,
+          delivery_at:req.body.delivery_at,
           created_at: req.body.created_at?req.body.created_at:new Date()
         }
         console.log("items:",items)
