@@ -75,7 +75,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     let data = await iOemuSys.Read('deliveryOrderInfo', iOemuSys.CreatedbIndex('delivery_notes'), ['delivery_id', req.query.delivery_id]);
     if(data ==null){
       data = '' ;
-    }console.log(data);
+    }
     //console.log('dddd',data);
     let list = await iOemuSys.Read('productList', iOemuSys.CreatedbIndex('products'), ['productsList', 1])
     if (list == null){
@@ -175,11 +175,9 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         delivery_user: req.body.delivery_user,
         created_at: req.body.created_at
       }
-      console.log("items:",items)
-      console.log('data',data);
       delete displayDelivery_user;
 
-      console.log("why", req.body)
+      console.log("STRANGE", req.body)
       let result = await iOemuSys.update('createDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
       console.log("end", result);
       res.redirect('/deliveryOrder');
@@ -204,6 +202,7 @@ router.post('/delete', checkLogin, async (req, res, next) => {
     //console.log('cde',req.body)
       await iOemuSys.connect();
       let items = [];
+      console.log(req.body._id);
       id = ObjectId.createFromHexString(req.body._id)
       delete req.body.type;
       if (req.body.Type === "in") {
@@ -266,7 +265,9 @@ router.post('/delete', checkLogin, async (req, res, next) => {
             stock_id: req.body.stock_id
           });
         }
-        req.body.updated_at = new Date();
+        if(req.body.delivery_check == '1')
+          req.body.delivery_at = new Date() ;
+         req.body.updated_at = new Date();
         data = {
           _id : id ,
           delivery_id: req.body.delivery_id,
