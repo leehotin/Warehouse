@@ -175,11 +175,9 @@ router.post('/delete', checkLogin, async (req, res, next) => {
         delivery_user: req.body.delivery_user,
         created_at: req.body.created_at
       }
-      console.log("items:",items)
-      console.log('data',data);
       delete displayDelivery_user;
 
-      console.log("why", req.body)
+      console.log("STRANGE", req.body)
       let result = await iOemuSys.update('createDeliveryOrder', iOemuSys.CreatedbIndex('delivery_notes'), data);
       console.log("end", result);
       res.redirect('/deliveryOrder');
