@@ -54,16 +54,15 @@
                   <div class="row py-1 border-bottom border-dark">
                       <div class="">
                           <input type="checkbox" value="<%= datas[i]._id %>" name="rollback_no" >
-                          
                         </div>  
                     <div class="col text-center">
-                      <a href="/product/info?id=<%= datas[i]._id %>" class="darkmode"><%= datas[i]._id.getTimestamp() %></a>
+                      <label class="darkmode"><%= datas[i]._id.getTimestamp() %></label>
                     </div>
                     <div class="col text-center">
                       <%= datas[i].who %>
                     </div>
                     <div class="col text-center">
-                    <%= datas[i].source %>
+                      <%= datas[i].source %>
                     </div>
                   </div>
                 <% } %>
